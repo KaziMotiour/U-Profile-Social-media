@@ -10,7 +10,7 @@ class CustomAccountManager(BaseUserManager):
         othersField.setdefault('is_superuser', True)
         othersField.setdefault('is_staff', True)
         othersField.setdefault('is_active', True)
-        
+
         if othersField.get('is_staff') is not True:
             raise ValueError('Superuser must be assigned to is_staff=True')
         
@@ -30,7 +30,7 @@ class CustomAccountManager(BaseUserManager):
 
         
 
-
+# Custom authentication model
 class NewUsers(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_("email address"), max_length=254, unique=True)
     username = models.CharField(_("username"), max_length=50, unique=True)

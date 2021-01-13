@@ -4,17 +4,21 @@ from django.core.exceptions import ValidationError
 from rest_framework.validators import UniqueTogetherValidator
 from django.core.validators import validate_email
 from .models import NewUsers
+from django.contrib.auth import  get_user_model
+User= get_user_model()
 
+
+# Custom authentication serializer model
 class singupSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(max_length=100, required=True)
     class Meta:
-        model=NewUsers
+        model = User
         fields=['email','username', 'password','password2']
         extra_kwargs = {'password': {'write_only': True}, 'password2':{'write_only': True}}
 
         validators = [
             UniqueTogetherValidator(
-                queryset=NewUsers.objects.all(),
+                queryset=User.objects.all(),
                 fields=['email', 'username'],
                 message = 'email or username should be unique'
             )

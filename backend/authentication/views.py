@@ -3,14 +3,18 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import singupSerializer
+from django.contrib.auth.models import User
 
 
 class HelloView(APIView):
     permission_classes = (IsAuthenticated,)
     def get(self, request):
         print(request.user)
+        print(User)
         content = {'message': 'Hello, World!'}
         return Response(content)
+
+# Custom Authentication  
 class CreateNewUserView(APIView):
     permission_classes = [AllowAny]
 
