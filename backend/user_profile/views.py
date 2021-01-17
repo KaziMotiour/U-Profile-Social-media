@@ -5,7 +5,7 @@ from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .permission import IsOwnerOrReadOnly
 from rest_framework.parsers import MultiPartParser, FormParser
-from .serializers import UserProfile
+from .serializers import UserProfile, UserSerializer
 from .models import User_profile
 from django.contrib.auth import get_user_model
 from .models import UserFollow
@@ -20,7 +20,6 @@ class EditUserProfile(RetrieveUpdateAPIView):
 
     
 class get_user(ListAPIView):
-    permission_classes = [IsAuthenticated]
     serializer_class = UserProfile
     queryset = User_profile.objects.all()
 
@@ -41,4 +40,12 @@ def UserFollowViews(request, username):
     else:
         return Response({"toggle_user": "Connot found"}) 
     
-    
+
+
+class UserListView(ListAPIView):
+    serializer_class=UserSerializer
+    queryset = User.objects.all()
+
+class UserdetailView(RetrieveUpdateAPIView):
+    serializer_class=UserSerializer
+    queryset = User.objects.all()

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'authentication',
     'rest_framework',
     'user_profile',
+    'UserPost',
 ]
 
 MIDDLEWARE = [

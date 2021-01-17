@@ -10,7 +10,7 @@ def upload_to(instance, filename):
     return 'ProfilePic/{filename}'.format(filename=filename)
 
 class User_profile(models.Model):
-    user = models.ForeignKey(User, related_name='profile', on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     first_name = models.CharField(max_length=100, null=True, blank=True)
     Last_name = models.CharField(max_length=100, null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
@@ -25,10 +25,6 @@ class User_profile(models.Model):
         return str(self.user.username)
 
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        User_profile.objects.create(user=instance.user)
 
 
 
@@ -56,9 +52,11 @@ class UserFollow(models.Model):
 
      
 @receiver(post_save, sender=User)
+def create_UserFollow(sender, instance, created, **kwargs):
+    if created:
+        UserFollow.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        UserFollow.objects.create(user=instance.user)
-
-
-
+        User_profile.objects.create(user=instance)
