@@ -4,6 +4,7 @@ from django.conf import settings
 User= get_user_model()
 from django.db.models.signals import post_save,  post_delete
 from django.dispatch import receiver
+from UserPost.models import UserPost
 
 
 def upload_to(instance, filename):
@@ -50,6 +51,28 @@ class UserFollow(models.Model):
     def __str__(self):
         return str(self.user)
 
+
+class PostBookmarkManager(models.Manager):
+    def TogglePostBookmark(self, user, post):
+        get_user,created = PostBookmark.objects.get_or_create(user=user)
+        
+        if post in get_user.post.all():
+            added=False
+        else:
+            get_user.post.add(post)
+            added=True
+        return added
+class PostBookmark(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bookmark')
+    post = models.ManyToManyField(UserPost, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    objects = PostBookmarkManager()
+
+    def __str__(self):
+        return str(self.user)
+
+     
      
 @receiver(post_save, sender=User)
 def create_UserFollow(sender, instance, created, **kwargs):
@@ -59,4 +82,10 @@ def create_UserFollow(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        User_profile.objects.create(user=instance)
+        PostBookmark.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        PostBookmark.objects.create(user=instance)

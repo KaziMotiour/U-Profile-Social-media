@@ -1,9 +1,10 @@
 from rest_framework import serializers
-from .models import User_profile, UserFollow
+from .models import User_profile, UserFollow, PostBookmark
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 from django.contrib.auth import  get_user_model
 from UserPost.models import UserPost
+from UserPost.serializers import PostSerializer
     
 User= get_user_model()
 
@@ -108,7 +109,7 @@ class UserProfile(serializers.ModelSerializer):
 
         
 
-class PostSerializer(serializers.ModelSerializer):
+class PostSerializerForUser(serializers.ModelSerializer):
     likes = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = UserPost
@@ -119,10 +120,10 @@ class PostSerializer(serializers.ModelSerializer):
         return obj.likes.count()
 
 
-
+# for UserProfile
 class UserSerializer(serializers.ModelSerializer):
         full_name = serializers.SerializerMethodField(read_only=True)
-        posts = PostSerializer(read_only=True, many=True)
+        posts = PostSerializerForUser(read_only=True, many=True)
         profile=UserProfile(read_only=True)
         class Meta:
             model = User
@@ -136,3 +137,9 @@ class UserSerializer(serializers.ModelSerializer):
             user = User_profile.objects.filter(user=obj).first()
             return user.image.url
 
+
+class PostBookmarkSerializer(serializers.ModelSerializer):
+    post=PostSerializer(many=True)
+    class Meta:
+        model=PostBookmark
+        fields=['user', 'post']

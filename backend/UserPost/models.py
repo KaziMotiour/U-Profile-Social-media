@@ -119,8 +119,9 @@ class UserPost(models.Model):
     objects = UserPostManager()
     class Meta:
         ordering = ['-id']
+    
     def __str__(self):
-        return self.content[0:10]
+        return str(self.content)
     
 
     @property

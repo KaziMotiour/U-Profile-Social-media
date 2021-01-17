@@ -5,10 +5,10 @@ from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .permission import IsOwnerOrReadOnly
 from rest_framework.parsers import MultiPartParser, FormParser
-from .serializers import UserProfile, UserSerializer
-from .models import User_profile
+from .serializers import UserProfile, UserSerializer, PostBookmarkSerializer
+from .models import User_profile, PostBookmark, UserFollow
 from django.contrib.auth import get_user_model
-from .models import UserFollow
+from UserPost.models import UserPost, Post
 User= get_user_model()
 
 
@@ -28,7 +28,6 @@ class get_user(ListAPIView):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def UserFollowViews(request, username):
-    permission_classes = [IsAuthenticated]
     user = request.user
     toggle_user = User.objects.get(username__icontains=username)
     if toggle_user:
@@ -42,6 +41,26 @@ def UserFollowViews(request, username):
     
 
 
+
+
+
+@api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
+def ToggleBookmarkViews(request, pk):
+    user = request.user
+    post = UserPost.objects.filter(pk=pk).first()
+   
+    if post:
+        is_bookmark = PostBookmark.objects.TogglePostBookmark(user, post)
+        print(post, 'view')
+        if is_bookmark:
+            return Response({"bookmark": "True"})
+        else:
+            return Response({"bookmark": "False"})
+    else:
+        return Response({"toggle_user": "Connot found"}) 
+    
+
 class UserListView(ListAPIView):
     serializer_class=UserSerializer
     queryset = User.objects.all()
@@ -49,3 +68,12 @@ class UserListView(ListAPIView):
 class UserdetailView(RetrieveUpdateAPIView):
     serializer_class=UserSerializer
     queryset = User.objects.all()
+
+class PostBookmarkVew(ListAPIView):
+    serializer_class = PostBookmarkSerializer
+    def get_queryset(self):
+        qs = PostBookmark.objects.filter(user=self.request.user)
+        return qs
+        
+    
+   
