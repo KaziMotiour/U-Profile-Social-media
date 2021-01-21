@@ -2,9 +2,10 @@ from rest_framework import serializers
 from rest_framework.response import Response
 from django.contrib.auth import  get_user_model
 User= get_user_model()
-from .models import UserPost
+from .models import UserPost, PostComment
 from user_profile.models import User_profile, PostBookmark
-# from user_profile.serializers import PostUserDetailsSerializer
+
+# Post User deatails
 class PostUserDetailsSerializers(serializers.ModelSerializer):
         full_name = serializers.SerializerMethodField(read_only=True)
         profilePic = serializers.SerializerMethodField(read_only=True)
@@ -40,6 +41,14 @@ class SharePostSerializer(serializers.ModelSerializer):
         fields = ['id','parent', 'user', 'content', 'image', 'timestamp', 'is_retweet', 'sharePostContent']
 
 
+# comment serializer
+class PostCommentSerializer(serializers.ModelSerializer):
+    user = PostUserDetailsSerializers(read_only=True)
+    class Meta:
+        model = PostComment
+        fields = ['id', 'user', 'post', 'comment', 'create_date']
+        extra_kwargs = {'create_date':{'read_only':True}}
+
 
 
 
@@ -51,9 +60,10 @@ class PostSerializer(serializers.ModelSerializer):
     parent = TweetParentSerializer(read_only=True)
     user = PostUserDetailsSerializers(read_only=True)
     sharePostContent = serializers.CharField(max_length=1000, required=False)
+    postComment = PostCommentSerializer(many=True, read_only=True)
     class Meta:
         model = UserPost
-        fields = ['id','parent', 'user', 'content', 'image', 'timestamp', 'is_retweet', 'is_saved', 'likes', 'sharePostContent']
+        fields = ['id','parent', 'user', 'content', 'image', 'timestamp', 'is_retweet', 'is_saved', 'likes', 'sharePostContent','postComment']
 
 
     def get_likes(self, obj):
@@ -79,3 +89,5 @@ class PostCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserPost
         fields = ['user', 'content', 'image', 'timestamp']
+
+    

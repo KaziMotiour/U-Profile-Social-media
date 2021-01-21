@@ -52,7 +52,7 @@ def ToggleBookmarkViews(request, pk):
    
     if post:
         is_bookmark = PostBookmark.objects.TogglePostBookmark(user, post)
-        print(post, 'view')
+
         if is_bookmark:
             return Response({"bookmark": "True"})
         else:

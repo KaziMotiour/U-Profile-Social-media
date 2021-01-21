@@ -1,11 +1,13 @@
 from django.shortcuts import render
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated
-from .serializers import PostSerializer, PostCreateSerializer, SharePostSerializer
+from .serializers import PostSerializer, PostCreateSerializer, SharePostSerializer, PostCommentSerializer
 from django.shortcuts import get_object_or_404
-from .models import UserPost
+from .models import UserPost, PostComment
+from .permission import IsOwnerOrReadOnly
 
 # Create your views here.
 
@@ -59,3 +61,25 @@ class PostCreateApiView(CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+
+@api_view(['GET','POST'])
+@permission_classes([IsAuthenticated])
+def postCommentCreate(request, pk):
+    user = request.user
+    post = UserPost.objects.filter(pk=pk).first()
+    serialized_data = PostCommentSerializer(data=request.data)
+
+    if serialized_data.is_valid():
+        comment=serialized_data.data.get('comment')
+        createComment=PostComment.objects.create(user=user, post=post, comment=comment)
+        createComment.save()
+        return Response({'comment':'created'}, status=status.HTTP_201_CREATED)
+    else:
+        return Response({'comment':'validate error'}, status=status.HTTP_400_BAD_REQUEST)
+
+class PostCommentUpdateAndDelete(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    serializer_class = PostCommentSerializer
+    queryset = PostComment.objects.all()

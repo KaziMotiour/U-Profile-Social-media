@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'user_profile',
     'UserPost',
+    'notification'
 ]
 
 MIDDLEWARE = [

@@ -2,9 +2,10 @@ from django.db import models
 from django.contrib.auth import  get_user_model
 from django.conf import settings
 User= get_user_model()
-from django.db.models.signals import post_save,  post_delete
+from django.db.models.signals import post_save,  post_delete, m2m_changed
 from django.dispatch import receiver
 from UserPost.models import UserPost
+from notification.models import Notification
 
 
 def upload_to(instance, filename):
@@ -24,6 +25,7 @@ class User_profile(models.Model):
     
     def __str__(self):
         return str(self.user.username)
+
 
 
 
@@ -52,6 +54,8 @@ class UserFollow(models.Model):
         return str(self.user)
 
 
+
+
 class PostBookmarkManager(models.Manager):
     def TogglePostBookmark(self, user, post):
         get_user,created = PostBookmark.objects.get_or_create(user=user)
@@ -72,6 +76,11 @@ class PostBookmark(models.Model):
     def __str__(self):
         return str(self.user)
 
+
+
+
+
+
      
      
 @receiver(post_save, sender=User)
@@ -89,3 +98,19 @@ def create_user_profile(sender, instance, created, **kwargs):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         PostBookmark.objects.create(user=instance)
+
+@receiver(m2m_changed, sender=UserFollow.following.through)
+def Add_Follow_Notification(sender, instance, action, reverse, pk_set, **kwargs):
+
+    
+    if action == 'pre_add':
+        user = User.objects.get(pk=list(pk_set)[0])
+        who_following = User.objects.get(username=instance)
+        notify = Notification(sender=who_following, user=user, Notification_type=3)
+        notify.save()
+    if action == 'pre_remove':
+        user = User.objects.get(pk=list(pk_set)[0])
+        who_following = User.objects.get(username=instance)
+        notify = Notification.objects.filter(sender=who_following, user=user, Notification_type=3).first()
+        notify.delete()
+

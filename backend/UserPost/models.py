@@ -1,8 +1,14 @@
 from django.db import models
+from django.db.models.signals import post_delete, post_save,  m2m_changed
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model 
 from django.utils import timezone
 from django.conf import settings
+from notification.models import Notification
+from django.dispatch import receiver
+
+UserModel = get_user_model()
+
 User = settings.AUTH_USER_MODEL
 
 
@@ -121,10 +127,51 @@ class UserPost(models.Model):
         ordering = ['-id']
     
     def __str__(self):
-        return str(self.content)
+        return str(self.id)
     
 
     @property
     def is_retweet(self):
         return self.parent != None
        
+
+class PostComment(models.Model):
+    user = models.ForeignKey(User, related_name='userComment', on_delete=models.CASCADE, null=True, blank=True)
+    post = models.ForeignKey(UserPost, related_name='postComment', on_delete=models.CASCADE, null=True, blank=True)
+    comment = models.CharField(max_length=500)
+    create_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.comment)
+
+
+
+
+@receiver([post_save, post_delete], sender=PostComment)
+def create_UserFollow(sender, instance, created=None, **kwargs):
+    print(created)
+    if created:
+        comment = instance
+        user = comment.post.user
+        sender = comment.user
+        post = comment.post
+        notify = Notification(post=post, sender=sender, user=user, Notification_type=2, text_preview=comment.comment[:25])
+        notify.save()
+    elif created == None:
+        comment = instance
+        user = comment.post.user
+        sender = comment.user
+        post = comment.post
+        notify = Notification.objects.filter(post=post, sender=sender, user=user, Notification_type=2, text_preview=comment.comment[:25]).first()
+        notify.delete()
+
+@receiver(m2m_changed, sender=UserPost.likes.through)
+def add_like_notification(sender, instance, action,pk_set, **kwargs):
+    post = UserPost.objects.get(pk=str(instance))
+    sender = UserModel.objects.get(id=list(pk_set)[-1])
+    if action == 'pre_add':
+        notify = Notification(post = post, sender = sender, user=post.user, Notification_type=1, text_preview=post.content[0:25])
+        notify.save()
+    elif action == 'pre_remove':
+        notify = Notification.objects.filter(post = post, sender= sender, user=post.user, Notification_type=1, text_preview=post.content[0:25]).first()
+        notify.delete()
