@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from rest_framework.response import Response
+from django.db.models import Q
 from rest_framework.decorators import api_view,  permission_classes
 from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .permission import IsOwnerOrReadOnly
 from rest_framework.parsers import MultiPartParser, FormParser
-from .serializers import UserProfile, UserSerializer, PostBookmarkSerializer
+from .serializers import UserProfile, UserSerializer, PostBookmarkSerializer, PostBookmarkSerializer,PostUserDetailsSerializer
 from .models import User_profile, PostBookmark, UserFollow
 from django.contrib.auth import get_user_model
 from UserPost.models import UserPost, Post
@@ -76,4 +77,11 @@ class PostBookmarkVew(ListAPIView):
         return qs
         
     
-   
+class RecomendedUser(ListAPIView):
+    serializer_class = PostUserDetailsSerializer
+    def get_queryset(self):
+        user = self.request.user
+        follow_user = UserFollow.objects.get(user=user)
+        print(follow_user.following.all())
+        qs = User.objects.exclude(id__in= follow_user.following.all()).exclude(username=user.username)
+        return  qs 

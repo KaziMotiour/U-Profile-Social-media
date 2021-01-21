@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -8,15 +9,25 @@ from .serializers import PostSerializer, PostCreateSerializer, SharePostSerializ
 from django.shortcuts import get_object_or_404
 from .models import UserPost, PostComment
 from .permission import IsOwnerOrReadOnly
+from user_profile.models import UserFollow
 
 # Create your views here.
 
 class PostListView(ListAPIView):
     serializer_class=PostSerializer
     queryset = UserPost.objects.all()
+   
+    def get_queryset(self):
+        users = self.request.user
+        follow_user = UserFollow.objects.get(user=users)
+        print(follow_user.following.all())
+        qs = UserPost.objects.filter(Q(user__in = follow_user.following.all()) | Q(user=users))
+        return  qs 
 
-class PostDetailView(RetrieveUpdateDestroyAPIView):
+class PostDetailView(RetrieveUpdateDestroyAPIView): 
     serializer_class=PostSerializer
+    queryset = UserPost.objects.all()
+    
     queryset = UserPost.objects.all()
     
 @api_view(['GET','POST'])

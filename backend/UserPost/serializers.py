@@ -73,9 +73,7 @@ class PostSerializer(serializers.ModelSerializer):
         request  = self.context.get('request')
         user=request.user
         Bookmark_user= PostBookmark.objects.get(user__username=user.username)
-        print(Bookmark_user, obj.id)
         post = UserPost.objects.filter(id=obj.id).first()
-        print(post)
         if post in Bookmark_user.post.all():
             return True
         else:

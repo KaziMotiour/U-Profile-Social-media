@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User_profile, UserFollow, PostBookmark
+from .models import PostBookmark, User_profile, UserFollow
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 from django.contrib.auth import  get_user_model
@@ -123,7 +123,7 @@ class PostSerializerForUser(serializers.ModelSerializer):
 # for UserProfile
 class UserSerializer(serializers.ModelSerializer):
         full_name = serializers.SerializerMethodField(read_only=True)
-        posts = PostSerializerForUser(read_only=True, many=True)
+        posts = PostSerializer(read_only=True, many=True)
         profile=UserProfile(read_only=True)
         class Meta:
             model = User
@@ -139,6 +139,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class PostBookmarkSerializer(serializers.ModelSerializer):
+    user =PostUserDetailsSerializer(read_only=True)
     post=PostSerializer(many=True)
     class Meta:
         model=PostBookmark

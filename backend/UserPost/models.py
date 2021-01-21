@@ -79,7 +79,7 @@ class Post(models.Model):
 class UserPostManager(models.Manager):
     
     def RePost(self,user, post, user_content=''):
-        print('hello', 'model')
+        
      
         if post.parent:
             og_parent = post.parent
@@ -149,7 +149,6 @@ class PostComment(models.Model):
 
 @receiver([post_save, post_delete], sender=PostComment)
 def create_UserFollow(sender, instance, created=None, **kwargs):
-    print(created)
     if created:
         comment = instance
         user = comment.post.user
@@ -163,6 +162,8 @@ def create_UserFollow(sender, instance, created=None, **kwargs):
         sender = comment.user
         post = comment.post
         notify = Notification.objects.filter(post=post, sender=sender, user=user, Notification_type=2, text_preview=comment.comment[:25]).first()
+        if notify:
+            notify.delete()
         notify.delete()
 
 @receiver(m2m_changed, sender=UserPost.likes.through)
@@ -174,4 +175,5 @@ def add_like_notification(sender, instance, action,pk_set, **kwargs):
         notify.save()
     elif action == 'pre_remove':
         notify = Notification.objects.filter(post = post, sender= sender, user=post.user, Notification_type=1, text_preview=post.content[0:25]).first()
-        notify.delete()
+        if notify:
+            notify.delete()
