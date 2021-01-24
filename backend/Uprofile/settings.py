@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'user_profile',
     'UserPost',
-    'notification'
+    'notification',
+    'django_rest_passwordreset',
 ]
 
 MIDDLEWARE = [
@@ -106,6 +107,16 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_POST = 587
+EMAIL_HOST_USER = 'kmatiour30@gmail.com'
+EMAIL_HOST_PASSWORD = "behjihmbzpqtyphq"
+EMAIL_USE_TLS = True
+
+
+
 
 AUTH_USER_MODEL ='authentication.newUsers'
 # Internationalization

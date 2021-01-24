@@ -46,3 +46,9 @@ class singupSerializer(serializers.ModelSerializer):
         return user
 
 
+# change password serializer
+class ChangePasswordSerializer(serializers.Serializer):
+    
+    model = User
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
