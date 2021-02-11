@@ -86,6 +86,6 @@ class PostCreateSerializer(serializers.ModelSerializer):
     user =serializers.ReadOnlyField(source='user.username')
     class Meta:
         model = UserPost
-        fields = ['user', 'content', 'image', 'timestamp']
+        fields = ['id','user', 'content', 'image', 'timestamp']
 
     

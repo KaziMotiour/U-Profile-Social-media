@@ -52,10 +52,11 @@ class NewUsers(AbstractBaseUser, PermissionsMixin):
         return str(self.username)
 
 
+#singal for send email with token to reset password
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
 
-    email_plaintext_message = "You're receiving this email because you requested a password reset for your user account at U-profile.\n\n Please copy the token value to reset password. \n\n Token={} \n\n Thanks for using our site! \n\n The U-profile team.".format(reset_password_token.key)
+    email_plaintext_message = "You're receiving this email because you requested a password reset for your user account at U-profile.\n\n Please copy the token value to reset password. \n\n Token = {} \n\n Thanks for using our site! \n\n The U-profile team.".format(reset_password_token.key)
 
 
     send_mail(
