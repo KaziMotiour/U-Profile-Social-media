@@ -3,9 +3,9 @@ from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
+from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
-from .serializers import PostSerializer, PostCreateSerializer, SharePostSerializer, PostCommentSerializer
+from .serializers import PostSerializer, PostCreateSerializer, SharePostSerializer, PostCommentSerializer, PostUserDetailsSerializers
 from django.shortcuts import get_object_or_404
 from .models import UserPost, PostComment
 from .permission import IsOwnerOrReadOnly
@@ -13,9 +13,25 @@ from user_profile.models import UserFollow
 
 # Create your views here.
 
+@api_view(['GET'])
+def likedUser(requser, post_id):
+    post = UserPost.objects.get(id=post_id)
+    print(post.likes.all())
+    return Response({'hello'})
+
+# get all the user List from ManyToManyFields
+class postLikedUser(ListAPIView):
+    serializer_class = PostUserDetailsSerializers
+    def get_queryset(self):
+        pk = self.kwargs.get('pk')
+        post = UserPost.objects.get(pk=pk)
+        qs = post.likes.all()
+        return qs
+    
+
 class PostListView(ListAPIView):
     serializer_class=PostSerializer
-    queryset = UserPost.objects.all()
+    # queryset = UserPost.objects.all()
    
     def get_queryset(self):
         users = self.request.user
@@ -44,7 +60,7 @@ def ReTweetView(request, post_id):
     if post:
         RePost = UserPost.objects.RePost(user, post, user_content)
         if RePost:
-             return Response({"RePost": "True"})
+            return Response({"RePost": "True"})
         else:
             return Response({"RePost": "False"})
     else:

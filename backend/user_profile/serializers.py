@@ -9,6 +9,7 @@ from UserPost.serializers import PostSerializer
 User= get_user_model()
 
 
+# for post user
 class PostUserDetailsSerializer(serializers.ModelSerializer):
         full_name = serializers.SerializerMethodField(read_only=True)
         profilePic = serializers.SerializerMethodField(read_only=True)
@@ -27,10 +28,7 @@ class PostUserDetailsSerializer(serializers.ModelSerializer):
 
 
 
-
-
-
-
+# for user details
 class UserProfile(serializers.ModelSerializer):
     users_name = serializers.SerializerMethodField(read_only=True)
     is_following = serializers.SerializerMethodField(read_only=True)
@@ -109,22 +107,23 @@ class UserProfile(serializers.ModelSerializer):
 
         
 
-class PostSerializerForUser(serializers.ModelSerializer):
-    likes = serializers.SerializerMethodField(read_only=True)
-    class Meta:
-        model = UserPost
-        fields = ['id','parent', 'user', 'content', 'image', 'likes', 'timestamp', 'is_retweet']
+# class PostSerializerForUser(serializers.ModelSerializer):
+#     likes = serializers.SerializerMethodField(read_only=True)
+#     class Meta:
+#         model = UserPost
+#         fields = ['id','parent', 'user', 'content', 'image', 'likes', 'timestamp', 'is_retweet']
 
 
-    def get_likes(self, obj):
-        return obj.likes.count()
+    # def get_likes(self, obj):
+    #     return obj.likes.count()
 
 
-# for UserProfile
+
+# full user detailsUserProfile
 class UserSerializer(serializers.ModelSerializer):
         full_name = serializers.SerializerMethodField(read_only=True)
-        posts = PostSerializer(read_only=True, many=True)
         profile=UserProfile(read_only=True)
+        posts = PostSerializer(read_only=True, many=True)
         class Meta:
             model = User
             fields=['id', 'username', 'full_name','profile', 'posts']
@@ -133,13 +132,14 @@ class UserSerializer(serializers.ModelSerializer):
             user = User_profile.objects.filter(user=obj).first()
             return str(user.first_name)+' '+ str(user.Last_name)
 
-        def get_profilePic(self, obj):
-            user = User_profile.objects.filter(user=obj).first()
-            return user.image.url
+        # def get_profilePic(self, obj):
+        #     user = User_profile.objects.filter(user=obj).first()
+        #     return user.image.url
 
 
+# post bookmark
 class PostBookmarkSerializer(serializers.ModelSerializer):
-    user =PostUserDetailsSerializer(read_only=True)
+    user = PostUserDetailsSerializer(read_only=True)
     post=PostSerializer(many=True)
     class Meta:
         model=PostBookmark

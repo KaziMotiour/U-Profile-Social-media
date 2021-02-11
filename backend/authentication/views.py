@@ -24,7 +24,7 @@ class CreateNewUserView(APIView):
         if serializer_data.is_valid():
             new_user = serializer_data.save()
             if new_user:
-                content = {'message': 'Hello, World!'}
+                content = {'message': 'new user created'}
                 return Response(content, status=status.HTTP_201_CREATED)
         return Response(serializer_data.errors, status=status.HTTP_400_BAD_REQUEST)
 
