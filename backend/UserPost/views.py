@@ -5,13 +5,21 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
-from .serializers import PostSerializer, PostCreateSerializer, SharePostSerializer, PostCommentSerializer, PostUserDetailsSerializers
+from .serializers import PostSerializer, PostCreateSerializer, SharePostSerializer, PostCommentSerializer, PostUserDetailsSerializers, ProductFilter
 from django.shortcuts import get_object_or_404
 from .models import UserPost, PostComment
 from .permission import IsOwnerOrReadOnly
 from user_profile.models import UserFollow
-
+from django_filters import rest_framework as filters
 # Create your views here.
+class List_of_user(ListAPIView):
+    serializer_class=PostSerializer
+    queryset = UserPost.objects.all()
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = ProductFilter
+
+
+
 
 @api_view(['GET'])
 def likedUser(requser, post_id):

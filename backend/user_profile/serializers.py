@@ -8,7 +8,6 @@ from UserPost.serializers import PostSerializer
     
 User= get_user_model()
 
-
 # for post user
 class PostUserDetailsSerializer(serializers.ModelSerializer):
         full_name = serializers.SerializerMethodField(read_only=True)

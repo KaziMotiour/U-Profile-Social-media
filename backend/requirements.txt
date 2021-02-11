@@ -8,3 +8,4 @@ psycopg2-binary==2.8.6
 PyJWT==2.0.0
 Pillow==8.1.0
 django-rest-passwordreset==1.1.0
+django-filter==2.4.0

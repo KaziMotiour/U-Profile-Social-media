@@ -12,6 +12,7 @@ from django.contrib.auth import get_user_model
 from UserPost.models import UserPost, Post
 User= get_user_model()
 
+# Create your views here.
 
 
 class EditUserProfile(RetrieveUpdateAPIView):

@@ -4,6 +4,16 @@ from django.contrib.auth import  get_user_model
 User= get_user_model()
 from .models import UserPost, PostComment
 from user_profile.models import User_profile, PostBookmark
+from django_filters import rest_framework as filters
+
+
+class ProductFilter(filters.FilterSet):
+    # min_price = django_filters.NumberFilter(name="price", lookup_expr='gte')
+    # max_price = django_filters.NumberFilter(name="price", lookup_expr='lte')
+    class Meta:
+        model = UserPost
+        fields = ['user__username']    
+
 
 # Post User deatails
 class PostUserDetailsSerializers(serializers.ModelSerializer):
