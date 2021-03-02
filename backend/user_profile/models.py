@@ -47,9 +47,9 @@ class UserFollow(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='follow')
     following = models.ManyToManyField(User, related_name="UserFollowing", blank=True)
     followed_by = models.ManyToManyField(User, related_name='UserFollowed_by',  blank=True)
-
+    
     objects = UserFollowManager()
-
+    
     def __str__(self):
         return str(self.user)
 

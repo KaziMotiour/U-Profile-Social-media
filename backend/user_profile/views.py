@@ -10,7 +10,7 @@ from .serializers import UserProfile, UserSerializer, PostBookmarkSerializer, Po
 from .models import User_profile, PostBookmark, UserFollow
 from django.contrib.auth import get_user_model
 from UserPost.models import UserPost, Post
-User= get_user_model()
+User = get_user_model()
 
 # Create your views here.
 

@@ -1,0 +1,40 @@
+.widgets {
+  padding: 20px;
+}
+.widgets_input {
+  display: flex;
+  align-items: center;
+  background-color: var(--twitter-background);
+  padding: 10px;
+  border-radius: 20px;
+  margin-top: 10px;
+  margin-left: 20px;
+}
+
+.widgets_input input {
+  border: none;
+  background-color: var(--twitter-background);
+  width: 90%;
+  height: 30px;
+}
+
+.widgets_widget {
+  margin-top: 15px;
+  margin-left: 20px;
+  padding: 20px;
+  background-color: #f5f8fa;
+  border-radius: 20px;
+}
+
+.widgets::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and firefox */
+.widgets {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.widgets_input input:focus{
+  outline: none;
+}

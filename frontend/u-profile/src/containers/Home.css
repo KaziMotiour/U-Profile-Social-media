@@ -1,0 +1,35 @@
+.home {
+    display: flex;
+    height: 100vh;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 10px;
+  }
+
+.slider{
+    flex:1;
+}
+  
+.feed{
+    flex:2;
+}
+  
+.widgets{
+    flex:1;
+}
+@media screen and (max-width: 500px) {
+ 
+    .slider{
+        display: none;
+    }
+    .widgets{
+        display: none;
+    }
+  }
+
+  @media screen and (max-width: 992px) {
+ 
+    .slider{
+        display: none;
+    }
+  }

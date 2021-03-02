@@ -112,8 +112,18 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_POST = 587
 EMAIL_HOST_USER = 'kmatiour30@gmail.com'
-EMAIL_HOST_PASSWORD = "behjihmbzpqtyphq"
+EMAIL_HOST_PASSWORD = 'matiour124'
 EMAIL_USE_TLS = True
+
+# SEND_GRID_API_KEY = ''
+# EMAIL_HOST = 'smtp.sendgrid.net'
+# EMAIL_HOST_USER = 'kmatiour30@gmail.com' # ''
+# EMAIL_HOST_PASSWORD = 'sxpnlgflndcbxsel' #'' #sendgrid email
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = 'kmatiour30@gmail.com' #sendgrig email
+# ACCOUNT_EMAIL_SUBJECT_PREFIX = 'Contact email from CAREERS'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
 

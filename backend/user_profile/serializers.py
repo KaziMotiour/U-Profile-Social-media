@@ -8,7 +8,7 @@ from UserPost.serializers import PostSerializer
     
 User= get_user_model()
 
-# for post user
+# for post user 
 class PostUserDetailsSerializer(serializers.ModelSerializer):
         full_name = serializers.SerializerMethodField(read_only=True)
         profilePic = serializers.SerializerMethodField(read_only=True)
@@ -17,7 +17,8 @@ class PostUserDetailsSerializer(serializers.ModelSerializer):
             fields=['id', 'username', 'full_name', 'profilePic']
 
         def get_full_name(self, obj):
-            user = User_profile.objects.filter(user=obj).first()
+            print(obj, 'obj')
+            user = User_profile.objects.filter(user__username=obj.username).first()
             return str(user.first_name)+' '+ str(user.Last_name)
 
         def get_profilePic(self, obj):
@@ -128,6 +129,7 @@ class UserSerializer(serializers.ModelSerializer):
             fields=['id', 'username', 'full_name','profile', 'posts']
 
         def get_full_name(self, obj):
+            print(obj)
             user = User_profile.objects.filter(user=obj).first()
             return str(user.first_name)+' '+ str(user.Last_name)
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -24,10 +25,10 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(2),
     },
     title: {
-      display: 'none',
       [theme.breakpoints.up('sm')]: {
         display: 'block',
       },
+      paddingRight:'10px'
     },
     search: {
       position: 'relative',
@@ -77,6 +78,15 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         display: 'none',
       },
+    },
+    large: {
+      width: theme.spacing(6),
+      height: theme.spacing(6),
+    },
+    small: {
+      marginTop:'4px',
+      width: theme.spacing(5),
+      height: theme.spacing(5),
     },
   }),
 );
@@ -167,16 +177,8 @@ export default function Nav() {
     <div className={classes.grow}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
-            Material-UI
+          <Typography className={classes.title} variant="h6">
+            uProfile
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -211,10 +213,13 @@ export default function Nav() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
+              {/* <AccountCircle /> */}
+              <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" className={classes.large} />
             </IconButton>
           </div>
+
           <div className={classes.sectionMobile}>
+          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" className={classes.small} />
             <IconButton
               aria-label="show more"
               aria-controls={mobileMenuId}

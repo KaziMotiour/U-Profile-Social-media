@@ -1,17 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
-import Navber from './component/Navber'
-import Nav from './component/Nav'
+import React from "react";
+import Layout from './component/Layout'
+import {BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import "./App.css";
+import Home from './containers/Home'
+import Box from '@material-ui/core/Box'
+import Fab from '@material-ui/core/Fab'
 
 function App() {
   return (
     <div className="App">
       <Router>
-          <Route path="/nav" component={Nav} />
-          {/* <Route exect path="/" component={Navber} /> */}
-      </Router> 
-      <h1>Hello</h1>
+        <Layout>
+          <Route exect path='/' component={Home}/>
+        </Layout>
+      </Router>
+      
       
     </div>
   );

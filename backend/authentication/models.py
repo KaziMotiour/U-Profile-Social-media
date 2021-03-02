@@ -53,19 +53,46 @@ class NewUsers(AbstractBaseUser, PermissionsMixin):
 
 
 #singal for send email with token to reset password
+# @receiver(reset_password_token_created)
+# def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+
+#     email_plaintext_message = "You're receiving this email because you requested a password reset for your user account at U-profile.\n\n Please copy the token value to reset password. \n\n Token = {} \n\n Thanks for using our site! \n\n The U-profile team.".format(reset_password_token.key)
+
+#     print('hello')
+
+#     send_mail(
+#     'Subject',
+#     'Message.',
+#     'U-profile Team',
+#     ['kmotiour30@gmail.com'],
+#     )
+
+
+    # send_mail(
+    #     # title:
+    #     "Password Reset for {title}".format(title="U-profile"),
+    #     # message:
+    #     email_plaintext_message,
+    #     # from:
+    #     "U-profile Team",
+    #     # to:
+    #     [reset_password_token.user.email]
+    # )
+
+
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
 
-    email_plaintext_message = "You're receiving this email because you requested a password reset for your user account at U-profile.\n\n Please copy the token value to reset password. \n\n Token = {} \n\n Thanks for using our site! \n\n The U-profile team.".format(reset_password_token.key)
-
+    email_plaintext_message = "{}?token={}".format(reverse('password_reset:reset-password-request'), reset_password_token.key)
 
     send_mail(
         # title:
-        "Password Reset for {title}".format(title="U-profile"),
+        "Password Reset for {title}".format(title="Some website title"),
         # message:
         email_plaintext_message,
         # from:
-        "U-profile Team",
+        "noreply@somehost.local",
         # to:
         [reset_password_token.user.email]
     )
+
