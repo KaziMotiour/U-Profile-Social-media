@@ -1,0 +1,38 @@
+
+.login{
+    display: flex;
+    flex-direction: column;
+
+}
+.login-body{
+    display: flex;
+}
+.logo{
+    flex:1;
+    margin-top: 20px;
+}
+.form{
+    flex:1;
+
+}
+.logo h1{
+    margin:auto;
+}
+.logo img{
+    margin-top: 40px;
+}
+.login .tag{
+    margin: auto;
+    margin-top: 10px;
+    color: #ffffff;
+    height: auto;
+    padding: 20px 40px;
+    background-color: rgb(63, 81, 181);
+    border-radius: 50px;
+}
+
+@media screen and (max-width: 664px) {
+    .logo{
+     display: none;
+    }
+  }

@@ -1,0 +1,13 @@
+.login{
+    display: flex;
+    flex-direction: column;
+}
+.login .tag{
+    margin: auto;
+    margin-top: 30px;
+    color: #ffffff;
+    height: auto;
+    padding: 20px 40px;
+    background-color: rgb(63, 81, 181);
+    border-radius: 50px;
+}
