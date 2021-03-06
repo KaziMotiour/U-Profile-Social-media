@@ -56,3 +56,14 @@
 .tweetBox-imageInput:focus{
   outline: none;
 }
+.Label{
+  width: 20%;
+  display: inline-block;
+  background-color: rgb(63, 81, 181);
+  color: white;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}

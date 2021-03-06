@@ -46,11 +46,13 @@ INSTALLED_APPS = [
     'UserPost',
     'notification',
     'django_rest_passwordreset',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -131,6 +133,14 @@ EMAIL_USE_TLS = True
 AUTH_USER_MODEL ='authentication.newUsers'
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000" ,
+    "http://localhost:3001" ,
+    "http://localhost:3002" ,
+]
+
 
 LANGUAGE_CODE = 'en-us'
 

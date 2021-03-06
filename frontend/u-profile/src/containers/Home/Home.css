@@ -33,3 +33,8 @@
         display: none;
     }
   }
+
+.flex-row{
+    display: flex;
+    flex-direction: column;
+}

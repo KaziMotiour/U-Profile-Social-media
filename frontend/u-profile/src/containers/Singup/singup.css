@@ -31,6 +31,9 @@
     border-radius: 50px;
 }
 
+
+
+
 @media screen and (max-width: 664px) {
     .logo{
      display: none;

@@ -23,7 +23,7 @@
 }
 .login .tag{
     margin: auto;
-    margin-top: 30px;
+    margin-top: 20px;
     color: #ffffff;
     height: auto;
     padding: 20px 40px;
@@ -31,6 +31,11 @@
     border-radius: 50px;
 }
 
+.allert{
+    width: 60%;
+    margin: auto;
+    margin-top: 10px;
+}
 @media screen and (max-width: 664px) {
     .logo{
      display: none;

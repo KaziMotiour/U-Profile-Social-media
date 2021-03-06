@@ -9,12 +9,16 @@ import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
+import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import Link from '@material-ui/core/Link';
+import {useDispatch, useSelector} from 'react-redux'
+import { useHistory, withRouter, NavLink } from "react-router-dom";
+import {auth_logout} from '../store/actions/Auth'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -91,8 +95,11 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function Nav() {
+function Nav() {
   const classes = useStyles();
+  const history = useHistory()
+  const dispatch  = useDispatch()
+  const accessToken = useSelector(state => state.auth.access_token)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -116,8 +123,25 @@ export default function Nav() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const HandleLogout = ()=>{
+    
+    dispatch(auth_logout())
+
+    goToLogin()
+  }
+  async function goToLogin (){
+    await new Promise((resolve) => setTimeout(() => { 
+        const access_token = localStorage.getItem('access_token') 
+        if(!access_token){
+            history.push('/login')
+        }
+      
+    }, 1000))
+
+}
+
   const menuId = 'primary-search-account-menu';
-  const renderMenu = (
+  const  renderMenu = (
     <Menu
       anchorEl={anchorEl}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -129,6 +153,7 @@ export default function Nav() {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}><p onClick={HandleLogout}>LogOut</p></MenuItem>
     </Menu>
   );
 
@@ -170,6 +195,14 @@ export default function Nav() {
         </IconButton>
         <p>Profile</p>
       </MenuItem>
+      <MenuItem onClick={HandleLogout}>
+        <IconButton aria-label="show 11 new notifications" color="inherit">
+          <Badge color="secondary">
+            <MeetingRoomIcon />
+          </Badge>
+        </IconButton>
+        <p>Logout</p>
+      </MenuItem>
     </Menu>
   );
 
@@ -178,7 +211,8 @@ export default function Nav() {
       <AppBar position="static">
         <Toolbar>
           <Typography className={classes.title} variant="h6">
-            uProfile
+           <Link component={NavLink}
+            underline="none"  to='/' style={{color:'white'}}> uProfile </Link>
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -237,3 +271,4 @@ export default function Nav() {
     </div>
   );
 }
+export default withRouter(Nav);
