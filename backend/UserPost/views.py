@@ -56,23 +56,21 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
     
 @api_view(['GET','POST'])
 @permission_classes([IsAuthenticated])
-def ReTweetView(request, post_id):
+def SharePostView(request, post_id):
     
     serilizer_data = SharePostSerializer(data=request.data)
     if serilizer_data.is_valid():
-        print(serilizer_data.data.get('sharePostContent'))
-       
-    user_content = serilizer_data.data.get('sharePostContent')
-    user = request.user
-    post = get_object_or_404(UserPost, pk=post_id)
-    if post:
-        RePost = UserPost.objects.RePost(user, post, user_content)
-        if RePost:
-            return Response({"RePost": "True"})
+        user_content = serilizer_data.data.get('sharePostContent')
+        user = request.user
+        post = get_object_or_404(UserPost, pk=post_id)
+        if post:
+            RePost = UserPost.objects.RePost(user, post, user_content)
+            if RePost:
+                return Response({"RePost": "True"})
+            else:
+                return Response({"RePost": "False"})
         else:
-            return Response({"RePost": "False"})
-    else:
-        return Response({"post": "Dosn't exist"})
+            return Response({"post": "Dosn't exist"})
 
 
 @api_view(['GET'])
