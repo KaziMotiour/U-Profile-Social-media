@@ -7,9 +7,11 @@ import {createStore, applyMiddleware, compose, combineReducers} from 'redux'
 import {Provider} from 'react-redux'
 import thunk from 'redux-thunk'
 import AuthReducer from './store/reducers/AuthReducer'
+import UserInfo from './store/reducers/UserProfileReducer'
 
 const RootReducer = combineReducers({
-  auth:AuthReducer
+  auth:AuthReducer,
+  user:UserInfo
 })
 
 

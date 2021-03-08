@@ -21,9 +21,14 @@ class EditUserProfile(RetrieveUpdateAPIView):
     queryset = User_profile.objects.all()
 
     
-class get_user(ListAPIView):
-    serializer_class = UserProfile
-    queryset = User_profile.objects.all()
+class GetLoggedinUser(ListAPIView):
+    permission_classes=[IsAuthenticated]
+    serializer_class = PostUserDetailsSerializer
+    def get_queryset(self):
+        user = self.request.user
+        print(user.username)
+        qs = User.objects.filter(username__icontains=self.request.user.username)
+        return qs
 
 
 

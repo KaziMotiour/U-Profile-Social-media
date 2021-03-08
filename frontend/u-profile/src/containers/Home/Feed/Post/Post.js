@@ -46,6 +46,10 @@ const options = [
   'friends',
   'only me',
 ];
+const postOptions = [
+  'Edit',
+  'Delete',
+];
 // end dropdown style
 
 
@@ -56,10 +60,16 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
   // drop down
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorElPost, setAnchorElPost] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(1);
-
+  const [selectedPostEditIndex, setSelectedPostEditIndex] = React.useState(1);
+  console.log(selectedPostEditIndex);
   const handleClickListItem = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const handlePostClickListItem = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElPost(event.currentTarget);
   };
 
   const handleMenuItemClick = (event: React.MouseEvent<HTMLElement>, index: number) => {
@@ -67,8 +77,17 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
     setAnchorEl(null);
   };
 
+  const handlePostEditItemClick = (event: React.MouseEvent<HTMLElement>, index: number) => {
+    // console.log(index);
+    setSelectedPostEditIndex(index);
+    setAnchorElPost(null);
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleClosePostItems = () => {
+    setAnchorElPost(null);
   };
   // end dropdown
   const [commentOpen, setCommentOpen] = useState(false)
@@ -84,7 +103,9 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
     <div className="post" ref={ref}>
 
       <div className="particular-post">
+        {/* Post header part begain */}
         <div className='post-header'>
+        
         <div className="post_avatar">
           <Avatar src={avatar} className={classes.large}/>
         </div>
@@ -95,8 +116,38 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
 
             </h3 >
               time
+        
+        </div>
+        <div style={{marginLeft:'auto'}}>
+         <h2 aria-haspopup="true"
+          aria-controls="lock-menu"
+          aria-label="when device is locked"
+          onClick={handlePostClickListItem}  style={{cursor:'pointer'}}> ... </h2>
+          
+          {/* {options[selectedIndex]} */}
+      <Menu
+        id="lock-menu"
+        anchorEl={anchorElPost}
+        keepMounted
+        open={Boolean(anchorElPost)}
+        onClose={handleClosePostItems}
+      >
+        {postOptions.map((option, index) => (
+          <MenuItem
+            key={option}
+            // disabled={index === 0}
+            selected={index === selectedPostEditIndex}
+            onClick={(event) => handlePostEditItemClick(event, index)}
+          >
+            {option}
+          </MenuItem>
+        ))}
+      </Menu>
         </div>
         </div>
+          {/* Post header part end */}
+        
+        {/* Post body part begain */}
         <div className="post_body">    
           <div className="post__headerDescription">
             <p> {text} bla bla lorem is a bad boay  bla bla lorem is a bad boay  bla bla lorem is a bad boay bla bla lorem is a bad boay</p>
@@ -105,7 +156,9 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
           <img style={{width:'90%', height:"350px", marginLeft:'20px'}}  src={image} />
               
         </div>
+        {/* Post body part end */}
 
+          {/* Post footer part begain */}
           <div className="post_footer">
           <div className="likes">
                 <FavoriteIcon fontSize="samll"/>
@@ -113,13 +166,14 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
               <div className="comments">
                 <ChatBubbleOutlineIcon fontSize="samll" style={{cursor:'pointer'}} onClick={commentControl}/>
               </div>
-              <div className="pivracy">
+              {/* privracy begain */}
+              <div className="pivracy"> 
               <PublicIcon fontSize="samll" aria-haspopup="true"
           aria-controls="lock-menu"
           aria-label="when device is locked"
           onClick={handleClickListItem}  style={{cursor:'pointer'}}
-          
           />
+
           {options[selectedIndex]}
       <Menu
         id="lock-menu"
@@ -140,10 +194,13 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
         ))}
       </Menu>
               </div>
+              {/* privracy end */}
               <div className="shared">
                 <ShareIcon fontSize="default"/>
                 </div>
           </div>
+           {/* Post footer part end */}
+          
           {/* Comment section */}
           {commentOpen &&
         <div className='comment-section'> 
@@ -185,6 +242,7 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
 
      {/* shared picter */}
       <div className="particular-post">
+        {/* Post header part begain */}
         <div className='post-header'>
         <div className="post_avatar">
           <Avatar src={avatar}/>
@@ -197,7 +255,38 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
             </h3 >
               time
         </div>
+        {/* post edit options begain */}
+        <div style={{marginLeft:'auto'}}>
+         <h2 aria-haspopup="true"
+          aria-controls="lock-menu"
+          aria-label="when device is locked"
+          onClick={handlePostClickListItem}  style={{cursor:'pointer'}}> ... </h2>
+          
+          {/* {options[selectedIndex]} */}
+      <Menu
+        id="lock-menu"
+        anchorEl={anchorElPost}
+        keepMounted
+        open={Boolean(anchorElPost)}
+        onClose={handleClosePostItems}
+      >
+        {postOptions.map((option, index) => (
+          <MenuItem
+            key={option}
+            // disabled={index === 0}
+            selected={index === selectedPostEditIndex}
+            onClick={(event) => handlePostEditItemClick(event, index)}
+          >
+            {option}
+          </MenuItem>
+        ))}
+      </Menu>
+      </div>
+      {/* post edit options ended */}
+
         </div>
+         {/* Post header part ended */}
+         {/* Post body part begain */}
         <div className="post_body">    
           <div className="post__headerDescription">
             <p> {text} bla bla lorem is a bad boay  bla bla lorem is a bad boay  bla bla lorem is a bad boay bla bla lorem is a bad boay</p>
@@ -236,7 +325,9 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
               
        
         </div>
+        {/* Post body part ended */}
 
+        {/* Post fotter part begain */}
           <div className="post_footer">
               <div className="likes">
                 <FavoriteIcon fontSize="samll"/>
@@ -244,7 +335,8 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
               <div className="comments">
               <ChatBubbleOutlineIcon fontSize="samll" style={{cursor:'pointer'}} onClick={commentControl}/>
               </div>
-              <div className="pivracy">
+               {/* Post privacy part begain */}
+              <div className="privacy">
                
                 <PublicIcon fontSize="samll" aria-haspopup="true"
           aria-controls="lock-menu"
@@ -271,11 +363,14 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
           </MenuItem>
         ))}
       </Menu>
-              </div>
+      </div>
+      {/* Post privacy part  */}
               <div className="shared">
                 <ShareIcon fontSize="default"/>
               </div>
           </div>
+          {/* Post body part ended */}
+
           {/* Comment section */}
           {commentOpen &&
         <div className='comment-section'> 

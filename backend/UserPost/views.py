@@ -45,7 +45,7 @@ class PostListView(ListAPIView):
         users = self.request.user
         follow_user = UserFollow.objects.get(user=users)
         print(follow_user.following.all())
-        qs = UserPost.objects.filter(Q(user__in = follow_user.following.all()) | Q(user=users))
+        qs = UserPost.objects.filter(Q(user__in = follow_user.following.all()) | Q(user=users) | Q(privacy='public')).exclude(privacy='onlyme')
         return  qs 
 
 class PostDetailView(RetrieveUpdateDestroyAPIView): 

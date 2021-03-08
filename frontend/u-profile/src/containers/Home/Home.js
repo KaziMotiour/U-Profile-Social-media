@@ -1,12 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Sidebar from "./sidebar/Sidebar";
 import Feed from "./Feed/Feed";
 import Widgets from "./widgets/Widgets";
 import Nav from '../../component/Nav'
 import './Home.css'
+import {useDispatch, useSelector} from 'react-redux'
 
 
-function home(props) {
+function Home(props) {
+
+    const loggedinUser = useSelector(state => state.user.loggedinUserInfo)
+    console.log(loggedinUser.id, loggedinUser.username);
     return (
         <div className='flex-row'>
             <div>
@@ -30,4 +34,4 @@ function home(props) {
     )
 }
 
-export default home
+export default Home

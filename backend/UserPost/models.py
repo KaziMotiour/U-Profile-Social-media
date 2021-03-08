@@ -115,11 +115,23 @@ class UserPostManager(models.Manager):
 
 
 class UserPost(models.Model):
+    post_privacy = [
+    ('public', 'public'),
+    ('friends', 'friends'),
+    ('onlyme', 'onlyme'),
+]
     parent = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)
     content = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to=upload_to, blank=True)
     likes = models.ManyToManyField(User, blank=True, related_name='post_like')
+    privacy = models.CharField(
+        max_length=20,
+        choices=post_privacy,
+        default='friends',
+        null=True,
+        blank=True
+    )
     timestamp = models.DateTimeField(auto_now_add=True)
 
     objects = UserPostManager()
@@ -149,6 +161,7 @@ class PostComment(models.Model):
 
 @receiver([post_save, post_delete], sender=PostComment)
 def create_UserFollow(sender, instance, created=None, **kwargs):
+    # print(instance.post,  'instalce ')
     if created:
         comment = instance
         user = comment.post.user
@@ -156,15 +169,6 @@ def create_UserFollow(sender, instance, created=None, **kwargs):
         post = comment.post
         notify = Notification(post=post, sender=sender, user=user, Notification_type=2, text_preview=comment.comment[:25])
         notify.save()
-    elif created == None:
-        comment = instance
-        user = comment.post.user
-        sender = comment.user
-        post = comment.post
-        notify = Notification.objects.filter(post=post, sender=sender, user=user, Notification_type=2, text_preview=comment.comment[:25]).first()
-        if notify:
-            notify.delete()
-        notify.delete()
 
 @receiver(m2m_changed, sender=UserPost.likes.through)
 def add_like_notification(sender, instance, action,pk_set, **kwargs):

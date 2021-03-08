@@ -73,7 +73,7 @@ class PostSerializer(serializers.ModelSerializer):
     postComment = PostCommentSerializer(many=True, read_only=True)
     class Meta:
         model = UserPost
-        fields = ['id','parent', 'user', 'content', 'image', 'timestamp', 'is_retweet', 'is_saved', 'likes', 'sharePostContent','postComment']
+        fields = ['id','parent', 'user', 'content', 'image', 'timestamp', 'is_retweet', 'is_saved', 'likes', 'privacy', 'sharePostContent','postComment']
 
 
     def get_likes(self, obj):

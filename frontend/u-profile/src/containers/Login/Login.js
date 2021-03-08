@@ -21,7 +21,6 @@ import CloseIcon from '@material-ui/icons/Close';
 
 // end allert 
 
-
 import './login.css'
 import {UserLogin} from '../../store/actions/Auth'
 import {useHistory, useParams } from 'react-router-dom';

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Layout from './component/Layout'
 import {BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import "./App.css";
@@ -11,11 +11,17 @@ import Fab from '@material-ui/core/Fab'
 import Nav from './component/Nav'
 import {useDispatch, useSelector} from 'react-redux'
 import {AuthenticRoute, LogedInRoute} from './PrivateRoute'
+import {LoggedUserInfo} from './store/actions/UserProfile'
 
 function App() {
   const accessToken = useSelector(state => state.auth.access_token)
-  console.log(accessToken);
-  console.log('dd');
+  const dispatch = useDispatch()
+  useEffect(() =>{
+    
+    const config = { headers: {'Authorization': "Bearer " + localStorage.getItem('access_token')}}
+    console.log(config);
+    dispatch(LoggedUserInfo(config))
+  },[])
   return (
     <div className="App">
       <Router>

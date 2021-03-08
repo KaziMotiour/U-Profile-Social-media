@@ -30,7 +30,7 @@ export const auth_registratin = (confirmation) =>(
   console.log(confirmation),
   {
   type: AUTH_REGISTRATION,
-  confirmation: confirmation
+  confirmation: confirmation 
 
 })
 

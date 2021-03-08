@@ -63,9 +63,9 @@ function TweetBox() {
         <input type="file" id="upload" hidden onChange={onChangePicture}/>
         <label for="upload"  className="Label">Choose file</label>
         {/* Cross icont on image */}
-        <div style={{marginLeft:'auto', marginRight:'80px', marginTop:'40px', zIndex:'1'}}>{picture && <CancelIcon style={{color:'rgb(161, 166, 162)', cursor:'pointer',}} onClick={HandleCancleImage} className={classes.large} />}</div>
+        <div style={{marginLeft:'auto', marginRight:'70px', marginTop:'30px', zIndex:'1'}}>{picture && <CancelIcon style={{color:'rgb(161, 166, 162)', cursor:'pointer',}} onClick={HandleCancleImage} className={classes.large} />}</div>
         {/* Show load  image */}
-        {picture && <img src={imgData}  style={{width:'80%', maxHeight:'400px', margin:'auto', borderRadius:'5%', marginTop:'-50px'}}/>}
+        {picture && <img src={imgData}  style={{width:'80%', maxHeight:'400px', margin:'auto', borderRadius:'5%', marginTop:'-60px'}}/>}
         
         <div>
           <Button
