@@ -126,9 +126,9 @@ function Nav() {
   const HandleLogout = ()=>{
     
     dispatch(auth_logout())
-
     goToLogin()
   }
+
   async function goToLogin (){
     await new Promise((resolve) => setTimeout(() => { 
         const access_token = localStorage.getItem('access_token') 
@@ -137,8 +137,7 @@ function Nav() {
         }
       
     }, 1000))
-
-}
+  }
 
   const menuId = 'primary-search-account-menu';
   const  renderMenu = (

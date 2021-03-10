@@ -140,7 +140,7 @@ async function showAlert (){
             </IconButton>
           }
         >
-          You have successfully complete you'r registration.Try to login you'r account
+          {cmMessage}
         </Alert>
       </Collapse>
           </div>

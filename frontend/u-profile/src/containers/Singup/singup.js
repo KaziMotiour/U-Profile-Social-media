@@ -84,10 +84,10 @@ export default function Singup() {
   async function goToLogin (){
     await new Promise((resolve) => setTimeout(() => { 
         if(regConfirmation){
-          history.push({
-            pathname: '/login',
-            state: { detail: regConfirmation }
-          })
+            history.push({
+              pathname: '/login',
+              state: { detail: "You have successfully complete you'r registration.Try to login you'r account" }
+            })
         }
       
     }, 1000))

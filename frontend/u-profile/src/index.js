@@ -8,10 +8,12 @@ import {Provider} from 'react-redux'
 import thunk from 'redux-thunk'
 import AuthReducer from './store/reducers/AuthReducer'
 import UserInfo from './store/reducers/UserProfileReducer'
+import PostReducer from './store/reducers/PostReducer'
 
 const RootReducer = combineReducers({
   auth:AuthReducer,
-  user:UserInfo
+  user:UserInfo,
+  post:PostReducer,
 })
 
 

@@ -2,6 +2,9 @@ import { Avatar, Button } from "@material-ui/core";
 import React,{useState, useEffect} from "react";
 import CancelIcon from '@material-ui/icons/Cancel';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
+import {useHistory} from 'react-router-dom'
+import {CreatePost} from '../../../../store/actions/PostCrud'
+import {useDispatch} from 'react-redux'
 import "./TweetBox.css";
 
 
@@ -21,14 +24,15 @@ const useStyles = makeStyles((theme: Theme) =>
 function TweetBox() {
 
   const classes = useStyles();
-  const [tweetMessage, setTweetMessage] = useState('')
+  const history = useHistory()
+  const dispatch = useDispatch()
+  const [postContent, setPostContent] = useState('')
   const [tweetImage, setTweetImage]=useState('')
   const [picture, setPicture] = useState(null);
   const [imgData, setImgData] = useState(null);
 
   const onChangePicture = e => {
     if (e.target.files[0]) {
-      console.log("picture: ", e.target.files);
       setPicture(e.target.files[0]);
       const reader = new FileReader();
       reader.addEventListener("load", () => {
@@ -37,7 +41,6 @@ function TweetBox() {
       reader.readAsDataURL(e.target.files[0]);
     }
   };
-  console.log(picture, imgData );
   function sendTweet(e){
     e.preventDefault()
 
@@ -47,6 +50,40 @@ function TweetBox() {
     setImgData(null)
     setPicture(null)
   }
+
+  const HandelCreaatePost = (e) =>{
+    e.preventDefault()
+    
+    // checkAuthenticatin()
+    const config = { headers: { 
+      'Content-Type':'application/json',
+      'Authorization': "Bearer " + localStorage.getItem('access_token')
+    }}
+    let formData = new FormData();
+    formData.append("content", postContent);
+    if(picture){
+      formData.append("image", picture);
+    }
+    dispatch(CreatePost(formData, config))
+
+    setPicture(null)
+    setImgData(null)
+    setPostContent('')
+  }
+  
+  const checkAuthenticatin =()=>{
+    const access_token = localStorage.getItem('access_token')
+    if(!access_token){
+      history.push({
+        pathname: '/login',
+        state: { detail: 'Authentication failed, Try to login' }
+      })
+    }
+  }
+
+
+
+
   return (
     <div className="TweetBox">
       <form>
@@ -55,8 +92,8 @@ function TweetBox() {
           <textarea
             className="textarea"
             placeholder="What's happening ?"
-            value={tweetMessage}
-            onChange={(e) => setTweetMessage(e.target.value)}
+            value={postContent}
+            onChange={(e) => setPostContent(e.target.value)}
           ></textarea>
         </div>
 
@@ -73,7 +110,7 @@ function TweetBox() {
             variant="contained"
             className="TweetBox--Button"
             color="primary"
-            onClick={sendTweet}
+            onClick={HandelCreaatePost}
           >
             Tweet
           </Button>

@@ -11,15 +11,15 @@ import Fab from '@material-ui/core/Fab'
 import Nav from './component/Nav'
 import {useDispatch, useSelector} from 'react-redux'
 import {AuthenticRoute, LogedInRoute} from './PrivateRoute'
+import {VerifyJwtToken} from './store/actions/Auth'
 import {LoggedUserInfo} from './store/actions/UserProfile'
 
 function App() {
   const accessToken = useSelector(state => state.auth.access_token)
   const dispatch = useDispatch()
   useEffect(() =>{
-    
+    dispatch(VerifyJwtToken())
     const config = { headers: {'Authorization': "Bearer " + localStorage.getItem('access_token')}}
-    console.log(config);
     dispatch(LoggedUserInfo(config))
   },[])
   return (

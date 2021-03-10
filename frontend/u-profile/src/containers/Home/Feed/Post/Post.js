@@ -1,3 +1,4 @@
+import React, {forwardRef, useState, useEffect} from "react";
 import { Avatar } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';   
 import  VerifiedUserIcon  from "@material-ui/icons/VerifiedUser";
@@ -8,7 +9,7 @@ import RepeatIcon from '@material-ui/icons/Repeat';
 import ShareIcon from '@material-ui/icons/Share';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
-import React, {forwardRef, useState} from "react";
+
 // drop down import
 import TextField from '@material-ui/core/TextField';
 import List from '@material-ui/core/List';
@@ -16,8 +17,9 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-//end drop down import
 
+//end drop down import
+import {GetPostList} from '../../../../store/actions/PostCrud'
 import "./Post.css";
 
 // dropdown style
@@ -54,7 +56,7 @@ const postOptions = [
 
 
 
-const Post  = forwardRef(({ displayName, username, varified, text, image, avatar }, ref) =>{
+const Post  = forwardRef(({ user, parent, content, image, privacy, is_retweet, is_saved, likes, postComment, timestamp, is_liked  }, ref) =>{
 
 
   // drop down
@@ -63,7 +65,10 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
   const [anchorElPost, setAnchorElPost] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(1);
   const [selectedPostEditIndex, setSelectedPostEditIndex] = React.useState(1);
-  console.log(selectedPostEditIndex);
+
+ 
+
+
   const handleClickListItem = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -97,25 +102,27 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
     setCommentOpen(!commentOpen)
     console.log(commentOpen);
   }
-
+ 
   return (
   
     <div className="post" ref={ref}>
-
+      {!parent ? (
+        
       <div className="particular-post">
         {/* Post header part begain */}
         <div className='post-header'>
         
         <div className="post_avatar">
-          <Avatar src={avatar} className={classes.large}/>
+          <Avatar src={'http://127.0.0.1:8000'+user.profilePic} className={classes.large}/>
         </div>
       
         <div className="post__headerText">
-            <h3>{displayName} kazi motiour
-                {varified && <VerifiedUserIcon className="post_badge" /> }<span className="post_username">@{username} motiour</span> 
+            <h3> {user.full_name}
+                {/* {varified && <VerifiedUserIcon className="post_badge" /> } */}
+                <span className="post_username"> @{user.username} </span> 
 
             </h3 >
-              time
+            {timestamp.substr(0,10)} {timestamp.substr(10,6)}
         
         </div>
         <div style={{marginLeft:'auto'}}>
@@ -150,10 +157,10 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
         {/* Post body part begain */}
         <div className="post_body">    
           <div className="post__headerDescription">
-            <p> {text} bla bla lorem is a bad boay  bla bla lorem is a bad boay  bla bla lorem is a bad boay bla bla lorem is a bad boay</p>
-          
+            <p> {content} </p>
+            
           </div>
-          <img style={{width:'90%', height:"350px", marginLeft:'20px'}}  src={image} />
+          {image && <img style={{width:'80%', height:"350px", marginLeft:'30px'}}  src={image} /> }
               
         </div>
         {/* Post body part end */}
@@ -161,20 +168,20 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
           {/* Post footer part begain */}
           <div className="post_footer">
           <div className="likes">
-                <FavoriteIcon fontSize="samll"/>
+            {is_liked ?<FavoriteIcon fontSize="samll" style={{color:'blue'}}/> : <FavoriteIcon fontSize="samll"/> } &nbsp; {likes}
               </div>
               <div className="comments">
                 <ChatBubbleOutlineIcon fontSize="samll" style={{cursor:'pointer'}} onClick={commentControl}/>
               </div>
               {/* privracy begain */}
-              <div className="pivracy"> 
+              <div className="privacy"> 
               <PublicIcon fontSize="samll" aria-haspopup="true"
           aria-controls="lock-menu"
           aria-label="when device is locked"
           onClick={handleClickListItem}  style={{cursor:'pointer'}}
           />
 
-          {options[selectedIndex]}
+          {privacy}
       <Menu
         id="lock-menu"
         anchorEl={anchorEl}
@@ -207,7 +214,7 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
         <h2 style={{marginLeft:'15px'}}>Commnets</h2>
           <div className='comment'>
           <div className='comment-header'>
-            <Avatar src={avatar} className={classes.small}/> 
+            <Avatar src='' className={classes.small}/> 
           </div> 
           <div className='comment-body'>
             <h4>kazi motiour</h4>
@@ -217,7 +224,7 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
 
           <div className='comment'>
           <div className='comment-header'>
-            <Avatar src={avatar} className={classes.small}/> 
+            <Avatar src='' className={classes.small}/> 
           </div> 
           <div className='comment-body'>
             <h4>kazi motiour</h4>
@@ -225,7 +232,7 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
           </div>
           </div>
           <div className="comment-input">
-          <Avatar src={avatar} className={classes.small} style={{marginRight:'10px'}}/> 
+          <Avatar src={'http://127.0.0.1:8000'+user.profilePic} className={classes.small} style={{marginRight:'10px'}}/> 
           <TextField className={classes.text}  placeholder="What's you'r mind ?"/>
           </div>
 
@@ -236,24 +243,21 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
         {/* Comment section end*/}
 
       </div>
-
-
-
-
-     {/* shared picter */}
+      ):(
       <div className="particular-post">
         {/* Post header part begain */}
         <div className='post-header'>
         <div className="post_avatar">
-          <Avatar src={avatar}/>
+          <Avatar src={'http://127.0.0.1:8000'+user.profilePic}/>
         </div>
       
         <div className="post__headerText">
-            <h3>{displayName} kazi motiour
-                {varified && <VerifiedUserIcon className="post_badge" /> }<span className="post_username">  Shared </span> 
-               Shafin's post
+            <h3>{user.full_name}
+                {/* {varified && <VerifiedUserIcon className="post_badge" /> } */}
+                <span className="post_username"> share's </span> 
+               {parent.user.username} post
             </h3 >
-              time
+            {timestamp.substr(0,10)} {timestamp.substr(10,6)}
         </div>
         {/* post edit options begain */}
         <div style={{marginLeft:'auto'}}>
@@ -289,31 +293,34 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
          {/* Post body part begain */}
         <div className="post_body">    
           <div className="post__headerDescription">
-            <p> {text} bla bla lorem is a bad boay  bla bla lorem is a bad boay  bla bla lorem is a bad boay bla bla lorem is a bad boay</p>
+            <p> 
+               {content}</p>
           </div>
 
           {/* parent post  */}
-          <div style={{width:'100%',  height:'480px'}}> 
+          <div style={{width:'100%',  height:'auto'}}> 
           <div className="particular-shared-post">
         <div className='post-header'>
         <div className="post_avatar">
-          <Avatar src={avatar}/>
+          <Avatar src={'http://127.0.0.1:8000'+parent.user.profilePic}/>
         </div>
       
         <div className="post__headerText">
-            <h3>{displayName} kazi motiour
-                {varified && <VerifiedUserIcon className="post_badge" /> }<span className="post_username">@{username}</span> 
+            <h3>{parent.user.full_name}
+                {/* {varified && <VerifiedUserIcon className="post_badge" /> } */}
+                <span className="post_username"> @{parent.user.username}</span> 
 
             </h3 >
-              time
+            {parent.timestamp.substr(0,10)} {parent.timestamp.substr(10,6)}
         </div>
         </div>
         <div className="post_body">    
           <div className="post__headerDescription">
-            <p> {text} bla bla lorem is a bad boay  bla bla lorem is a bad boay  bla bla lorem is a bad boay bla bla lorem is a bad boay</p>
+            <p>  {content}</p>
           
           </div>
-          <img style={{width:'80%', height:"350px", marginLeft:'30px'}}  src={image} />
+          {parent.image && <img style={{width:'80%', height:"350px", marginLeft:'30px'}}  src={parent.image} /> }
+          
               
         </div>
 
@@ -330,7 +337,7 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
         {/* Post fotter part begain */}
           <div className="post_footer">
               <div className="likes">
-                <FavoriteIcon fontSize="samll"/>
+              {is_liked ?<FavoriteIcon fontSize="samll" style={{color:'blue'}}/> : <FavoriteIcon fontSize="samll"/> }&nbsp; {likes}
               </div>
               <div className="comments">
               <ChatBubbleOutlineIcon fontSize="samll" style={{cursor:'pointer'}} onClick={commentControl}/>
@@ -344,7 +351,7 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
           onClick={handleClickListItem}  style={{cursor:'pointer'}}
           
           />
-          {options[selectedIndex]}
+          {privacy}
       <Menu
         id="lock-menu"
         anchorEl={anchorEl}
@@ -377,7 +384,7 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
         <h2 style={{marginLeft:'15px'}}>Commnets</h2>
           <div className='comment'>
           <div className='comment-header'>
-            <Avatar src={avatar} className={classes.small}/> 
+            <Avatar src='' className={classes.small}/> 
           </div> 
           <div className='comment-body'>
             <h4>kazi motiour</h4>
@@ -386,7 +393,7 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
           </div>
           <div className='comment'>
           <div className='comment-header'>
-            <Avatar src={avatar} className={classes.small}/> 
+            <Avatar src='' className={classes.small}/> 
           </div> 
           <div className='comment-body'>
             <h4>kazi motiour</h4>
@@ -396,7 +403,9 @@ const Post  = forwardRef(({ displayName, username, varified, text, image, avatar
         </div>}
         {/* Comment section end*/}
 
-      </div>
+      </div>)}
+
+
     </div>
   );
 })

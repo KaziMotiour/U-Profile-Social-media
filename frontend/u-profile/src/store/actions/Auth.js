@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import {AUTH_START, AUTH_SUCCESS, AUTH_LOGOUT, AUTH_LOGIN_FAIL, AUTH_REGISTRATION, AUTH_REGISTRATION_FAIL, CAHNGE_PASSWORD, RESET_PASSWORD} from './ActionTypes'
+import {AUTH_START, AUTH_SUCCESS, AUTH_LOGOUT, AUTH_LOGIN_FAIL, AUTH_REGISTRATION, AUTH_REGISTRATION_FAIL, CAHNGE_PASSWORD, RESET_PASSWORD, VERIFY_JWT_TOKEN} from './ActionTypes'
 
 export const auth_start = () =>({
       type:AUTH_START
@@ -12,7 +12,7 @@ export const auth_success = (token) =>({
 })
 
 export const auth_login_fail = (errors) =>(
-  console.log(errors),
+  // console.log(errors),
   {
     type:AUTH_LOGIN_FAIL,
     error:errors
@@ -40,6 +40,8 @@ export const auth_registratin_fail = (errors) =>(
   registration_error: errors
 
 })
+
+
 
 
 
@@ -78,6 +80,28 @@ export const UserLogin = (email, password) => async dispatch =>{
 
 
 }
+
+export const VerifyJwtToken = () => async dispatch =>{
+  const token = localStorage.getItem('access_token')
+  console.log(token, 'verify');
+  try{
+
+      await axios.post('http://127.0.0.1:8000/api/token/verify/',{token}).then(res =>{
+        
+      }).catch(function (error) {
+
+        if(error.response.data.detail!==null){
+          dispatch(auth_logout())
+        }
+          
+       })
+  }catch(err){
+      // console.log(err,'err');
+  }
+
+
+}
+
 
 export const Registration = (email, username, password, password2) => async dispatch =>{
     console.log(email, username, password, password2);

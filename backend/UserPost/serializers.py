@@ -66,6 +66,7 @@ class PostCommentSerializer(serializers.ModelSerializer):
 # getPost Serializer
 class PostSerializer(serializers.ModelSerializer): 
     likes = serializers.SerializerMethodField(read_only=True)
+    is_liked = serializers.SerializerMethodField(read_only=True)
     is_saved = serializers.SerializerMethodField(read_only=True)
     parent = TweetParentSerializer(read_only=True)
     user = PostUserDetailsSerializers(read_only=True)
@@ -73,7 +74,7 @@ class PostSerializer(serializers.ModelSerializer):
     postComment = PostCommentSerializer(many=True, read_only=True)
     class Meta:
         model = UserPost
-        fields = ['id','parent', 'user', 'content', 'image', 'timestamp', 'is_retweet', 'is_saved', 'likes', 'privacy', 'sharePostContent','postComment']
+        fields = ['id','parent', 'user', 'content', 'image', 'timestamp', 'is_retweet', 'is_saved', 'likes', 'privacy', 'sharePostContent','postComment', 'is_liked']
 
 
     def get_likes(self, obj):
@@ -85,6 +86,14 @@ class PostSerializer(serializers.ModelSerializer):
         Bookmark_user= PostBookmark.objects.get(user__username=user.username)
         post = UserPost.objects.filter(id=obj.id).first()
         if post in Bookmark_user.post.all():
+            return True
+        else:
+            return False
+    def get_is_liked(self, obj):
+        request = self.context.get('request')
+        user = request.user
+        post = UserPost.objects.filter(id=obj.id).first()
+        if user in post.likes.all():
             return True
         else:
             return False
