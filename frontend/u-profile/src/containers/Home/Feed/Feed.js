@@ -25,6 +25,7 @@ const allPost = useSelector(state => state.post.allPost)
   const userposts = allPost.map(post=>(
     <Post 
       key={post.id}
+      id={post.id}
       parent={post.parent}
       user={post.user} 
       content ={post.content}

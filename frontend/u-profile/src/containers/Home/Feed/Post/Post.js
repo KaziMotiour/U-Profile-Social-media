@@ -19,8 +19,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
 //end drop down import
-import {GetPostList} from '../../../../store/actions/PostCrud'
+import {useDispatch, useSelector} from 'react-redux'
+import {useHistory} from 'react-router-dom'
+import {GetPostList, LikePost, CommentPost} from '../../../../store/actions/PostCrud'
 import "./Post.css";
+import { CommentTwoTone } from "@material-ui/icons";
 
 // dropdown style
 const useStyles = makeStyles((theme: Theme) =>
@@ -56,17 +59,20 @@ const postOptions = [
 
 
 
-const Post  = forwardRef(({ user, parent, content, image, privacy, is_retweet, is_saved, likes, postComment, timestamp, is_liked  }, ref) =>{
+const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet, is_saved, likes, postComment, timestamp, is_liked  }, ref) =>{
 
 
   // drop down
   const classes = useStyles();
+  const dispatch = useDispatch()
+  const history = useHistory()
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchorElPost, setAnchorElPost] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(1);
   const [selectedPostEditIndex, setSelectedPostEditIndex] = React.useState(1);
+  const [postComments, setPostComments] = useState('');
 
- 
+  console.log(postComments);
 
 
   const handleClickListItem = (event: React.MouseEvent<HTMLElement>) => {
@@ -95,6 +101,7 @@ const Post  = forwardRef(({ user, parent, content, image, privacy, is_retweet, i
     setAnchorElPost(null);
   };
   // end dropdown
+
   const [commentOpen, setCommentOpen] = useState(false)
 
   const commentControl = () =>{
@@ -102,6 +109,40 @@ const Post  = forwardRef(({ user, parent, content, image, privacy, is_retweet, i
     setCommentOpen(!commentOpen)
     console.log(commentOpen);
   }
+
+  const HandleLikePost = () =>{
+    checkAuthenticatin()
+    const config = { headers: { 
+      'Authorization': "Bearer " + localStorage.getItem('access_token')
+    }}
+    dispatch(LikePost(id, config))
+
+  }
+  const HandleCommetPost = (e, id) =>{
+    checkAuthenticatin()
+    const config = { headers: { 
+      'Content-Type':'application/json',
+      'Authorization': "Bearer " + localStorage.getItem('access_token')
+    }}
+    if(e.code==='Enter'){
+      const formData = new FormData()
+      formData.append('comment', postComments)
+      dispatch(CommentPost(id, formData, config))
+      setPostComments('')
+    }
+    
+  }
+
+  const checkAuthenticatin =()=>{
+    const access_token = localStorage.getItem('access_token')
+    if(!access_token){
+      history.push({
+        pathname: '/login',
+        state: { detail: 'Authentication failed, Try to login' }
+      })
+    }
+  }
+
  
   return (
   
@@ -167,8 +208,8 @@ const Post  = forwardRef(({ user, parent, content, image, privacy, is_retweet, i
 
           {/* Post footer part begain */}
           <div className="post_footer">
-          <div className="likes">
-            {is_liked ?<FavoriteIcon fontSize="samll" style={{color:'blue'}}/> : <FavoriteIcon fontSize="samll"/> } &nbsp; {likes}
+          <div className="likes" >
+            {is_liked ?<FavoriteIcon onClick={id =>HandleLikePost(id)} fontSize="samll" style={{color:'blue', cursor:'pointer'}}/> : <FavoriteIcon onClick={id =>HandleLikePost(id)}  fontSize="samll" style={{ cursor:'pointer'}}/> } &nbsp; {likes}
               </div>
               <div className="comments">
                 <ChatBubbleOutlineIcon fontSize="samll" style={{cursor:'pointer'}} onClick={commentControl}/>
@@ -178,7 +219,7 @@ const Post  = forwardRef(({ user, parent, content, image, privacy, is_retweet, i
               <PublicIcon fontSize="samll" aria-haspopup="true"
           aria-controls="lock-menu"
           aria-label="when device is locked"
-          onClick={handleClickListItem}  style={{cursor:'pointer'}}
+          onClick={handleClickListItem} style={{cursor:'pointer'}}
           />
 
           {privacy}
@@ -212,28 +253,26 @@ const Post  = forwardRef(({ user, parent, content, image, privacy, is_retweet, i
           {commentOpen &&
         <div className='comment-section'> 
         <h2 style={{marginLeft:'15px'}}>Commnets</h2>
-          <div className='comment'>
-          <div className='comment-header'>
-            <Avatar src='' className={classes.small}/> 
-          </div> 
-          <div className='comment-body'>
-            <h4>kazi motiour</h4>
-            heelo dearsdf asdf asdf asdf  
-          </div>
-          </div>
+          
+            {postComment && postComment.map(comment => (
+              <div className='comment'>
+                <div className='comment-header'>
+                <Avatar src={'http://127.0.0.1:8000'+comment.user.profilePic} className={classes.small}/> 
+              </div> 
+              <div className='comment-body'>
+                <h4>{comment.user.full_name}</h4>
+                {comment.comment}
+              </div>
+              </div>
+              
+            ))}
+          
 
           <div className='comment'>
-          <div className='comment-header'>
-            <Avatar src='' className={classes.small}/> 
-          </div> 
-          <div className='comment-body'>
-            <h4>kazi motiour</h4>
-            heelo dearsdf asdf asdf asdf  
-          </div>
           </div>
           <div className="comment-input">
           <Avatar src={'http://127.0.0.1:8000'+user.profilePic} className={classes.small} style={{marginRight:'10px'}}/> 
-          <TextField className={classes.text}  placeholder="What's you'r mind ?"/>
+          <TextField className={classes.text} onKeyDown={e =>HandleCommetPost(e, id)} onChange={e => setPostComments(e.target.value)} value={postComments}  placeholder="What's you'r mind ?"/>
           </div>
 
 
@@ -337,7 +376,7 @@ const Post  = forwardRef(({ user, parent, content, image, privacy, is_retweet, i
         {/* Post fotter part begain */}
           <div className="post_footer">
               <div className="likes">
-              {is_liked ?<FavoriteIcon fontSize="samll" style={{color:'blue'}}/> : <FavoriteIcon fontSize="samll"/> }&nbsp; {likes}
+              {is_liked ?<FavoriteIcon onClick={id =>HandleLikePost(id)} fontSize="samll" style={{color:'blue', cursor:'pointer'}}/> : <FavoriteIcon onClick={id =>HandleLikePost(id)} fontSize="samll" style={{cursor:'pointer'}}/> }&nbsp; {likes}
               </div>
               <div className="comments">
               <ChatBubbleOutlineIcon fontSize="samll" style={{cursor:'pointer'}} onClick={commentControl}/>
@@ -382,23 +421,22 @@ const Post  = forwardRef(({ user, parent, content, image, privacy, is_retweet, i
           {commentOpen &&
         <div className='comment-section'> 
         <h2 style={{marginLeft:'15px'}}>Commnets</h2>
-          <div className='comment'>
-          <div className='comment-header'>
-            <Avatar src='' className={classes.small}/> 
-          </div> 
-          <div className='comment-body'>
-            <h4>kazi motiour</h4>
-            heelo dearsdf asdf asdf asdf  
-          </div>
-          </div>
-          <div className='comment'>
-          <div className='comment-header'>
-            <Avatar src='' className={classes.small}/> 
-          </div> 
-          <div className='comment-body'>
-            <h4>kazi motiour</h4>
-            heelo dearsdf asdf asdf asdf  
-          </div>
+        {postComment && postComment.map(comment => (
+              <div className='comment'>
+                <div className='comment-header'>
+                <Avatar src={'http://127.0.0.1:8000'+comment.user.profilePic} className={classes.small}/> 
+              </div> 
+              <div className='comment-body'>
+                <h4>{comment.user.full_name}</h4>
+                {comment.comment}
+              </div>
+              </div>
+              
+            ))}
+  
+          <div className="comment-input">
+          <Avatar src={'http://127.0.0.1:8000'+user.profilePic} className={classes.small} style={{marginRight:'10px'}}/> 
+          <TextField onKeyDown={e =>HandleCommetPost(e, id)}className={classes.text} onChange={e => setPostComments(e.target.value)} value={postComments}  placeholder="What's you'r mind ?"/>
           </div>
         </div>}
         {/* Comment section end*/}

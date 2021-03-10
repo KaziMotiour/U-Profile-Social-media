@@ -4,7 +4,8 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import {useHistory} from 'react-router-dom'
 import {CreatePost} from '../../../../store/actions/PostCrud'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
+import {CheckAuthentication} from '../../../../CheckAuthentication'
 import "./TweetBox.css";
 
 
@@ -31,6 +32,7 @@ function TweetBox() {
   const [picture, setPicture] = useState(null);
   const [imgData, setImgData] = useState(null);
 
+
   const onChangePicture = e => {
     if (e.target.files[0]) {
       setPicture(e.target.files[0]);
@@ -53,8 +55,7 @@ function TweetBox() {
 
   const HandelCreaatePost = (e) =>{
     e.preventDefault()
-    
-    // checkAuthenticatin()
+    checkAuthenticatin()
     const config = { headers: { 
       'Content-Type':'application/json',
       'Authorization': "Bearer " + localStorage.getItem('access_token')
