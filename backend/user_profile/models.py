@@ -91,11 +91,11 @@ def create_UserFollow(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        PostBookmark.objects.create(user=instance)
+        User_profile.objects.create(user=instance)
 
 
 @receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
+def create_Relation_With_Bookmrak(sender, instance, created, **kwargs):
     if created:
         PostBookmark.objects.create(user=instance)
 

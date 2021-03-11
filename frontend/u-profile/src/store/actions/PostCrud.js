@@ -75,3 +75,18 @@ export const CommentPost = (id, data, config) => async dispatch =>{
         console.log(e);
     }
 }
+export const ChangePrivacy = (id, data, config) => async dispatch =>{
+    console.log(data.get('privacy'),'privacy');
+    try{
+        axios.put(`http://127.0.0.1:8000/post/detail/${id}`, data, config).then(res =>{
+            console.log(res.data);
+            dispatch(GetPostList(config))
+        }).catch(function (error){
+            if (error.response){
+                console.log(error.response.data.detail);
+            }
+        })
+    }catch(e){
+        console.log(e);
+    }
+}

@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
-from .serializers import PostSerializer, PostCreateSerializer, SharePostSerializer, PostCommentSerializer, PostUserDetailsSerializers, ProductFilter
+from .serializers import PostSerializer, PostCreateSerializer, SharePostSerializer, PostCommentSerializer, PostUserDetailsSerializers, ProductFilter, PostCommentCreateSerializer
 from django.shortcuts import get_object_or_404
 from .models import UserPost, PostComment
 from .permission import IsOwnerOrReadOnly
@@ -49,10 +49,10 @@ class PostListView(ListAPIView):
         return  qs 
 
 class PostDetailView(RetrieveUpdateDestroyAPIView): 
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     serializer_class=PostSerializer
     queryset = UserPost.objects.all()
     
-    queryset = UserPost.objects.all()
     
 @api_view(['GET','POST'])
 @permission_classes([IsAuthenticated])
@@ -102,7 +102,7 @@ class PostCreateApiView(CreateAPIView):
 def postCommentCreate(request, pk):
     user = request.user
     post = UserPost.objects.filter(pk=pk).first()
-    serialized_data = PostCommentSerializer(data=request.data)
+    serialized_data = PostCommentCreateSerializer(data=request.data)
 
     if serialized_data.is_valid():
         comment=serialized_data.data.get('comment')

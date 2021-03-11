@@ -52,7 +52,7 @@ class NewUsers(AbstractBaseUser, PermissionsMixin):
         return str(self.username)
 
 
-#singal for send email with token to reset password
+# singal for send email with token to reset password
 # @receiver(reset_password_token_created)
 # def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
 

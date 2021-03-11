@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.conf import settings
 from notification.models import Notification
 from django.dispatch import receiver
+from django.contrib.humanize.templatetags import humanize
 
 UserModel = get_user_model()
 
@@ -155,20 +156,23 @@ class PostComment(models.Model):
 
     def __str__(self):
         return str(self.comment)
+    
+    def get_create_date(self):
+        return humanize.naturaltime(self.create_date)
 
 
 
 
 @receiver([post_save, post_delete], sender=PostComment)
 def create_UserFollow(sender, instance, created=None, **kwargs):
-    # print(instance.post,  'instalce ')
-    if created:
-        comment = instance
-        user = comment.post.user
-        sender = comment.user
-        post = comment.post
-        notify = Notification(post=post, sender=sender, user=user, Notification_type=2, text_preview=comment.comment[:25])
-        notify.save()
+    print(instance.id,  'instalce ')
+    # if created:
+    #     comment = instance
+    #     user = comment.post.user
+    #     sender = comment.user
+    #     post = comment.post
+    #     notify = Notification(post=post, sender=sender, user=user, Notification_type=2, text_preview=comment.comment[:25])
+    #     notify.save()
 
 @receiver(m2m_changed, sender=UserPost.likes.through)
 def add_like_notification(sender, instance, action,pk_set, **kwargs):

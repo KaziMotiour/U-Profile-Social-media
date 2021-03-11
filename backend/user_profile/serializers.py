@@ -8,22 +8,26 @@ from UserPost.serializers import PostSerializer
     
 User= get_user_model()
 
+
+
+class UserInfoSrializer(serializers.ModelSerializer):
+    class Meta:
+        model = User_profile
+        fields=['id', 'image']
 # for post user 
 class PostUserDetailsSerializer(serializers.ModelSerializer):
         full_name = serializers.SerializerMethodField(read_only=True)
-        profilePic = serializers.SerializerMethodField(read_only=True)
+        
+        profile = UserInfoSrializer(read_only=True)
         class Meta:
             model = User
-            fields=['id', 'username', 'full_name', 'profilePic']
+            fields=['id', 'username', 'full_name', 'profile' ]
 
         def get_full_name(self, obj):
             print(obj, 'obj')
             user = User_profile.objects.filter(user__username=obj.username).first()
             return str(user.first_name)+' '+ str(user.Last_name)
 
-        def get_profilePic(self, obj):
-            user = User_profile.objects.filter(user=obj).first()
-            return user.image.url
 
 
 

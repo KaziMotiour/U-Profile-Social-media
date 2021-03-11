@@ -4,6 +4,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import  VerifiedUserIcon  from "@material-ui/icons/VerifiedUser";
 import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import Button from '@material-ui/core/Button';
 import PublicIcon from '@material-ui/icons/Public';
 import RepeatIcon from '@material-ui/icons/Repeat';
 import ShareIcon from '@material-ui/icons/Share';
@@ -21,7 +22,7 @@ import Menu from '@material-ui/core/Menu';
 //end drop down import
 import {useDispatch, useSelector} from 'react-redux'
 import {useHistory} from 'react-router-dom'
-import {GetPostList, LikePost, CommentPost} from '../../../../store/actions/PostCrud'
+import {GetPostList, LikePost, CommentPost, ChangePrivacy} from '../../../../store/actions/PostCrud'
 import "./Post.css";
 import { CommentTwoTone } from "@material-ui/icons";
 
@@ -46,10 +47,10 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const options = [
+const Privacyoptions = [
   'public',
   'friends',
-  'only me',
+  'onlyme',
 ];
 const postOptions = [
   'Edit',
@@ -66,48 +67,18 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
   const classes = useStyles();
   const dispatch = useDispatch()
   const history = useHistory()
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [anchorElPost, setAnchorElPost] = React.useState(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
-  const [selectedPostEditIndex, setSelectedPostEditIndex] = React.useState(1);
+  const loggedInUser = useSelector(state => state.user.loggedinUserInfo)
+  const [opneEditOption, setOpenEditOption] = useState(false)
+  const [opnePrivacyOption, setOpenPrivacyOption] = useState(false)
+  const [selectedPostEdiOption, setSelectedPostEditOption] = React.useState('');
+  const [selectedPrivacyOption, setSelectedPrivacyOption] = React.useState('');
   const [postComments, setPostComments] = useState('');
-
-  console.log(postComments);
-
-
-  const handleClickListItem = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handlePostClickListItem = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElPost(event.currentTarget);
-  };
-
-  const handleMenuItemClick = (event: React.MouseEvent<HTMLElement>, index: number) => {
-    setSelectedIndex(index);
-    setAnchorEl(null);
-  };
-
-  const handlePostEditItemClick = (event: React.MouseEvent<HTMLElement>, index: number) => {
-    // console.log(index);
-    setSelectedPostEditIndex(index);
-    setAnchorElPost(null);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const handleClosePostItems = () => {
-    setAnchorElPost(null);
-  };
-  // end dropdown
-
+  const number_of_comment = postComment.length
   const [commentOpen, setCommentOpen] = useState(false)
 
   const commentControl = () =>{
-    
     setCommentOpen(!commentOpen)
-    console.log(commentOpen);
+
   }
 
   const HandleLikePost = () =>{
@@ -119,7 +90,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
 
   }
   const HandleCommetPost = (e, id) =>{
-    checkAuthenticatin()
+    // checkAuthenticatin()
     const config = { headers: { 
       'Content-Type':'application/json',
       'Authorization': "Bearer " + localStorage.getItem('access_token')
@@ -132,6 +103,33 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
     }
     
   }
+
+
+  // async function showAlert (id, config){
+  //   await new Promise((resolve) => setTimeout(() => { 
+  //     console.log(selectedPrivacyOption);
+  //       if(selectedPrivacyOption){
+        
+  //       }
+      
+  //   }, 2000))
+  // }
+
+  const HandlePrivacyChange =(id, option) =>{
+   
+    checkAuthenticatin()
+    console.log(id,  option);
+   
+    const config = { headers: { 
+      'Content-Type':'application/json',
+      'Authorization': "Bearer " + localStorage.getItem('access_token')
+    }}
+    let formData = new FormData()
+      formData.append('privacy', option)
+      dispatch(ChangePrivacy(id, formData, config))
+    
+  }
+      
 
   const checkAuthenticatin =()=>{
     const access_token = localStorage.getItem('access_token')
@@ -154,11 +152,11 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         <div className='post-header'>
         
         <div className="post_avatar">
-          <Avatar src={'http://127.0.0.1:8000'+user.profilePic} className={classes.large}/>
+          <Avatar src={user.profile.image} className={classes.large}/>
         </div>
       
         <div className="post__headerText">
-            <h3> {user.full_name}
+            <h3> {user.full_name ? user.username : user.full_name}
                 {/* {varified && <VerifiedUserIcon className="post_badge" /> } */}
                 <span className="post_username"> @{user.username} </span> 
 
@@ -166,31 +164,25 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
             {timestamp.substr(0,10)} {timestamp.substr(10,6)}
         
         </div>
-        <div style={{marginLeft:'auto'}}>
-         <h2 aria-haspopup="true"
-          aria-controls="lock-menu"
-          aria-label="when device is locked"
-          onClick={handlePostClickListItem}  style={{cursor:'pointer'}}> ... </h2>
-          
-          {/* {options[selectedIndex]} */}
-      <Menu
-        id="lock-menu"
-        anchorEl={anchorElPost}
-        keepMounted
-        open={Boolean(anchorElPost)}
-        onClose={handleClosePostItems}
-      >
-        {postOptions.map((option, index) => (
-          <MenuItem
-            key={option}
-            // disabled={index === 0}
-            selected={index === selectedPostEditIndex}
-            onClick={(event) => handlePostEditItemClick(event, index)}
-          >
-            {option}
-          </MenuItem>
-        ))}
-      </Menu>
+        <div style={{marginLeft:'auto'}} className="nav">
+        <nav role="navigation">
+                <ul>
+                  <li onClick={()=> setOpenEditOption(!opneEditOption)} ><h2>...</h2>
+                <ul class="dropdown">
+                  {opneEditOption &&
+                    postOptions.map( (option) =>(
+                    <li onClick={e => setSelectedPostEditOption(option)}  className="option"><p>{option}</p></li>
+                    ))
+                  }
+                  
+                  
+                </ul>
+                  </li>
+                </ul>
+        </nav>
+
+
+         
         </div>
         </div>
           {/* Post header part end */}
@@ -201,7 +193,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
             <p> {content} </p>
             
           </div>
-          {image && <img style={{width:'80%', height:"350px", marginLeft:'30px'}}  src={image} /> }
+          {image && <img style={{width:'90%', height:"350px", marginLeft:'30px'}}  src={image} /> }
               
         </div>
         {/* Post body part end */}
@@ -211,36 +203,34 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
           <div className="likes" >
             {is_liked ?<FavoriteIcon onClick={id =>HandleLikePost(id)} fontSize="samll" style={{color:'blue', cursor:'pointer'}}/> : <FavoriteIcon onClick={id =>HandleLikePost(id)}  fontSize="samll" style={{ cursor:'pointer'}}/> } &nbsp; {likes}
               </div>
-              <div className="comments">
-                <ChatBubbleOutlineIcon fontSize="samll" style={{cursor:'pointer'}} onClick={commentControl}/>
+              <div className="comments" style={{display:'flex'}}>
+                <ChatBubbleOutlineIcon fontSize="samll" style={{cursor:'pointer'}} onClick={commentControl}/> &nbsp;{number_of_comment}
               </div>
               {/* privracy begain */}
               <div className="privacy"> 
-              <PublicIcon fontSize="samll" aria-haspopup="true"
-          aria-controls="lock-menu"
-          aria-label="when device is locked"
-          onClick={handleClickListItem} style={{cursor:'pointer'}}
-          />
+               <nav role="navigation">
+                <ul>
+                 <li> 
+                   <div onClick={() => setOpenPrivacyOption(!opnePrivacyOption)} style={{display:'flex',marginTop:'-10px'}}> 
+                   <PublicIcon fontSize="samll" aria-haspopup="true"
+                  aria-controls="lock-menu"
+                  aria-label="when device is locked"
+                  style={{cursor:'pointer'}}
+                    /> &nbsp;<p> {privacy}</p>
+                </div>
+                <ul class="dropdown">
+                  
+                  {opnePrivacyOption &&( <div onClick={() =>setOpenPrivacyOption(!opnePrivacyOption)}>
+                  {Privacyoptions.map( (option) =>(
+                    <li onClick={e => HandlePrivacyChange(id, option)}  className="option"><p>{option}</p></li>
+                  ))} </div>)
+                    }
 
-          {privacy}
-      <Menu
-        id="lock-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        {options.map((option, index) => (
-          <MenuItem
-            key={option}
-            // disabled={index === 0}
-            selected={index === selectedIndex}
-            onClick={(event) => handleMenuItemClick(event, index)}
-          >
-            {option}
-          </MenuItem>
-        ))}
-      </Menu>
+                </ul>
+                  </li>
+                </ul>
+        </nav>
+                
               </div>
               {/* privracy end */}
               <div className="shared">
@@ -257,11 +247,16 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
             {postComment && postComment.map(comment => (
               <div className='comment'>
                 <div className='comment-header'>
-                <Avatar src={'http://127.0.0.1:8000'+comment.user.profilePic} className={classes.small}/> 
+                <Avatar src={comment.user && comment.user.profile.image} className={classes.small}/> 
               </div> 
               <div className='comment-body'>
-                <h4>{comment.user.full_name}</h4>
+                <div style={{display:'flex'}}>
+                <h4>{comment.user.full_name ? comment.user.username: comment.user.full_name}</h4> &nbsp; <p style={{ontSize:'13px', marginLeft:'auto'}}> </p>&nbsp;{comment.create_date.substr(0,3)}
+                </div>
+                <div>
                 {comment.comment}
+                </div>
+                
               </div>
               </div>
               
@@ -271,7 +266,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
           <div className='comment'>
           </div>
           <div className="comment-input">
-          <Avatar src={'http://127.0.0.1:8000'+user.profilePic} className={classes.small} style={{marginRight:'10px'}}/> 
+          <Avatar  src={ loggedInUser && loggedInUser.profile.image} className={classes.small} style={{marginRight:'10px'}}/> 
           <TextField className={classes.text} onKeyDown={e =>HandleCommetPost(e, id)} onChange={e => setPostComments(e.target.value)} value={postComments}  placeholder="What's you'r mind ?"/>
           </div>
 
@@ -282,12 +277,15 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         {/* Comment section end*/}
 
       </div>
+
       ):(
+
       <div className="particular-post">
+        {/* share post part */}
         {/* Post header part begain */}
         <div className='post-header'>
         <div className="post_avatar">
-          <Avatar src={'http://127.0.0.1:8000'+user.profilePic}/>
+          <Avatar src={user.profile.image}/>
         </div>
       
         <div className="post__headerText">
@@ -300,30 +298,21 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         </div>
         {/* post edit options begain */}
         <div style={{marginLeft:'auto'}}>
-         <h2 aria-haspopup="true"
-          aria-controls="lock-menu"
-          aria-label="when device is locked"
-          onClick={handlePostClickListItem}  style={{cursor:'pointer'}}> ... </h2>
-          
-          {/* {options[selectedIndex]} */}
-      <Menu
-        id="lock-menu"
-        anchorEl={anchorElPost}
-        keepMounted
-        open={Boolean(anchorElPost)}
-        onClose={handleClosePostItems}
-      >
-        {postOptions.map((option, index) => (
-          <MenuItem
-            key={option}
-            // disabled={index === 0}
-            selected={index === selectedPostEditIndex}
-            onClick={(event) => handlePostEditItemClick(event, index)}
-          >
-            {option}
-          </MenuItem>
-        ))}
-      </Menu>
+        <nav role="navigation">
+                <ul>
+                <li onClick={()=> setOpenEditOption(!opneEditOption)} ><h2>...</h2>
+                <ul class="dropdown">
+                  {opneEditOption &&
+                    postOptions.map( (option) =>(
+                    <li onClick={e => setSelectedPostEditOption(option)}  className="option">{option}</li>
+                    ))
+                  }
+                  
+                  
+                </ul>
+                  </li>
+                </ul>
+        </nav>
       </div>
       {/* post edit options ended */}
 
@@ -341,7 +330,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
           <div className="particular-shared-post">
         <div className='post-header'>
         <div className="post_avatar">
-          <Avatar src={'http://127.0.0.1:8000'+parent.user.profilePic}/>
+          <Avatar src={parent.user.profile.image}/>
         </div>
       
         <div className="post__headerText">
@@ -378,37 +367,35 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
               <div className="likes">
               {is_liked ?<FavoriteIcon onClick={id =>HandleLikePost(id)} fontSize="samll" style={{color:'blue', cursor:'pointer'}}/> : <FavoriteIcon onClick={id =>HandleLikePost(id)} fontSize="samll" style={{cursor:'pointer'}}/> }&nbsp; {likes}
               </div>
-              <div className="comments">
-              <ChatBubbleOutlineIcon fontSize="samll" style={{cursor:'pointer'}} onClick={commentControl}/>
+              <div className="comments" style={{display:'flex'}}>
+              <ChatBubbleOutlineIcon fontSize="samll" style={{cursor:'pointer'}} onClick={commentControl}/> &nbsp;{number_of_comment}
               </div>
                {/* Post privacy part begain */}
-              <div className="privacy">
-               
-                <PublicIcon fontSize="samll" aria-haspopup="true"
-          aria-controls="lock-menu"
-          aria-label="when device is locked"
-          onClick={handleClickListItem}  style={{cursor:'pointer'}}
-          
-          />
-          {privacy}
-      <Menu
-        id="lock-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        {options.map((option, index) => (
-          <MenuItem
-            key={option}
-            // disabled={index === 0}
-            selected={index === selectedIndex}
-            onClick={(event) => handleMenuItemClick(event, index)}
-          >
-            {option}
-          </MenuItem>
-        ))}
-      </Menu>
+              <div className="privacy"> 
+              <nav role="navigation">
+                <ul>
+                <li  >
+                <div onClick={() => setOpenPrivacyOption(!opnePrivacyOption)} style={{display:'flex',marginTop:'-10px'}}> 
+                   <PublicIcon fontSize="samll" aria-haspopup="true"
+                  aria-controls="lock-menu"
+                  aria-label="when device is locked"
+                  style={{cursor:'pointer'}}
+                    /> &nbsp;<p> {privacy}</p>
+                </div>
+                <ul class="dropdown">
+                  
+                  {opnePrivacyOption &&( <div onClick={() =>setOpenPrivacyOption(!opnePrivacyOption)}>
+                  {Privacyoptions.map( (option) =>(
+                    <li onClick={e => setSelectedPrivacyOption(option)}  className="option">{option}</li>
+                  ))} </div>)
+                    }
+
+                </ul>
+                </li>
+                </ul>
+        </nav>
+         
+      
       </div>
       {/* Post privacy part  */}
               <div className="shared">
@@ -424,18 +411,22 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         {postComment && postComment.map(comment => (
               <div className='comment'>
                 <div className='comment-header'>
-                <Avatar src={'http://127.0.0.1:8000'+comment.user.profilePic} className={classes.small}/> 
+                <Avatar src={postComment.user && postComment.user.profile.image}  className={classes.small}/> 
               </div> 
               <div className='comment-body'>
-                <h4>{comment.user.full_name}</h4>
+              <div style={{display:'flex'}}>
+                <h4>{comment.user.full_name }</h4> &nbsp; <p style={{ontSize:'13px', marginLeft:'auto'}}></p>
+                </div>
+                <div>
                 {comment.comment}
+                </div>
               </div>
               </div>
               
             ))}
   
           <div className="comment-input">
-          <Avatar src={'http://127.0.0.1:8000'+user.profilePic} className={classes.small} style={{marginRight:'10px'}}/> 
+          <Avatar src={ loggedInUser && loggedInUser.profile.image} className={classes.small} style={{marginRight:'10px'}}/> 
           <TextField onKeyDown={e =>HandleCommetPost(e, id)}className={classes.text} onChange={e => setPostComments(e.target.value)} value={postComments}  placeholder="What's you'r mind ?"/>
           </div>
         </div>}

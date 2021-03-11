@@ -5,6 +5,7 @@ User= get_user_model()
 from .models import UserPost, PostComment
 from user_profile.models import User_profile, PostBookmark
 from django_filters import rest_framework as filters
+# from user_profile.serializers import PostUserDetailsSerializer
 
 
 class ProductFilter(filters.FilterSet):
@@ -14,23 +15,22 @@ class ProductFilter(filters.FilterSet):
         model = UserPost
         fields = ['user__username']    
 
+class UserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User_profile
+        fields = ['id', 'image']
 
-# Post User deatails
+
 class PostUserDetailsSerializers(serializers.ModelSerializer):
         full_name = serializers.SerializerMethodField(read_only=True)
-        profilePic = serializers.SerializerMethodField(read_only=True)
+        profile = UserInfoSerializer(read_only=True)
         class Meta:
             model = User
-            fields=['id', 'username', 'full_name', 'profilePic']
+            fields=['id', 'username', 'full_name', 'profile']
 
         def get_full_name(self, obj):
             user = User_profile.objects.filter(user=obj).first()
             return str(user.first_name)+' '+ str(user.Last_name)
-
-        def get_profilePic(self, obj):
-            user = User_profile.objects.filter(user=obj).first()
-            return user.image.url
-
 
 
 
@@ -52,12 +52,30 @@ class SharePostSerializer(serializers.ModelSerializer):
 
 
 # comment serializer
-class PostCommentSerializer(serializers.ModelSerializer):
+class PostCommentCreateSerializer(serializers.ModelSerializer):
     user = PostUserDetailsSerializers(read_only=True)
     class Meta:
         model = PostComment
         fields = ['id', 'user', 'post', 'comment', 'create_date']
-        extra_kwargs = {'create_date':{'read_only':True}}
+        extra_kwargs = {'create_date': {'read_only': True}}
+    
+ 
+
+
+
+
+class PostCommentSerializer(serializers.ModelSerializer):
+    user = PostUserDetailsSerializers(read_only=True)
+    create_date = serializers.SerializerMethodField(read_only=True)
+    class Meta:
+        model = PostComment
+        fields = ['id', 'user', 'post', 'comment', 'create_date' ]
+    
+    def get_create_date(self, obj):
+        print(obj.get_create_date(),'comment')
+        time = obj.get_create_date()
+        return time
+    
 
 
 

@@ -149,15 +149,17 @@ function Nav() {
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMenuOpen}
       onClose={handleMenuClose}
-    >
+    ><div style={{display:'flex', flexDirection:'column'}}>
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={handleMenuClose}><p onClick={HandleLogout}>LogOut</p></MenuItem>
+      </div>
     </Menu>
   );
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
+    <div >
     <Menu
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -167,13 +169,15 @@ function Nav() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
+      <div style={{display:'flex', flexDirection:'column'}}>
+      
       <MenuItem>
         <IconButton aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="secondary">
             <MailIcon />
           </Badge>
         </IconButton>
-        <p>Messages</p>
+        <p>Messagesss</p>
       </MenuItem>
       <MenuItem>
         <IconButton aria-label="show 11 new notifications" color="inherit">
@@ -202,7 +206,9 @@ function Nav() {
         </IconButton>
         <p>Logout</p>
       </MenuItem>
+      </div>
     </Menu>
+    </div>
   );
 
   return (
