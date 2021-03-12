@@ -37,6 +37,7 @@ const allPost = useSelector(state => state.post.allPost)
       postComment = {post.postComment}
       timestamp = {post.timestamp}
       is_liked = {post.is_liked}
+      shared_user = {post.shared_user}
       />
   ))
   return (

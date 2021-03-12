@@ -1,0 +1,109 @@
+
+.comment-section{
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+}
+
+.comment{
+    display: flex;
+    margin-top: 20px;
+    
+    
+}
+.comment-header{
+    display: flex;
+    margin-left: 30px;
+    font-size: 18px;
+    font-weight: 500;
+
+}
+.comment-body{
+    width: auto;
+    height: auto;
+    padding: 5px;
+    margin-left: 10px;
+    margin-top: 20px;
+    font-weight: 400;
+    margin-top: -5px;
+    background-color: rgb(235, 230, 230);
+    border-radius: 10px;
+}
+.comment-input{
+    margin-top: 30px;
+    display: flex;
+    margin-left: 30px;
+}
+
+/* Drop down */
+a {
+    text-decoration: none;
+  }
+  
+  nav {
+    font-family: monospace;
+    
+  }
+  
+  ul {
+   
+    list-style: none;
+    margin-bottom: 15px;
+    padding-left: 0;
+  }
+  
+  li {
+    color: #000000;
+    display: block;
+    float: left;
+    padding: .3rem;
+    position: relative;
+    text-decoration: none;
+    transition-duration: 0.5s;
+    font-weight: bold;
+   
+  }
+    
+  li a {
+    color: #000000;
+
+  }
+  
+  li:hover {
+    cursor: pointer;
+  }
+  
+  ul li ul {
+    background: rgb(247, 244, 244);
+    visibility: hidden;
+    opacity: 0;
+    min-width: 5rem;
+    position: absolute;
+    transition: all 0.5s ease;
+    margin-top: .1rem;
+    left: 0;
+    display: none;
+    
+  }
+  
+  ul li > ul,
+  ul li ul {
+    visibility: visible;
+    opacity: 1;
+    display: block;
+  }
+  
+  ul li ul li {
+    clear: both;
+    width: 65%;
+  }
+.option:hover{
+    background: #ffffff;
+    -webkit-box-shadow: 2px 2px 1px 1px #ccc;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+    -moz-box-shadow:    2px 2px 1px 1px #ccc;  /* Firefox 3.5 - 3.6 */
+    box-shadow:         2px 2px 1px 1px #ccc;
+    border-radius: 5px;
+}
+.nav{
+    margin-right: 20px;    
+}

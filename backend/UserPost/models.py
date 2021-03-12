@@ -126,6 +126,7 @@ class UserPost(models.Model):
     content = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to=upload_to, blank=True)
     likes = models.ManyToManyField(User, blank=True, related_name='post_like')
+    shared_user = models.ManyToManyField(User, blank=True, related_name='shared_user')
     privacy = models.CharField(
         max_length=20,
         choices=post_privacy,

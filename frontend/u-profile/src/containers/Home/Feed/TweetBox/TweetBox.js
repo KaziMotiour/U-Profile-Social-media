@@ -77,7 +77,7 @@ function TweetBox() {
     if(!access_token){
       history.push({
         pathname: '/login',
-        state: { detail: 'Authentication failed, Try to login' }
+        state: { detail: 'session expired, Try to login again' }
       })
     }
   }

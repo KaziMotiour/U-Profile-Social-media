@@ -23,8 +23,11 @@ import Menu from '@material-ui/core/Menu';
 import {useDispatch, useSelector} from 'react-redux'
 import {useHistory} from 'react-router-dom'
 import {GetPostList, LikePost, CommentPost, ChangePrivacy} from '../../../../store/actions/PostCrud'
+import {VerifyJwtToken} from '../../../../store/actions/Auth'
 import "./Post.css";
 import { CommentTwoTone } from "@material-ui/icons";
+import Comment from './comment/Comment'
+import SharedPost from './sharePost/SharePost'
 
 // dropdown style
 const useStyles = makeStyles((theme: Theme) =>
@@ -60,7 +63,7 @@ const postOptions = [
 
 
 
-const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet, is_saved, likes, postComment, timestamp, is_liked  }, ref) =>{
+const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet, is_saved, likes, postComment, timestamp, is_liked, shared_user }, ref) =>{
 
 
   // drop down
@@ -70,18 +73,22 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
   const loggedInUser = useSelector(state => state.user.loggedinUserInfo)
   const [opneEditOption, setOpenEditOption] = useState(false)
   const [opnePrivacyOption, setOpenPrivacyOption] = useState(false)
+  const [opneSharePost, setOpenSharePost] = useState(false)
   const [selectedPostEdiOption, setSelectedPostEditOption] = React.useState('');
   const [selectedPrivacyOption, setSelectedPrivacyOption] = React.useState('');
   const [postComments, setPostComments] = useState('');
   const number_of_comment = postComment.length
   const [commentOpen, setCommentOpen] = useState(false)
-
+  const loggedin_user_info = useSelector(state=> state.user.loggedinUserInfo)
+  const shared_users = shared_user.length
+  console.log(loggedin_user_info);
   const commentControl = () =>{
     setCommentOpen(!commentOpen)
 
   }
 
   const HandleLikePost = () =>{
+    dispatch(VerifyJwtToken())
     checkAuthenticatin()
     const config = { headers: { 
       'Authorization': "Bearer " + localStorage.getItem('access_token')
@@ -90,7 +97,8 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
 
   }
   const HandleCommetPost = (e, id) =>{
-    // checkAuthenticatin()
+    dispatch(VerifyJwtToken())
+    checkAuthenticatin()
     const config = { headers: { 
       'Content-Type':'application/json',
       'Authorization': "Bearer " + localStorage.getItem('access_token')
@@ -104,19 +112,8 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
     
   }
 
-
-  // async function showAlert (id, config){
-  //   await new Promise((resolve) => setTimeout(() => { 
-  //     console.log(selectedPrivacyOption);
-  //       if(selectedPrivacyOption){
-        
-  //       }
-      
-  //   }, 2000))
-  // }
-
   const HandlePrivacyChange =(id, option) =>{
-   
+    dispatch(VerifyJwtToken())
     checkAuthenticatin()
     console.log(id,  option);
    
@@ -127,6 +124,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
     let formData = new FormData()
       formData.append('privacy', option)
       dispatch(ChangePrivacy(id, formData, config))
+      
     
   }
       
@@ -136,7 +134,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
     if(!access_token){
       history.push({
         pathname: '/login',
-        state: { detail: 'Authentication failed, Try to login' }
+        state: { detail: 'session expired, Try to login again' }
       })
     }
   }
@@ -144,10 +142,11 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
  
   return (
   
-    <div className="post" ref={ref}>
+    <div className="post" ref={ref} onClick={() =>opneEditOption && setOpenEditOption(false)} >
+      {/* {opneEditOption === true && setOpenEditOption(false)} */}
       {!parent ? (
         
-      <div className="particular-post">
+      <div className="particular-post" onClick={() =>opnePrivacyOption && setOpenPrivacyOption(false)}>
         {/* Post header part begain */}
         <div className='post-header'>
         
@@ -165,7 +164,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         
         </div>
         <div style={{marginLeft:'auto'}} className="nav">
-        <nav role="navigation">
+       { loggedin_user_info.username=== user.username && <nav role="navigation">
                 <ul>
                   <li onClick={()=> setOpenEditOption(!opneEditOption)} ><h2>...</h2>
                 <ul class="dropdown">
@@ -179,8 +178,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
                 </ul>
                   </li>
                 </ul>
-        </nav>
-
+        </nav>}
 
          
         </div>
@@ -218,7 +216,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
                   style={{cursor:'pointer'}}
                     /> &nbsp;<p> {privacy}</p>
                 </div>
-                <ul class="dropdown">
+                { loggedin_user_info.username === user.username && <ul class="dropdown">
                   
                   {opnePrivacyOption &&( <div onClick={() =>setOpenPrivacyOption(!opnePrivacyOption)}>
                   {Privacyoptions.map( (option) =>(
@@ -226,15 +224,19 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
                   ))} </div>)
                     }
 
-                </ul>
+                </ul>}
                   </li>
                 </ul>
         </nav>
                 
               </div>
               {/* privracy end */}
-              <div className="shared">
-                <ShareIcon fontSize="default"/>
+              <div className="shared" style={{display:'flex', cursor:'pointer'}}>
+                <ShareIcon onClick={() => setOpenSharePost(!opneSharePost)} fontSize="default"/>&nbsp; {shared_users}
+                {opneSharePost && (
+                <SharedPost open={true} id={id} postUsername={user.username}
+                postUserFullname={user.full_name} postUserImage={user.profile.image} content={content} image={image} loggedInUsername={loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info.profile.image}
+                />)}
                 </div>
           </div>
            {/* Post footer part end */}
@@ -244,27 +246,11 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         <div className='comment-section'> 
         <h2 style={{marginLeft:'15px'}}>Commnets</h2>
           
-            {postComment && postComment.map(comment => (
-              <div className='comment'>
-                <div className='comment-header'>
-                <Avatar src={comment.user && comment.user.profile.image} className={classes.small}/> 
-              </div> 
-              <div className='comment-body'>
-                <div style={{display:'flex'}}>
-                <h4>{comment.user.full_name ? comment.user.username: comment.user.full_name}</h4> &nbsp; <p style={{ontSize:'13px', marginLeft:'auto'}}> </p>&nbsp;{comment.create_date.substr(0,3)}
-                </div>
-                <div>
-                {comment.comment}
-                </div>
-                
-              </div>
-              </div>
+            {postComment && postComment.map(comments => (
+             <Comment comment={comments} />
               
             ))}
           
-
-          <div className='comment'>
-          </div>
           <div className="comment-input">
           <Avatar  src={ loggedInUser && loggedInUser.profile.image} className={classes.small} style={{marginRight:'10px'}}/> 
           <TextField className={classes.text} onKeyDown={e =>HandleCommetPost(e, id)} onChange={e => setPostComments(e.target.value)} value={postComments}  placeholder="What's you'r mind ?"/>
@@ -280,7 +266,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
 
       ):(
 
-      <div className="particular-post">
+      <div className="particular-post" onClick={() =>opnePrivacyOption && setOpenPrivacyOption(false)}>
         {/* share post part */}
         {/* Post header part begain */}
         <div className='post-header'>
@@ -347,7 +333,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
             <p>  {content}</p>
           
           </div>
-          {parent.image && <img style={{width:'80%', height:"350px", marginLeft:'30px'}}  src={parent.image} /> }
+          {parent.image && <img style={{width:'90%', height:"350px", marginLeft:'20px'}}  src={parent.image} /> }
           
               
         </div>
@@ -398,8 +384,10 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
       
       </div>
       {/* Post privacy part  */}
-              <div className="shared">
-                <ShareIcon fontSize="default"/>
+              <div className="shared" style={{display:'flex', cursor:'pointer'}}>
+                <ShareIcon onClick={() => setOpenSharePost(!opneSharePost)} fontSize="default"/> &nbsp; {shared_users}
+                {opneSharePost && (<SharedPost open={true} id={id}/>)}
+
               </div>
           </div>
           {/* Post body part ended */}
@@ -408,20 +396,8 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
           {commentOpen &&
         <div className='comment-section'> 
         <h2 style={{marginLeft:'15px'}}>Commnets</h2>
-        {postComment && postComment.map(comment => (
-              <div className='comment'>
-                <div className='comment-header'>
-                <Avatar src={postComment.user && postComment.user.profile.image}  className={classes.small}/> 
-              </div> 
-              <div className='comment-body'>
-              <div style={{display:'flex'}}>
-                <h4>{comment.user.full_name }</h4> &nbsp; <p style={{ontSize:'13px', marginLeft:'auto'}}></p>
-                </div>
-                <div>
-                {comment.comment}
-                </div>
-              </div>
-              </div>
+        {postComment && postComment.map(comments => (
+              <Comment comment={comments} />
               
             ))}
   

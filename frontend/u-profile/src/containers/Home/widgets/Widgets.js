@@ -12,7 +12,7 @@ import "./Widgets.css";
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 120,
+    maxWidth: 110,
     maxHeight:200,
     margin:5,
   },

@@ -1,5 +1,7 @@
 .widgets {
-  padding: 20px;
+  padding: 10px;
+  margin-right: -10px;
+
 }
 .widgets_input {
   display: flex;
@@ -8,13 +10,13 @@
   padding: 10px;
   border-radius: 20px;
   margin-top: 10px;
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 .widgets_input input {
   border: none;
   background-color: var(--twitter-background);
-  width: 90%;
+  width: 100%;
   height: 30px;
 }
 

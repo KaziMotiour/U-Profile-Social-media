@@ -75,11 +75,61 @@ export const CommentPost = (id, data, config) => async dispatch =>{
         console.log(e);
     }
 }
+
+export const CommentUpdate = (id, data, config) => async dispatch =>{
+    console.log(id, data.get('comment'), config);
+    try{
+        axios.put(`http://127.0.0.1:8000/post/comment/rud/${id}`, data, config).then(res =>{
+            console.log(res.data);
+            dispatch(GetPostList(config))
+        }).catch(function (error){
+            if (error.response){
+                console.log(error.response.data.detail);
+            }
+        })
+    }catch(e){
+        console.log(e);
+    }
+}
+export const CommentDelete = (id, config) => async dispatch =>{
+    try{
+        axios.delete(`http://127.0.0.1:8000/post/comment/rud/${id}`, config).then(res =>{
+            console.log(res.data);
+            dispatch(GetPostList(config))
+        }).catch(function (error){
+            if (error.response){
+                console.log(error.response.data.detail);
+            }
+        })
+    }catch(e){
+        console.log(e);
+    }
+}
+
+
+
 export const ChangePrivacy = (id, data, config) => async dispatch =>{
     console.log(data.get('privacy'),'privacy');
     try{
         axios.put(`http://127.0.0.1:8000/post/detail/${id}`, data, config).then(res =>{
             console.log(res.data);
+            dispatch(GetPostList(config))
+        }).catch(function (error){
+            if (error.response){
+                console.log(error.response.data.detail);
+            }
+        })
+    }catch(e){
+        console.log(e);
+    }
+}
+
+
+export const SharePost = (id, data, config) => async dispatch =>{
+    console.log(data.get('sharePostContent'));
+    try{
+        axios.post(`http://127.0.0.1:8000/post/rePost/${id}`, data, config).then(res =>{
+            console.log(res.data,'dataaaaaa');
             dispatch(GetPostList(config))
         }).catch(function (error){
             if (error.response){

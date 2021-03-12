@@ -1,8 +1,8 @@
 .home {
     display: flex;
     height: 100vh;
-    margin-left: auto;
-    margin-right: auto;
+    /* margin-left: auto;
+    margin-right: auto; */
     padding: 0 10px;
   }
 
@@ -17,7 +17,7 @@
 .widgets{
     flex:1;
 }
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 640px) {
  
     .slider{
         display: none;

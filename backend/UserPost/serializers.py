@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django.contrib.auth import  get_user_model
 User= get_user_model()
 from .models import UserPost, PostComment
-from user_profile.models import User_profile, PostBookmark
+from user_profile.models import User_profile, PostBookmark, UserFollow
 from django_filters import rest_framework as filters
 # from user_profile.serializers import PostUserDetailsSerializer
 
@@ -24,13 +24,26 @@ class UserInfoSerializer(serializers.ModelSerializer):
 class PostUserDetailsSerializers(serializers.ModelSerializer):
         full_name = serializers.SerializerMethodField(read_only=True)
         profile = UserInfoSerializer(read_only=True)
+        is_following = serializers.SerializerMethodField(read_only=True)
         class Meta:
             model = User
-            fields=['id', 'username', 'full_name', 'profile']
+            fields=['id', 'username', 'full_name', 'profile', 'is_following']
 
         def get_full_name(self, obj):
             user = User_profile.objects.filter(user=obj).first()
             return str(user.first_name)+' '+ str(user.Last_name)
+        
+        def get_is_following(self, obj):
+           
+            request = self.context.get("request")
+            if obj == request.user:
+                return True
+            else:
+                user = UserFollow.objects.filter(user=request.user).first()
+                if obj in user.following.all():
+                    return True
+                else:
+                    return False
 
 
 
@@ -90,9 +103,10 @@ class PostSerializer(serializers.ModelSerializer):
     user = PostUserDetailsSerializers(read_only=True)
     sharePostContent = serializers.CharField(max_length=1000, required=False)
     postComment = PostCommentSerializer(many=True, read_only=True)
+    shared_user = PostUserDetailsSerializers(read_only=True, many=True)
     class Meta:
         model = UserPost
-        fields = ['id','parent', 'user', 'content', 'image', 'timestamp', 'is_retweet', 'is_saved', 'likes', 'privacy', 'sharePostContent','postComment', 'is_liked']
+        fields = ['id','parent', 'user', 'content', 'image', 'timestamp', 'is_retweet', 'is_saved', 'likes', 'privacy', 'sharePostContent','postComment', 'is_liked','shared_user']
 
 
     def get_likes(self, obj):
