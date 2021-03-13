@@ -17,4 +17,5 @@ export const LOGGED_IN_USER_INFO   = 'lOGGED_IN_USER_INFO'
 
 export const  GET_POST_START = 'GET_POST_START'
 export const GET_POST_SUCCESS   = 'GET_POST_SUCCESS'
+export const SHARE_POST_SUCCESS   = 'SHARE_POST_SUCCESS'
 

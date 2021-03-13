@@ -81,7 +81,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
   const [commentOpen, setCommentOpen] = useState(false)
   const loggedin_user_info = useSelector(state=> state.user.loggedinUserInfo)
   const shared_users = shared_user.length
-  console.log(loggedin_user_info);
+  console.log(user.full_name);
   const commentControl = () =>{
     setCommentOpen(!commentOpen)
 
@@ -127,8 +127,12 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
       
     
   }
-      
 
+  const HandleShareOpen = () =>{
+    setOpenSharePost(!opneSharePost)
+  }
+
+  
   const checkAuthenticatin =()=>{
     const access_token = localStorage.getItem('access_token')
     if(!access_token){
@@ -155,7 +159,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         </div>
       
         <div className="post__headerText">
-            <h3> {user.full_name ? user.username : user.full_name}
+            <h3> {user.full_name!=='None None'? user.full_name : user.username}
                 {/* {varified && <VerifiedUserIcon className="post_badge" /> } */}
                 <span className="post_username"> @{user.username} </span> 
 
@@ -164,7 +168,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         
         </div>
         <div style={{marginLeft:'auto'}} className="nav">
-       { loggedin_user_info.username=== user.username && <nav role="navigation">
+       {loggedin_user_info &&  loggedin_user_info.username === user.username && <nav role="navigation">
                 <ul>
                   <li onClick={()=> setOpenEditOption(!opneEditOption)} ><h2>...</h2>
                 <ul class="dropdown">
@@ -216,7 +220,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
                   style={{cursor:'pointer'}}
                     /> &nbsp;<p> {privacy}</p>
                 </div>
-                { loggedin_user_info.username === user.username && <ul class="dropdown">
+                {loggedin_user_info && loggedin_user_info.username === user.username && <ul class="dropdown">
                   
                   {opnePrivacyOption &&( <div onClick={() =>setOpenPrivacyOption(!opnePrivacyOption)}>
                   {Privacyoptions.map( (option) =>(
@@ -232,10 +236,11 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
               </div>
               {/* privracy end */}
               <div className="shared" style={{display:'flex', cursor:'pointer'}}>
-                <ShareIcon onClick={() => setOpenSharePost(!opneSharePost)} fontSize="default"/>&nbsp; {shared_users}
+                <ShareIcon onClick={HandleShareOpen} fontSize="default"/>&nbsp; {shared_users}
                 {opneSharePost && (
                 <SharedPost open={true} id={id} postUsername={user.username}
-                postUserFullname={user.full_name} postUserImage={user.profile.image} content={content} image={image} loggedInUsername={loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info.profile.image}
+                postUserFullname={user.full_name && user.full_name} postUserImage={user.profile.image} content={content} image={image} loggedInUsername={loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info.profile.image}
+                hondleShareOpen={HandleShareOpen}
                 />)}
                 </div>
           </div>
@@ -275,7 +280,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         </div>
       
         <div className="post__headerText">
-            <h3>{user.full_name}
+            <h3> {user.full_name!=='None None'? user.full_name : user.username}
                 {/* {varified && <VerifiedUserIcon className="post_badge" /> } */}
                 <span className="post_username"> share's </span> 
                {parent.user.username} post
@@ -284,13 +289,13 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         </div>
         {/* post edit options begain */}
         <div style={{marginLeft:'auto'}}>
-        <nav role="navigation">
+        {loggedin_user_info &&  loggedin_user_info.username === user.username && <nav role="navigation">
                 <ul>
-                <li onClick={()=> setOpenEditOption(!opneEditOption)} ><h2>...</h2>
+                  <li onClick={()=> setOpenEditOption(!opneEditOption)} ><h2>...</h2>
                 <ul class="dropdown">
                   {opneEditOption &&
                     postOptions.map( (option) =>(
-                    <li onClick={e => setSelectedPostEditOption(option)}  className="option">{option}</li>
+                    <li onClick={e => setSelectedPostEditOption(option)}  className="option"><p>{option}</p></li>
                     ))
                   }
                   
@@ -298,7 +303,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
                 </ul>
                   </li>
                 </ul>
-        </nav>
+        </nav>}
       </div>
       {/* post edit options ended */}
 
@@ -320,7 +325,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         </div>
       
         <div className="post__headerText">
-            <h3>{parent.user.full_name}
+            <h3>{parent.user.full_name !=='None None' ? parent.user.full_name : parent.user.username}
                 {/* {varified && <VerifiedUserIcon className="post_badge" /> } */}
                 <span className="post_username"> @{parent.user.username}</span> 
 
@@ -330,7 +335,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         </div>
         <div className="post_body">    
           <div className="post__headerDescription">
-            <p>  {content}</p>
+            <p>  {parent.content}</p>
           
           </div>
           {parent.image && <img style={{width:'90%', height:"350px", marginLeft:'20px'}}  src={parent.image} /> }
@@ -370,12 +375,15 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
                 </div>
                 <ul class="dropdown">
                   
+                  {loggedin_user_info &&  loggedin_user_info.username === user.username && <ul class="dropdown">
+                  
                   {opnePrivacyOption &&( <div onClick={() =>setOpenPrivacyOption(!opnePrivacyOption)}>
                   {Privacyoptions.map( (option) =>(
-                    <li onClick={e => setSelectedPrivacyOption(option)}  className="option">{option}</li>
+                    <li onClick={e => HandlePrivacyChange(id, option)}  className="option"><p>{option}</p></li>
                   ))} </div>)
                     }
 
+                </ul>}
                 </ul>
                 </li>
                 </ul>
@@ -386,7 +394,10 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
       {/* Post privacy part  */}
               <div className="shared" style={{display:'flex', cursor:'pointer'}}>
                 <ShareIcon onClick={() => setOpenSharePost(!opneSharePost)} fontSize="default"/> &nbsp; {shared_users}
-                {opneSharePost && (<SharedPost open={true} id={id}/>)}
+              
+                {opneSharePost && (<SharedPost open={true} id={parent.id} postUserFullname={parent.user.full_name} postUserImage={parent.user.profile.image} content={parent.content} image={parent.image} loggedInUsername={loggedin_user_info && loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info && loggedin_user_info.profile.image} hondleShareOpen={HandleShareOpen} 
+                
+                /> )}
 
               </div>
           </div>

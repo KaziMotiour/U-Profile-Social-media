@@ -1,5 +1,6 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import Slide from '@material-ui/core/Slide';
@@ -9,7 +10,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {VerifyJwtToken} from '../../../../../store/actions/Auth'
 import {SharePost} from '../../../../../store/actions/PostCrud'
 import './SharePost.css'
-
+import SnackBer from './SnackBer'
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -18,14 +19,17 @@ export default function SharedPost(props) {
     
     const history = useHistory()
     const dispatch  = useDispatch()
+    const sharePostInfo = localStorage.getItem('RePost')
     const [open, setOpen] = React.useState(props.open);
     const [sharePostContent, setSharepostContent] = useState('')
-    
+
     const handleClose = () => {
         setOpen(false);
-    };
+        localStorage.removeItem('RePost')
+        props.hondleShareOpen()
 
-    const HandlePrivacyChange =() =>{
+    };
+    const HandleSharePost =() =>{
         dispatch(VerifyJwtToken())
         checkAuthenticatin()
    
@@ -37,9 +41,19 @@ export default function SharedPost(props) {
         formData.append('sharePostContent', sharePostContent)
         dispatch(SharePost(props.id, formData, config))
         setSharepostContent('')
+        closeDialog()
   }
-      
 
+ 
+async function closeDialog (){
+  await new Promise((resolve) => setTimeout(() => { 
+      setOpen(false)
+      localStorage.removeItem('RePost')
+      props.hondleShareOpen()
+  
+  }, 3000))
+}
+ 
   const checkAuthenticatin =()=>{
     const access_token = localStorage.getItem('access_token')
     if(!access_token){
@@ -49,6 +63,9 @@ export default function SharedPost(props) {
       })
     }
   }
+
+
+
 
 
 console.log(props.loggedInUsername, props.id);
@@ -120,13 +137,18 @@ console.log(props.loggedInUsername, props.id);
           <Button onClick={handleClose} color="primary" >
             Cancle
           </Button>
-          <Button onClick={HandlePrivacyChange} color="primary" variant="contained">
-            Share
+          <Button onClick={HandleSharePost} color="primary" variant="contained">
+            share
           </Button>
+          {sharePostInfo!==null && <SnackBer open={true} success_info={sharePostInfo} />}
         </DialogActions>
         </div>
         </div>
         </div>
+
+
+
+
 
        
       </Dialog>

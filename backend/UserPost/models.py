@@ -179,10 +179,16 @@ def create_UserFollow(sender, instance, created=None, **kwargs):
 def add_like_notification(sender, instance, action,pk_set, **kwargs):
     post = UserPost.objects.get(pk=str(instance))
     sender = UserModel.objects.get(id=list(pk_set)[-1])
+    if post.content:
+        content = post.content[0:25]
+    else:
+        content = ''
+    
+    
     if action == 'pre_add':
-        notify = Notification(post = post, sender = sender, user=post.user, Notification_type=1, text_preview=post.content[0:25])
+        notify = Notification(post = post, sender = sender, user=post.user, Notification_type=1, text_preview='')
         notify.save()
     elif action == 'pre_remove':
-        notify = Notification.objects.filter(post = post, sender= sender, user=post.user, Notification_type=1, text_preview=post.content[0:25]).first()
+        notify = Notification.objects.filter(post = post, sender= sender, user=post.user, Notification_type=1, text_preview=content).first()
         if notify:
             notify.delete()
