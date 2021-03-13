@@ -19,6 +19,7 @@
 * Post like
 * Comment
 * share
+* Bookmark post
 * Post privacy (public, frinds, onlyme)
 
 
