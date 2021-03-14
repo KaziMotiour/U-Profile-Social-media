@@ -12,7 +12,7 @@ import {SharePost} from '../../../../../store/actions/PostCrud'
 import './SharePost.css'
 import SnackBer from './SnackBer'
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Slide direction="down" ref={ref} {...props} />;
 });
 
 export default function SharedPost(props) {
@@ -89,8 +89,8 @@ console.log(props.loggedInUsername, props.id);
         <div className="post__headerText">
             <h3> {props.loggedInUsername}
                 
-                <span className="post_username"> share's </span> 
-               {/* {parent.user.username} post */}{props.postUsername} post
+                <span className="post_username"> shareed </span> 
+               {/* {parent.user.username} post */}{props.postUsername}'s post
             </h3 >
             {/* {timestamp.substr(0,10)} {timestamp.substr(10,6)} */}
         </div>
@@ -129,7 +129,7 @@ console.log(props.loggedInUsername, props.id);
           
           </div>
           {/* {parent.image && <img style={{width:'80%', height:"350px", marginLeft:'30px'}}  src={parent.image} /> } */} 
-          <img style={{width:'70%', height:"250px", marginLeft:'30px'}}  src={props.image} />
+          {props.image && (<img style={{width:'70%', height:"250px", marginLeft:'30px'}}  src={props.image} />)}
               
         </div>
       </div>

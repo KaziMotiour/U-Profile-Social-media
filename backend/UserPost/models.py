@@ -183,8 +183,7 @@ def add_like_notification(sender, instance, action,pk_set, **kwargs):
         content = post.content[0:25]
     else:
         content = ''
-    
-    
+        
     if action == 'pre_add':
         notify = Notification(post = post, sender = sender, user=post.user, Notification_type=1, text_preview='')
         notify.save()

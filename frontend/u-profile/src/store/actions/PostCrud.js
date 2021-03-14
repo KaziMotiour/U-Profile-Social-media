@@ -150,3 +150,21 @@ export const SharePost = (id, data, config) => async dispatch =>{
         console.log(e);
     }
 }
+
+export const EditPost = (id, data, config) => async dispatch =>{
+    try{
+        axios.put(`http://127.0.0.1:8000/post/detail/${id}`, data, config).then(res =>{
+           
+            console.log('updated success');
+            localStorage.setItem('updated','success')
+            dispatch(GetPostList(config))
+        }).catch(function (error){
+            if (error.response){
+                console.log(error.response.data.detail);
+                localStorage.setItem('updated','failed')
+            }
+        })
+    }catch(e){
+        console.log(e);
+    }
+}

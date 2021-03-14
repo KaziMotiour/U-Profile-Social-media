@@ -100,6 +100,7 @@ function Nav() {
   const history = useHistory()
   const dispatch  = useDispatch()
   const accessToken = useSelector(state => state.auth.access_token)
+  const loggedInUser = useSelector(state => state.user.loggedinUserInfo)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -253,12 +254,12 @@ function Nav() {
               color="inherit"
             >
               {/* <AccountCircle /> */}
-              <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" className={classes.large} />
+              {loggedInUser ? ( <Avatar alt="Remy Sharp" src={loggedInUser.profile.image} className={classes.small} />) :  ( <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" className={classes.small} />)}
             </IconButton>
           </div>
 
           <div className={classes.sectionMobile}>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" className={classes.small} />
+            {loggedInUser ? ( <Avatar alt="Remy Sharp" src={loggedInUser.profile.image} className={classes.small} />) :  ( <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" className={classes.small} />)}
             <IconButton
               aria-label="show more"
               aria-controls={mobileMenuId}

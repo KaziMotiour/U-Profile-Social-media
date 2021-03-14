@@ -1,0 +1,35 @@
+.editPost{
+    padding: 50px;
+}
+.Textarea {
+    width: 80%;
+    height: 10px;
+    font-size: 16px;
+    border: none;
+    padding: 10px;
+    margin-top: -15px;
+    /* border-bottom:1px solid rgb(63, 81, 181) ; */
+  }
+  
+.Textarea::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and firefox */
+.Textarea {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.Textarea:focus{
+    outline: none;
+}
+.buttons{
+      margin-right: 5%;
+}
+.sharePostForm{
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.sharePostForm::-webkit-scrollbar {
+    display: none;
+}

@@ -28,6 +28,7 @@ import "./Post.css";
 import { CommentTwoTone } from "@material-ui/icons";
 import Comment from './comment/Comment'
 import SharedPost from './sharePost/SharePost'
+import EditPost from './editPost/EditPost'
 
 // dropdown style
 const useStyles = makeStyles((theme: Theme) =>
@@ -74,14 +75,14 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
   const [opneEditOption, setOpenEditOption] = useState(false)
   const [opnePrivacyOption, setOpenPrivacyOption] = useState(false)
   const [opneSharePost, setOpenSharePost] = useState(false)
-  const [selectedPostEdiOption, setSelectedPostEditOption] = React.useState('');
-  const [selectedPrivacyOption, setSelectedPrivacyOption] = React.useState('');
+  const [openEditForm, setOpenEditForm] = React.useState(false)
+  const [openDeleteForm, setOpenDeleteForm] = React.useState(false)
   const [postComments, setPostComments] = useState('');
   const number_of_comment = postComment.length
   const [commentOpen, setCommentOpen] = useState(false)
   const loggedin_user_info = useSelector(state=> state.user.loggedinUserInfo)
   const shared_users = shared_user.length
-  console.log(user.full_name);
+ 
   const commentControl = () =>{
     setCommentOpen(!commentOpen)
 
@@ -115,7 +116,6 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
   const HandlePrivacyChange =(id, option) =>{
     dispatch(VerifyJwtToken())
     checkAuthenticatin()
-    console.log(id,  option);
    
     const config = { headers: { 
       'Content-Type':'application/json',
@@ -132,6 +132,20 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
     setOpenSharePost(!opneSharePost)
   }
 
+  const  HandleEditOpen = (option) =>{
+
+    if (option==='Edit'){
+      setOpenEditForm(!openEditForm)
+    }else if(option==='Delete'){
+      setOpenDeleteForm(!openDeleteForm)
+    }    
+}
+ 
+
+
+  const closeEditForm = () =>{
+    setOpenEditForm(!openEditForm)
+  }
   
   const checkAuthenticatin =()=>{
     const access_token = localStorage.getItem('access_token')
@@ -174,7 +188,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
                 <ul class="dropdown">
                   {opneEditOption &&
                     postOptions.map( (option) =>(
-                    <li onClick={e => setSelectedPostEditOption(option)}  className="option"><p>{option}</p></li>
+                    <li onClick={e => HandleEditOpen(option)}  className="option"><p>{option}</p></li>
                     ))
                   }
                   
@@ -184,7 +198,10 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
                 </ul>
         </nav>}
 
-         
+
+        {openEditForm && <EditPost open={true} id={id} postUsername={user.username}
+                postUserFullname={user.full_name && user.full_name} postUserImage={user.profile.image} content={content} image={image} loggedInUsername={loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info.profile.image}
+                hondleEditFormOpen={closeEditForm} />}
         </div>
         </div>
           {/* Post header part end */}
@@ -236,7 +253,9 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
               </div>
               {/* privracy end */}
               <div className="shared" style={{display:'flex', cursor:'pointer'}}>
-                <ShareIcon onClick={HandleShareOpen} fontSize="default"/>&nbsp; {shared_users}
+               
+                <ShareIcon onClick={HandleShareOpen} fontSize="default"/>&nbsp; {shared_users} share
+
                 {opneSharePost && (
                 <SharedPost open={true} id={id} postUsername={user.username}
                 postUserFullname={user.full_name && user.full_name} postUserImage={user.profile.image} content={content} image={image} loggedInUsername={loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info.profile.image}
@@ -282,8 +301,8 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         <div className="post__headerText">
             <h3> {user.full_name!=='None None'? user.full_name : user.username}
                 {/* {varified && <VerifiedUserIcon className="post_badge" /> } */}
-                <span className="post_username"> share's </span> 
-               {parent.user.username} post
+                <span className="post_username"> shared </span> 
+               {parent.user.username}'s post
             </h3 >
             {timestamp.substr(0,10)} {timestamp.substr(10,6)}
         </div>
@@ -295,7 +314,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
                 <ul class="dropdown">
                   {opneEditOption &&
                     postOptions.map( (option) =>(
-                    <li onClick={e => setSelectedPostEditOption(option)}  className="option"><p>{option}</p></li>
+                    <li onClick={e => HandleEditOpen(option)}  className="option"><p>{option}</p></li>
                     ))
                   }
                   
@@ -304,6 +323,9 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
                   </li>
                 </ul>
         </nav>}
+        {openEditForm && <EditPost open={true} id={id} parent={parent} postUsername={parent.user.username} postUserFullname={parent.user.full_name} postUserImage={parent.user.profile.image} content={parent.content} image={parent.image} loggedInUsername={loggedin_user_info && loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info && loggedin_user_info.profile.image}
+                hondleEditFormOpen={closeEditForm} />}
+        
       </div>
       {/* post edit options ended */}
 
@@ -393,9 +415,9 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
       </div>
       {/* Post privacy part  */}
               <div className="shared" style={{display:'flex', cursor:'pointer'}}>
-                <ShareIcon onClick={() => setOpenSharePost(!opneSharePost)} fontSize="default"/> &nbsp; {shared_users}
+                <ShareIcon onClick={() => setOpenSharePost(!opneSharePost)} fontSize="default"/> &nbsp; {shared_users} share
               
-                {opneSharePost && (<SharedPost open={true} id={parent.id} postUserFullname={parent.user.full_name} postUserImage={parent.user.profile.image} content={parent.content} image={parent.image} loggedInUsername={loggedin_user_info && loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info && loggedin_user_info.profile.image} hondleShareOpen={HandleShareOpen} 
+                {opneSharePost && (<SharedPost open={true} id={id} postUserFullname={parent.user.full_name} postUserImage={parent.user.profile.image} content={parent.content} image={parent.image} loggedInUsername={loggedin_user_info && loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info && loggedin_user_info.profile.image} hondleShareOpen={HandleShareOpen} 
                 
                 /> )}
 

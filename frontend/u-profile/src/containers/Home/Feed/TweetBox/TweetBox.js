@@ -34,6 +34,7 @@ function TweetBox() {
 
 
   const onChangePicture = e => {
+
     if (e.target.files[0]) {
       setPicture(e.target.files[0]);
       const reader = new FileReader();
@@ -113,7 +114,7 @@ function TweetBox() {
             color="primary"
             onClick={HandelCreaatePost}
           >
-            Tweet
+            Post
           </Button>
         </div>
       </form>

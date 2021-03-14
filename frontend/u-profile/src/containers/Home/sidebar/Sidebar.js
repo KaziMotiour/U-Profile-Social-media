@@ -30,7 +30,7 @@ function Sidebar() {
 
             
             {/* button */}
-            <Button variant="outlined"  className="sidebar--tweet" fullWidth>Tweet</Button>
+            
             
         </div>
     )
