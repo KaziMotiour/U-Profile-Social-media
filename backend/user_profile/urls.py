@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import EditUserProfile, GetLoggedinUser, UserFollowViews,UserdetailView, UserListView, ToggleBookmarkViews, PostBookmarkVew, RecomendedUser
+from .views import EditUserProfile, GetLoggedinUser, UserFollowViews,UserdetailView, UserListView, ToggleBookmarkViews, PostBookmarkVew, RecomendedUser, MutualFeiend
 
 urlpatterns = [
     path('user/', UserListView.as_view(), name="user"),
@@ -10,5 +10,6 @@ urlpatterns = [
     path('bookmark/', PostBookmarkVew.as_view(), name="PostBookmarkVIew"),
     path('bookmark/<int:pk>', ToggleBookmarkViews, name="postBookmarkViews"),
     path('recomemdedUser/', RecomendedUser.as_view(), name="postBookmarkViews"),
+    path('mutualfriend/<int:pk>', MutualFeiend.as_view(), name="postBookmarkViews"),
 
 ]

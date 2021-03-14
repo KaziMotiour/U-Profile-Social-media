@@ -21,6 +21,7 @@ function App() {
     dispatch(VerifyJwtToken())
     const config = { headers: {'Authorization': "Bearer " + localStorage.getItem('access_token')}}
     dispatch(LoggedUserInfo(config))
+    
   },[])
   return (
     <div className="App">

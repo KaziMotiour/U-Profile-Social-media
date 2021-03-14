@@ -6,7 +6,7 @@ from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .permission import IsOwnerOrReadOnly
 from rest_framework.parsers import MultiPartParser, FormParser
-from .serializers import UserProfile, UserSerializer, PostBookmarkSerializer, PostBookmarkSerializer,PostUserDetailsSerializer
+from .serializers import UserProfile, UserSerializer, PostBookmarkSerializer, PostBookmarkSerializer,PostUserDetailsSerializer, RecomendedUserList
 from .models import User_profile, PostBookmark, UserFollow
 from django.contrib.auth import get_user_model
 from UserPost.models import UserPost, Post
@@ -84,10 +84,42 @@ class PostBookmarkVew(ListAPIView):
         
     
 class RecomendedUser(ListAPIView):
-    serializer_class = PostUserDetailsSerializer
+    serializer_class = RecomendedUserList
     def get_queryset(self):
         user = self.request.user
         follow_user = UserFollow.objects.get(user=user)
-        print(follow_user.following.all())
-        qs = User.objects.exclude(id__in= follow_user.following.all()).exclude(username=user.username)
-        return  qs 
+        qs = User.objects.exclude(id__in= follow_user.following.all()).exclude(username=user.username).order_by('?')[:5]
+        return  qs
+
+
+class MutualFeiend(ListAPIView):
+    serializer_class=PostUserDetailsSerializer
+    def get_queryset(self):
+        R_user = self.request.user
+        RE_user = self.kwargs.get('pk')
+        requested_user =UserFollow.objects.filter(user=R_user).first()
+        recomended_user = UserFollow.objects.filter(user=RE_user).first()
+        return requested_user.following.filter(id__in = recomended_user.following.all())
+
+
+
+# @api_view(['GET','POST'])
+# # @permission_classes([IsAuthenticated])
+# def MutualFriend(request, user_id):
+    
+#     serilizer_data = PostUserDetailsSerializer(data=request.data)
+#     if serilizer_data.is_valid():
+#         user_content = serilizer_data.data.get('sharePostContent')
+#         print(user_content)
+#         user = request.user
+#         post = get_object_or_404(UserPost, pk=post_id)
+#         if post:
+#             RePost = UserPost.objects.RePost(user, post, user_content)
+            
+#             if RePost:
+#                 post.shared_user.add(user)
+#                 return Response({"RePost": "True"})
+#             else:
+#                 return Response({"RePost": "False"})
+#         else:
+#             return Response({"post": "Dosn't exist"})

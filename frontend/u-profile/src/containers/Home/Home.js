@@ -4,13 +4,37 @@ import Feed from "./Feed/Feed";
 import Widgets from "./widgets/Widgets";
 import Nav from '../../component/Nav'
 import './Home.css'
+import {useHistory} from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
 import {GetPostList} from '../../store/actions/PostCrud'
+import {LoggedUserInfo} from '../../store/actions/UserProfile'
+import {VerifyJwtToken} from '../../store/actions/Auth'
+
+
 
 
 function Home(props) {
     const dispatch = useDispatch()
+    const history = useHistory()
+    useEffect(() =>{
+        dispatch(VerifyJwtToken())
+        const access = localStorage.getItem('access_token')
+        const config = { headers: {'Authorization': "Bearer " + localStorage.getItem('access_token')}}
 
+        access && dispatch(LoggedUserInfo(config))
+        checkAuthenticatin()
+      },[])
+
+      const checkAuthenticatin =()=>{
+        const access_token = localStorage.getItem('access_token')
+        if(!access_token){
+          history.push({
+            pathname: '/login',
+            state: { detail: 'session expired, Try to login again' }
+          })
+        }
+      }
+    
 
     const loggedinUser = useSelector(state => state.user.loggedinUserInfo)
     return (

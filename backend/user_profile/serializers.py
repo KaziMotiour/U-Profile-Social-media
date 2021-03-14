@@ -17,16 +17,42 @@ class UserInfoSrializer(serializers.ModelSerializer):
 # for post user 
 class PostUserDetailsSerializer(serializers.ModelSerializer):
         full_name = serializers.SerializerMethodField(read_only=True)
-        
         profile = UserInfoSrializer(read_only=True)
+
         class Meta:
             model = User
             fields=['id', 'username', 'full_name', 'profile' ]
 
         def get_full_name(self, obj):
-            print(obj, 'obj')
             user = User_profile.objects.filter(user__username=obj.username).first()
             return str(user.first_name)+' '+ str(user.Last_name)
+
+
+class RecomendedUserList(serializers.ModelSerializer):
+        full_name = serializers.SerializerMethodField(read_only=True)
+        profile = UserInfoSrializer(read_only=True)
+        mutual_friends = serializers.SerializerMethodField(read_only=True,)
+        class Meta:
+            model = User
+            fields=['id', 'username', 'full_name', 'profile', 'mutual_friends' ]
+
+        def get_full_name(self, obj):
+            user = User_profile.objects.filter(user__username=obj.username).first()
+            return str(user.first_name)+' '+ str(user.Last_name)
+
+        def get_mutual_friends(self, obj):
+            mutual_friend = 0
+            request = self.context.get("request")
+            requested_user =UserFollow.objects.filter(user=request.user).first()
+            recomended_user = UserFollow.objects.filter(user=obj).first() 
+            for user in recomended_user.following.all():
+                if user in  requested_user.following.all():
+                    mutual_friend+=1
+
+            return mutual_friend
+
+
+
 
 
 
@@ -133,7 +159,6 @@ class UserSerializer(serializers.ModelSerializer):
             fields=['id', 'username', 'full_name','profile', 'posts']
 
         def get_full_name(self, obj):
-            print(obj)
             user = User_profile.objects.filter(user=obj).first()
             return str(user.first_name)+' '+ str(user.Last_name)
 

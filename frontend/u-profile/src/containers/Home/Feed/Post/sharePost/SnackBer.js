@@ -11,6 +11,7 @@ function SnackBer(props) {
         vertical: 'top',
         horizontal: 'center',
       });
+
       const info = props.success_info
       const {horizontal, vertical, snackBerOpen} = state;
 
@@ -18,17 +19,25 @@ function SnackBer(props) {
           setState({...state, snackBerOpen:props.open})
       },[])
 
-      let confirmInfo = 'no comments'
+      let confirmInfo = 'No comments'
+
       if (props.success_info === 'True'){
-        confirmInfo="SuccessFully shared"
+        confirmInfo="SuccessFully Shared"
         closeDialog()
-      }else{
+      }else if(props.success_info === 'success'){
+        confirmInfo="Successfully Updated"
+        closeDialog()
+      }else if(props.success_info === 'Deleted'){
+        confirmInfo="Successfully Deleted"
+        closeDialog()
+      }else if(props.success_info === 'False') {
         confirmInfo="Already shared for today"
         closeDialog()
       }
       const handleOpen = () =>{
         setState({ ...state, snackBerOpen: true });
       }
+
       async function closeDialog (){
         await new Promise((resolve) => setTimeout(() => { 
             setState({ ...state, snackBerOpen: false });
@@ -50,7 +59,7 @@ function SnackBer(props) {
                         aria-describedby="message-id2"
                         // className={classes.snackbarStyleViaNestedContent}
 
-                        style={props.success_info === 'True' ? {backgroundColor:'green'} :{backgroundColor:'rgb(71, 73, 82)'}}
+                        style={props.success_info === 'False' ? {backgroundColor:'rgb(71, 73, 82)'}: {backgroundColor:'green'}}
                         message={
                           <span id="message-id2">
                             <div>{confirmInfo}</div>

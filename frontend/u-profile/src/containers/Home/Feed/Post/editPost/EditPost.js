@@ -43,21 +43,22 @@ const useStyles = makeStyles((theme: Theme) =>
         width:'90%',
         height:"300px", 
         marginLeft:'30px', 
-        marginTop:'-30px'
+        
     }
   }))
 
 export default function SharedPost({open, id, parent, postUsername, postUserFullname, postUserImage, content, image, loggedInUsername, loggedInUserImage, hondleEditFormOpen}) {
+
     const classes = useStyles()
     const history = useHistory()
     const dispatch  = useDispatch()
-    const sharePostInfo = localStorage.getItem('RePost')
+    const editInfo = localStorage.getItem('updated')
     const [formOpen, setFormOpen] = React.useState(open); 
     const [editContent, setEditContent] = useState(content)
-
     const [postImage, setPostImage] = useState(image)
     const [newImage, setNewImge] = useState(null)
     const [imgData, setImgData] = useState(null);
+    console.log(editInfo,'edit info');
 
 // load image
   const onChangePicture = (e) => {
@@ -74,7 +75,7 @@ export default function SharedPost({open, id, parent, postUsername, postUserFull
 
     const handleClose = () => {
         setFormOpen(false);
-        localStorage.removeItem('Updated')
+        localStorage.removeItem('updated')
         hondleEditFormOpen()
 
     };
@@ -89,10 +90,6 @@ export default function SharedPost({open, id, parent, postUsername, postUserFull
         let formData = new FormData()
         if(editContent){
             formData.append('content', editContent)
-        }
-
-        if(!postImage){
-            formData.append('image', postImage)
         }
 
         if(newImage){
@@ -110,16 +107,12 @@ export default function SharedPost({open, id, parent, postUsername, postUserFull
 async function closeDialog (){
   await new Promise((resolve) => setTimeout(() => { 
         setFormOpen(false)
-        localStorage.removeItem('Updated')
+        localStorage.removeItem('updated')
         hondleEditFormOpen()
   
   }, 3000))
 }
 
-const DeleteImage = () =>{
-    setPostImage(null)
-    setImgData(null)
-}
  
   const checkAuthenticatin =()=>{
     const access_token = localStorage.getItem('access_token')
@@ -186,8 +179,6 @@ const DeleteImage = () =>{
           </div>
           <label style={{width:'150px'}} className="Label">Add / Change Image</label> &nbsp;
           <input type="file" id="upload" onChange={onChangePicture}/><br/><br/>
-          <div onClick={DeleteImage} className={classes.cancelIcon} >
-          {postImage && ( <Button style={{color:'red'}} variant="outlined" >Remove</Button> )} </div>
           {postImage && (<img  className={classes.img} src={imgData ? imgData :postImage} />  )}
               
         </div>
@@ -267,7 +258,7 @@ const DeleteImage = () =>{
           <Button onClick={HandlePostEdit} color="primary" variant="contained">
             Update
           </Button>
-          {sharePostInfo!==null && <SnackBer open={true} success_info={sharePostInfo} />}
+          {editInfo!==null && <SnackBer open={true} success_info={editInfo} />}
         </DialogActions>
        
       </Dialog>

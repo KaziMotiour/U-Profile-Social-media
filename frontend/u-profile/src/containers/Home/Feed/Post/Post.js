@@ -29,6 +29,7 @@ import { CommentTwoTone } from "@material-ui/icons";
 import Comment from './comment/Comment'
 import SharedPost from './sharePost/SharePost'
 import EditPost from './editPost/EditPost'
+import DeletePost from './deletePost/DeletePost'
 
 // dropdown style
 const useStyles = makeStyles((theme: Theme) =>
@@ -133,7 +134,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
   }
 
   const  HandleEditOpen = (option) =>{
-
+    console.log(option, 'optionss');
     if (option==='Edit'){
       setOpenEditForm(!openEditForm)
     }else if(option==='Delete'){
@@ -146,7 +147,9 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
   const closeEditForm = () =>{
     setOpenEditForm(!openEditForm)
   }
-  
+  const closeDeleteForm = () =>{
+    setOpenDeleteForm(!openDeleteForm)
+  }
   const checkAuthenticatin =()=>{
     const access_token = localStorage.getItem('access_token')
     if(!access_token){
@@ -198,10 +201,11 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
                 </ul>
         </nav>}
 
-
         {openEditForm && <EditPost open={true} id={id} postUsername={user.username}
                 postUserFullname={user.full_name && user.full_name} postUserImage={user.profile.image} content={content} image={image} loggedInUsername={loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info.profile.image}
                 hondleEditFormOpen={closeEditForm} />}
+        
+        {openDeleteForm && <DeletePost open={true} id={id}  hondleDeleteFormOpen={closeDeleteForm}/>}
         </div>
         </div>
           {/* Post header part end */}
@@ -323,8 +327,9 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
                   </li>
                 </ul>
         </nav>}
-        {openEditForm && <EditPost open={true} id={id} parent={parent} postUsername={parent.user.username} postUserFullname={parent.user.full_name} postUserImage={parent.user.profile.image} content={parent.content} image={parent.image} loggedInUsername={loggedin_user_info && loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info && loggedin_user_info.profile.image}
-                hondleEditFormOpen={closeEditForm} />}
+        {openEditForm && <EditPost open={true} id={id} parent={parent} postUsername={parent.user.username} postUserFullname={parent.user.full_name} postUserImage={parent.user.profile.image} content={content} image={parent.image} loggedInUsername={loggedin_user_info && loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info && loggedin_user_info.profile.image} hondleEditFormOpen={closeEditForm} />}
+
+        {openDeleteForm && <DeletePost open={true} id={id}  hondleDeleteFormOpen={closeDeleteForm}/>}
         
       </div>
       {/* post edit options ended */}
