@@ -6,6 +6,7 @@ import {useHistory} from 'react-router-dom'
 import {CreatePost} from '../../../../store/actions/PostCrud'
 import {useDispatch, useSelector} from 'react-redux'
 import {CheckAuthentication} from '../../../../CheckAuthentication'
+import {VerifyJwtToken} from '../../../../store/actions/Auth'
 import "./TweetBox.css";
 
 
@@ -33,6 +34,7 @@ function TweetBox() {
   const [imgData, setImgData] = useState(null);
 
 
+
   const onChangePicture = e => {
 
     if (e.target.files[0]) {
@@ -55,6 +57,7 @@ function TweetBox() {
   }
 
   const HandelCreaatePost = (e) =>{
+    dispatch(VerifyJwtToken())
     e.preventDefault()
     checkAuthenticatin()
     const config = { headers: { 

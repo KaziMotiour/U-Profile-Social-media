@@ -83,11 +83,10 @@ export const UserLogin = (email, password) => async dispatch =>{
 
 export const VerifyJwtToken = () => async dispatch =>{
   const token = localStorage.getItem('access_token')
-  console.log(token, 'verify');
   try{
 
       await axios.post('http://127.0.0.1:8000/api/token/verify/',{token}).then(res =>{
-        
+      
       }).catch(function (error) {
 
         if(error.response.data.detail!==null){
@@ -107,7 +106,6 @@ export const Registration = (email, username, password, password2) => async disp
     console.log(email, username, password, password2);
     try{
         await axios.post('http://127.0.0.1:8000/auth/singup/',{email, username, password, password2}).then(res =>{
-            console.log(res,'ress');
             dispatch(auth_registratin(res.data))
         }).catch(function (error) {
             // handle error

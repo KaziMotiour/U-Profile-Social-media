@@ -101,25 +101,3 @@ class MutualFeiend(ListAPIView):
         recomended_user = UserFollow.objects.filter(user=RE_user).first()
         return requested_user.following.filter(id__in = recomended_user.following.all())
 
-
-
-# @api_view(['GET','POST'])
-# # @permission_classes([IsAuthenticated])
-# def MutualFriend(request, user_id):
-    
-#     serilizer_data = PostUserDetailsSerializer(data=request.data)
-#     if serilizer_data.is_valid():
-#         user_content = serilizer_data.data.get('sharePostContent')
-#         print(user_content)
-#         user = request.user
-#         post = get_object_or_404(UserPost, pk=post_id)
-#         if post:
-#             RePost = UserPost.objects.RePost(user, post, user_content)
-            
-#             if RePost:
-#                 post.shared_user.add(user)
-#                 return Response({"RePost": "True"})
-#             else:
-#                 return Response({"RePost": "False"})
-#         else:
-#             return Response({"post": "Dosn't exist"})

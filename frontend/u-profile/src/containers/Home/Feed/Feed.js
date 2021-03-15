@@ -4,6 +4,7 @@ import Post from './Post/Post'
 import "./Feed.css";
 import {useDispatch, useSelector} from 'react-redux'
 import {GetPostList} from '../../../store/actions/PostCrud'
+import Media from './Post/LoadPost'
 
 function Feed() {
 
@@ -52,7 +53,7 @@ const allPost = useSelector(state => state.post.allPost)
 
       {/* posts */}
       <div className="post">
-      {userposts}
+     {allPost.length !==0 ? userposts : (<Media />) }
       </div>    
       
     </div>

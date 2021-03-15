@@ -12,6 +12,9 @@ export const VERIFY_JWT_TOKEN    = 'VERIFY_JWT_TOKEN'
 // User profile 
 
 export const LOGGED_IN_USER_INFO   = 'lOGGED_IN_USER_INFO'
+export const RECOMENDED_USER   = 'RECOMENDED_USER'
+export const MUTUAL_FRIEND   = 'MUTUAL_FRIEND'
+export const REMOVE_MUTUAL_FRIEND = 'REMOVE_MUTUAL_FRIEND'
 
 // CRUD post
 
