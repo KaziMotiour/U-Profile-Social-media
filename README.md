@@ -13,6 +13,7 @@
 * User profile
 * Follow/Unfollow
 * Recommended user
+* Show mutual friend 
 * Notification
 * Autocomplete search
 * CRUD post
