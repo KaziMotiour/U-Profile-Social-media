@@ -22,7 +22,7 @@
   border: 1px solid var(--twitter-background);
   font-size: 25px;
   background-color: white;
-  z-index: 100;
+ 
 }
 
 .feed-header > h2 {

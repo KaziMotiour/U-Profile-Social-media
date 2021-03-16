@@ -19,6 +19,8 @@ import Link from '@material-ui/core/Link';
 import {useDispatch, useSelector} from 'react-redux'
 import { useHistory, withRouter, NavLink } from "react-router-dom";
 import {auth_logout} from '../store/actions/Auth'
+import zIndex from '@material-ui/core/styles/zIndex';
+import './nav.css'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -92,6 +94,9 @@ const useStyles = makeStyles((theme: Theme) =>
       width: theme.spacing(5),
       height: theme.spacing(5),
     },
+   
+
+  
   }),
 );
 
@@ -103,11 +108,11 @@ function Nav() {
   const loggedInUser = useSelector(state => state.user.loggedinUserInfo)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    console.log(event.currentTarget);
     setAnchorEl(event.currentTarget);
   };
 
@@ -173,14 +178,6 @@ function Nav() {
       <div style={{display:'flex', flexDirection:'column'}}>
       
       <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messagesss</p>
-      </MenuItem>
-      <MenuItem>
         <IconButton aria-label="show 11 new notifications" color="inherit">
           <Badge badgeContent={11} color="secondary">
             <NotificationsIcon />
@@ -188,7 +185,7 @@ function Nav() {
         </IconButton>
         <p>Notifications</p>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem >
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
@@ -235,16 +232,13 @@ function Nav() {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <MailIcon />
+           
+            <IconButton aria-label="show 17 new notifications" color="inherit" >
+              <Badge badgeContent={17} color="secondary">    
+                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+                  
             <IconButton
               edge="end"
               aria-label="account of current user"
@@ -274,6 +268,8 @@ function Nav() {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
+
+
     </div>
   );
 }

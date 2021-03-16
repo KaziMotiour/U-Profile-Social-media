@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.humanize.templatetags import humanize
 from django.contrib.auth import  get_user_model
 from django.db.models.signals import post_save,  post_delete, pre_delete
 
@@ -20,7 +21,8 @@ class Notification(models.Model):
     def __str__(self):
         return str(self.Notification_type)
      
-
+    def get_date(self):
+        return humanize.naturaltime(self.date)
 
 
 

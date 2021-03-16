@@ -79,13 +79,12 @@ class PostCommentCreateSerializer(serializers.ModelSerializer):
 
 class PostCommentSerializer(serializers.ModelSerializer):
     user = PostUserDetailsSerializers(read_only=True)
-    create_date = serializers.SerializerMethodField(read_only=True)
+    create_date = serializers.SerializerMethodField()
     class Meta:
         model = PostComment
         fields = ['id', 'user', 'post', 'comment', 'create_date' ]
     
     def get_create_date(self, obj):
-        print(obj.get_create_date(),'comment')
         time = obj.get_create_date()
         return time
     

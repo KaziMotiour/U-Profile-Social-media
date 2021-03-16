@@ -28,7 +28,8 @@ urlpatterns = [
     path('hello/', HelloView.as_view(), name='hello'),
     path('auth/', include('authentication.urls')),
     path('profile/', include('user_profile.urls')),
-    path('post/', include('UserPost.urls'))
+    path('post/', include('UserPost.urls')),
+    path('notification/', include('notification.urls'))
 
 ]
 

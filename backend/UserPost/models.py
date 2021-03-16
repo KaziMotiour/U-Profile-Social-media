@@ -165,18 +165,18 @@ class PostComment(models.Model):
 
 
 @receiver([post_save, post_delete], sender=PostComment)
-def create_UserFollow(sender, instance, created=None, **kwargs):
+def commentNotifction(sender, instance, created=None, **kwargs):
     print(instance.id,  'instalce ')
-    # if created:
-    #     comment = instance
-    #     user = comment.post.user
-    #     sender = comment.user
-    #     post = comment.post
-    #     notify = Notification(post=post, sender=sender, user=user, Notification_type=2, text_preview=comment.comment[:25])
-    #     notify.save()
+    if created:
+        comment = instance
+        user = comment.post.user
+        sender = comment.user
+        post = comment.post
+        notify = Notification(post=post, sender=sender, user=user, Notification_type=2, text_preview=comment.comment[:25])
+        notify.save()
 
 @receiver(m2m_changed, sender=UserPost.likes.through)
-def add_like_notification(sender, instance, action,pk_set, **kwargs):
+def likenotification(sender, instance, action,pk_set, **kwargs):
     post = UserPost.objects.get(pk=str(instance))
     sender = UserModel.objects.get(id=list(pk_set)[-1])
     if post.content:

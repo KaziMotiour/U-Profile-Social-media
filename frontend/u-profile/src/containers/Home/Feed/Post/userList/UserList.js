@@ -22,13 +22,18 @@ createStyles({
     large: {
         width: theme.spacing(6),
         height: theme.spacing(6),
+        
       },
     body:{
-        padding:'20px 50px 50px 50px',  
+        padding:'20px 50px 5px 50px',  
         display:'flex'
-    }, 
+    },
+    userList:{
+      marginRight:'100px',
+      display:'flex'
+    },
     button:{
-        marginLeft:'100px'
+        marginLeft:'auto'
     },
     DeleteIcon:{
         width: theme.spacing(6),
@@ -71,8 +76,10 @@ export default function UserList({opene, mutualFriendList}) {
         </div>
           {mutualFriendList.map(user=>(
               <div  className={classes.body}>
+                <div className={classes.userList}>
                 <Avatar src={user.profile.image} className={classes.large}/>&nbsp;&nbsp;
                 {user.full_name !=='None None' ? user.full_name: user.username}
+                </div>
                 <Button color="primary" className={classes.button}>Following</Button>
               </div>
 

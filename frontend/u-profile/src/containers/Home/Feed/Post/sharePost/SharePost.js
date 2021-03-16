@@ -116,7 +116,7 @@ console.log(props.loggedInUsername, props.id);
         </div>
       
         <div className="post__headerText">
-            <h3>{props.postUserFullname}
+            <h3>{props.postUserFullname !=='None None' ? props.postUserFullname: props.postUsername }
             
                 <span className="post_username"> @  {props.postUsername}</span> 
 
