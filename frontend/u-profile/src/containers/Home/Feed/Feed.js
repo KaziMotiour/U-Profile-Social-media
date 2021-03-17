@@ -50,9 +50,11 @@ const allPost = useSelector(state => state.post.allPost)
       </div>
 
       {/* tweetbox */}
+      
       <TweetBox />
+
       <div className="recomendedUser">
-      <RecomendUser />
+      <RecomendUser className="rec"/>
       </div>
 
       {/* posts */}

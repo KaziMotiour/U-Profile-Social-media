@@ -209,4 +209,17 @@ a {
     }
    
   }
+  @media screen and (min-width: 500px) and (max-width: 800px){
+ 
+    .post{
+        max-width: 500px;
+        margin:auto
+    }
+    .particular-post, .particular-shared-post{
+        max-width: 560px;
+        margin:auto
+    }
+   
+  }
+  
   

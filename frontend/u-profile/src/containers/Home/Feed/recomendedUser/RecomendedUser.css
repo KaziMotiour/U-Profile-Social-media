@@ -1,7 +1,8 @@
 .widgets {
   padding: 10px;
   margin-right: -10px;
-  /* margin: auto; */
+  max-width: 100%;
+  margin:auto;
 
 }
 .card{
