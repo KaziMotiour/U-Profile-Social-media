@@ -1,7 +1,7 @@
     import React from 'react'
     import axios from 'axios'
 import {LOGGED_IN_USER_INFO, RECOMENDED_USER, MUTUAL_FRIEND} from './ActionTypes'
-import {GetPostLikedUser} from './Utils'
+import {GetPostLikedUser, GetPostSharedUser} from './Utils'
 
 
 
@@ -80,6 +80,20 @@ export const UserFollowFromLikedUser = (id, username, config) => async dispatch 
     }
 
 }
+
+export const UserFollowFromSharedUser = (id, username, config) => async dispatch =>{
+    console.log(id,'iddd');
+    try{
+        await axios.get(`http://127.0.0.1:8000/profile/follow/${username}`, config).then(res =>{
+            dispatch(GetPostSharedUser(id, config))
+        })
+    }catch(err){
+        console.log(err,'err');
+    }
+
+}
+
+
 export const MutualFriend = (id, config) => async dispatch =>{
 
     try{

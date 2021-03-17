@@ -5,6 +5,7 @@ import "./Feed.css";
 import {useDispatch, useSelector} from 'react-redux'
 import {GetPostList} from '../../../store/actions/PostCrud'
 import Media from './Post/LoadPost'
+import RecomendUser from './recomendedUser/RecomendedUser'
 
 function Feed() {
 
@@ -50,6 +51,9 @@ const allPost = useSelector(state => state.post.allPost)
 
       {/* tweetbox */}
       <TweetBox />
+      <div className="recomendedUser">
+      <RecomendUser />
+      </div>
 
       {/* posts */}
       <div className="post">

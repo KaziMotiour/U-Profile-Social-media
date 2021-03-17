@@ -37,6 +37,7 @@ export const GetPostSharedUser = (id, config) => async dispatch =>{
     try{
         await axios.get(`http://127.0.0.1:8000/post/shared-user/${id}`, config).then(res=>{
             console.log(res.data);
+            dispatch(PostSharedUser(res.data))
         })
 
     }catch(err){

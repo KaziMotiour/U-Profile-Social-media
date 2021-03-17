@@ -8,7 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import {useDispatch,  useSelector} from 'react-redux'
 import {REMOVE_MUTUAL_FRIEND} from '../../../../../store/actions/ActionTypes'
-import {UserFollowFromLikedUser} from '../../../../../store/actions/UserProfile'
+import {UserFollowFromLikedUser, UserFollowFromSharedUser} from '../../../../../store/actions/UserProfile'
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -47,7 +47,7 @@ createStyles({
 
 }))
 export default function UserList({id, opene, UserList, closeUserList, typeOfUser, from}) {
-  console.log(id,'uselist');
+  console.log(id,'post id');
   const [open, setOpen] = React.useState(opene);
   const classes = useStyles()
   const dispatch = useDispatch()
@@ -60,18 +60,8 @@ export default function UserList({id, opene, UserList, closeUserList, typeOfUser
   const handleClose = () => {
     setOpen(false);
     closeUserList()
-   
   };
-  const userFollowUnfollow = (username, postId) =>{
-    
-      dispatch(UserFollowFromLikedUser(postId, username, config))
-    
-    
-
-    
-  }
   
-  console.log(UserList);
   return (
     <div>
       
@@ -94,10 +84,10 @@ export default function UserList({id, opene, UserList, closeUserList, typeOfUser
                 <Avatar src={user.profile.image} className={classes.large}/>&nbsp;&nbsp;
                 {user.full_name !=='None None' ? user.full_name: user.username}
                 </div>
+                
                 <Button color="primary" className={classes.button}>
-                  <span onClick={()=> userFollowUnfollow(user.username, id)}>{user.is_following ? ('UnFollow') :('Follow')}</span>
-                  
-                  </Button>
+                 {from!=='mutualFriend'? <span>{user.is_following ? 'Following' : 'Unknown'}</span>: <sapn>following</sapn>}
+                </Button>
               </div>
 
           ))}

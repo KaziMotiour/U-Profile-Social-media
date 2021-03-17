@@ -87,7 +87,7 @@ console.log(props.loggedInUsername, props.id);
         </div>
       
         <div className="post__headerText">
-            <h3> {props.loggedInUsername}
+            <h3> {props.loggedInUserFullname !=='None None'? props.loggedInUserFullname: props.loggedInUserUsername}
                 
                 <span className="post_username"> shareed </span> 
                {/* {parent.user.username} post */}{props.postUsername}'s post

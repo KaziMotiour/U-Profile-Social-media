@@ -38,3 +38,12 @@
 .post{
   max-width: 100%;
 }
+
+
+@media screen and (min-width: 660px) {
+ 
+  .recomendedUser{
+      display: none;
+  }
+ 
+}

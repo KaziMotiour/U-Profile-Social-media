@@ -16,7 +16,7 @@ import TextField from '@material-ui/core/TextField';
 //end drop down import
 import {useDispatch, useSelector} from 'react-redux'
 import {useHistory} from 'react-router-dom'
-import {REMOVE_POST_LIKED_USER} from '../../../../store/actions/ActionTypes'
+import {REMOVE_POST_LIKED_USER, REMOVE_POST_SHARD_USER} from '../../../../store/actions/ActionTypes'
 import {GetPostList, LikePost, CommentPost, ChangePrivacy} from '../../../../store/actions/PostCrud'
 import {GetPostLikedUser, GetPostSharedUser} from '../../../../store/actions/Utils'
 import {VerifyJwtToken} from '../../../../store/actions/Auth'
@@ -52,6 +52,35 @@ const useStyles = makeStyles((theme: Theme) =>
         borderBottom:' 1px solid black',
         
       }
+    },
+    image:{
+      width:'90%',
+      height:"350px", 
+      marginLeft:'30px',
+      ['@media (max-width:490px)']: { // eslint-disable-line no-useless-computed-key
+        width: '98%',
+        marginLeft:'5px',
+      },
+        ['@media (max-width:800px)']: { // eslint-disable-line no-useless-computed-key
+          width: '98%',
+          marginLeft:'5px',
+        }
+
+    },
+    shareimage:{
+      width:'90%', 
+      height:"350px",
+      marginLeft:'20px',
+      ['@media (max-width:490px)']: { // eslint-disable-line no-useless-computed-key
+        width: '100%',
+        marginLeft:'1px',
+      },
+
+      ['@media (min-width:661px), (max-width:800px)']: { // eslint-disable-line no-useless-computed-key
+        width: '100%',
+        marginLeft:'1px',
+      }
+
     }
     
   }),
@@ -79,6 +108,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
   const history = useHistory()
   const loggedInUser = useSelector(state => state.user.loggedinUserInfo)
   const postLikedUsers = useSelector(state => state.post.postLikedUser)
+  const postSharedUsers =  useSelector(state => state.post.postSharedUser)
   const [opneEditOption, setOpenEditOption] = useState(false)
   const [opnePrivacyOption, setOpenPrivacyOption] = useState(false)
   const [opneSharePost, setOpenSharePost] = useState(false)
@@ -90,7 +120,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
   const loggedin_user_info = useSelector(state=> state.user.loggedinUserInfo)
   const shared_users = shared_user.length
  
-console.log(postLikedUsers && postLikedUsers);
+
   const config = { headers: { 
     'Content-Type':'application/json',
     'Authorization': "Bearer " + localStorage.getItem('access_token')
@@ -166,6 +196,17 @@ console.log(postLikedUsers && postLikedUsers);
     })
   }
 
+  const getPostSharedUserList = (id) =>{
+    console.log(id, 'likedis');
+  
+    dispatch(GetPostSharedUser(id, config))
+  }
+  const ClosePostSharedUserList = () =>{
+    dispatch({
+      type:REMOVE_POST_SHARD_USER
+    })
+  }
+
 
 
 
@@ -235,7 +276,8 @@ console.log(postLikedUsers && postLikedUsers);
             <p> {content} </p>
             
           </div>
-          {image && <img style={{width:'90%', height:"350px", marginLeft:'30px'}}  src={image} /> }
+          
+          {image && <img className={classes.image}   src={image} /> }
               
         </div>
         {/* Post body part end */}
@@ -246,7 +288,7 @@ console.log(postLikedUsers && postLikedUsers);
           <div className="likes" >
             {is_liked ?<FavoriteIcon onClick={id =>HandleLikePost(id)} fontSize="samll" style={{color:'blue', cursor:'pointer'}}/> : <FavoriteIcon onClick={id =>HandleLikePost(id)}  fontSize="samll" style={{ cursor:'pointer'}}/> } &nbsp;
              <span className={classes.likes} onClick={()=> getPostLikedUserList(id)}>{likes}</span>
-             {postLikedUsers.length !==0 && (<UserList id={id} opene={true} UserList={postLikedUsers} closeUserList={ClosePostLikedUserList} typeOfUser="Liked Users" from="likes"/>)}
+             {postLikedUsers.length !==0 && (<UserList opene={true} id={id}  UserList={postLikedUsers} closeUserList={ClosePostLikedUserList} typeOfUser="Liked Users" from="likes"/>)}
           </div>
 
           <div className="comments" style={{display:'flex'}}>
@@ -281,11 +323,14 @@ console.log(postLikedUsers && postLikedUsers);
               {/* privracy end */}
               <div className="shared" style={{display:'flex', cursor:'pointer'}}>
                
-                <ShareIcon onClick={HandleShareOpen} fontSize="default"/>&nbsp; {shared_users} share
-
+                <ShareIcon onClick={HandleShareOpen} fontSize="default"/>&nbsp;
+               
+               <span onClick={() => getPostSharedUserList(id)}> {shared_users} share</span>
+                {postSharedUsers.length !==0 && <UserList id={() => id} opene={true} UserList={postSharedUsers} closeUserList={ClosePostSharedUserList} typeOfUser="Who share this post" from="shared"/>}
+                
                 {opneSharePost && (
                 <SharedPost open={true} id={id} postUsername={user.username}
-                postUserFullname={user.full_name && user.full_name} postUserImage={user.profile.image} content={content} image={image} loggedInUsername={loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info.profile.image}
+                postUserFullname={user.full_name && user.full_name} postUserImage={user.profile.image} content={content} image={image} loggedInUserUsername={loggedin_user_info.username} loggedInUserFullname={loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info.profile.image}
                 hondleShareOpen={HandleShareOpen}
                 />)}
                 </div>
@@ -388,7 +433,7 @@ console.log(postLikedUsers && postLikedUsers);
             <p>  {parent.content}</p>
           
           </div>
-          {parent.image && <img style={{width:'90%', height:"350px", marginLeft:'20px'}}  src={parent.image} /> }
+          {parent.image && <img className={classes.shareimage}   src={parent.image} /> }
           
               
         </div>
@@ -405,14 +450,19 @@ console.log(postLikedUsers && postLikedUsers);
 
         {/* Post fotter part begain */}
           <div className="post_footer">
+              
+              {/* Like post */}
               <div className="likes">
               {is_liked ?<FavoriteIcon onClick={id =>HandleLikePost(id)} fontSize="samll" style={{color:'blue', cursor:'pointer'}}/> : <FavoriteIcon onClick={id =>HandleLikePost(id)} fontSize="samll" style={{cursor:'pointer'}}/> }&nbsp; 
               <span className={classes.likes} onClick={()=> getPostLikedUserList(id)}>{likes}</span>
               {postLikedUsers.length !==0 && (<UserList id={id}  opene={true} UserList={postLikedUsers} closeUserList={ClosePostLikedUserList} typeOfUser="Liked Users" from="likes" />)}
               </div>
+                
+              {/* comment post */}
               <div className="comments" style={{display:'flex'}}>
               <ChatBubbleOutlineIcon fontSize="samll" style={{cursor:'pointer'}} onClick={commentControl}/> &nbsp;{number_of_comment}
               </div>
+
                {/* Post privacy part begain */}
               <div className="privacy"> 
               <nav role="navigation">
@@ -443,11 +493,12 @@ console.log(postLikedUsers && postLikedUsers);
          
       
       </div>
+
       {/* Post privacy part  */}
               <div className="shared" style={{display:'flex', cursor:'pointer'}}>
                 <ShareIcon onClick={() => setOpenSharePost(!opneSharePost)} fontSize="default"/> &nbsp; {shared_users} share
               
-                {opneSharePost && (<SharedPost open={true} id={id} postUserFullname={parent.user.full_name} postUserImage={parent.user.profile.image} content={parent.content} image={parent.image} loggedInUsername={loggedin_user_info && loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info && loggedin_user_info.profile.image} hondleShareOpen={HandleShareOpen} 
+                {opneSharePost && (<SharedPost open={true} id={id} postUserFullname={parent.user.full_name} postUsername={parent.user.username} postUserImage={parent.user.profile.image} content={parent.content} image={parent.image} loggedInUserUsername={loggedin_user_info.username} loggedInUserFullname={loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info && loggedin_user_info.profile.image} hondleShareOpen={HandleShareOpen} 
                 
                 /> )}
 

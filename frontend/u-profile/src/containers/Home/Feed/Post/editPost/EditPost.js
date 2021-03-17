@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }))
 
 export default function SharedPost({open, id, parent, postUsername, postUserFullname, postUserImage, content, image, loggedInUsername, loggedInUserImage, hondleEditFormOpen}) {
-
+  console.log(id, 'shared');
     const classes = useStyles()
     const history = useHistory()
     const dispatch  = useDispatch()

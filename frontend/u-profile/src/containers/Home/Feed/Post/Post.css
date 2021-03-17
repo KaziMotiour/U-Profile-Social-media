@@ -192,3 +192,21 @@ a {
 .nav{
     margin-right: 20px;    
 }
+
+
+@media screen and (max-width: 490px) {
+ 
+    .particular-shared-post{
+        margin: 5px 0px 0px 0px;
+    }
+   
+  }
+
+  @media screen and (min-width: 661px) and (max-width: 800px){
+ 
+    .particular-shared-post{
+        margin: 5px 0px 0px 0px;
+    }
+   
+  }
+  
