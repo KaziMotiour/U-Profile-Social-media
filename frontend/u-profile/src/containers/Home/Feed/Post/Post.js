@@ -13,23 +13,21 @@ import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 
 // drop down import
 import TextField from '@material-ui/core/TextField';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-
 //end drop down import
 import {useDispatch, useSelector} from 'react-redux'
 import {useHistory} from 'react-router-dom'
+import {REMOVE_POST_LIKED_USER} from '../../../../store/actions/ActionTypes'
 import {GetPostList, LikePost, CommentPost, ChangePrivacy} from '../../../../store/actions/PostCrud'
+import {GetPostLikedUser, GetPostSharedUser} from '../../../../store/actions/Utils'
 import {VerifyJwtToken} from '../../../../store/actions/Auth'
+
 import "./Post.css";
 import { CommentTwoTone } from "@material-ui/icons";
 import Comment from './comment/Comment'
 import SharedPost from './sharePost/SharePost'
 import EditPost from './editPost/EditPost'
 import DeletePost from './deletePost/DeletePost'
+import UserList from './userList/UserList'
 
 // dropdown style
 const useStyles = makeStyles((theme: Theme) =>
@@ -47,6 +45,13 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     text:{
       width:'70%',
+    },
+    likes:{
+      cursor:'pointer',
+      '&:hover':{
+        borderBottom:' 1px solid black',
+        
+      }
     }
     
   }),
@@ -73,6 +78,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
   const dispatch = useDispatch()
   const history = useHistory()
   const loggedInUser = useSelector(state => state.user.loggedinUserInfo)
+  const postLikedUsers = useSelector(state => state.post.postLikedUser)
   const [opneEditOption, setOpenEditOption] = useState(false)
   const [opnePrivacyOption, setOpenPrivacyOption] = useState(false)
   const [opneSharePost, setOpenSharePost] = useState(false)
@@ -84,6 +90,12 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
   const loggedin_user_info = useSelector(state=> state.user.loggedinUserInfo)
   const shared_users = shared_user.length
  
+console.log(postLikedUsers && postLikedUsers);
+  const config = { headers: { 
+    'Content-Type':'application/json',
+    'Authorization': "Bearer " + localStorage.getItem('access_token')
+  }}
+
   const commentControl = () =>{
     setCommentOpen(!commentOpen)
 
@@ -92,19 +104,13 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
   const HandleLikePost = () =>{
     dispatch(VerifyJwtToken())
     checkAuthenticatin()
-    const config = { headers: { 
-      'Authorization': "Bearer " + localStorage.getItem('access_token')
-    }}
+   
     dispatch(LikePost(id, config))
 
   }
   const HandleCommetPost = (e, id) =>{
     dispatch(VerifyJwtToken())
     checkAuthenticatin()
-    const config = { headers: { 
-      'Content-Type':'application/json',
-      'Authorization': "Bearer " + localStorage.getItem('access_token')
-    }}
     if(e.code==='Enter'){
       const formData = new FormData()
       formData.append('comment', postComments)
@@ -117,11 +123,6 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
   const HandlePrivacyChange =(id, option) =>{
     dispatch(VerifyJwtToken())
     checkAuthenticatin()
-   
-    const config = { headers: { 
-      'Content-Type':'application/json',
-      'Authorization': "Bearer " + localStorage.getItem('access_token')
-    }}
     let formData = new FormData()
       formData.append('privacy', option)
       dispatch(ChangePrivacy(id, formData, config))
@@ -147,9 +148,27 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
   const closeEditForm = () =>{
     setOpenEditForm(!openEditForm)
   }
+
   const closeDeleteForm = () =>{
     setOpenDeleteForm(!openDeleteForm)
   }
+
+
+  // GET POST LIKED USER
+  const getPostLikedUserList = (id) =>{
+
+    dispatch(GetPostLikedUser(id, config))
+  }
+   // REMOVE POST LIKED USER FROM REDUCER
+  const ClosePostLikedUserList = () =>{
+    dispatch({
+      type:REMOVE_POST_LIKED_USER
+    })
+  }
+
+
+
+
   const checkAuthenticatin =()=>{
     const access_token = localStorage.getItem('access_token')
     if(!access_token){
@@ -223,14 +242,18 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
 
           {/* Post footer part begain */}
           <div className="post_footer">
+          
           <div className="likes" >
-            {is_liked ?<FavoriteIcon onClick={id =>HandleLikePost(id)} fontSize="samll" style={{color:'blue', cursor:'pointer'}}/> : <FavoriteIcon onClick={id =>HandleLikePost(id)}  fontSize="samll" style={{ cursor:'pointer'}}/> } &nbsp; {likes}
-              </div>
-              <div className="comments" style={{display:'flex'}}>
+            {is_liked ?<FavoriteIcon onClick={id =>HandleLikePost(id)} fontSize="samll" style={{color:'blue', cursor:'pointer'}}/> : <FavoriteIcon onClick={id =>HandleLikePost(id)}  fontSize="samll" style={{ cursor:'pointer'}}/> } &nbsp;
+             <span className={classes.likes} onClick={()=> getPostLikedUserList(id)}>{likes}</span>
+             {postLikedUsers.length !==0 && (<UserList id={id} opene={true} UserList={postLikedUsers} closeUserList={ClosePostLikedUserList} typeOfUser="Liked Users" from="likes"/>)}
+          </div>
+
+          <div className="comments" style={{display:'flex'}}>
                 <ChatBubbleOutlineIcon fontSize="samll" style={{cursor:'pointer'}} onClick={commentControl}/> &nbsp;{number_of_comment}
-              </div>
+          </div>
               {/* privracy begain */}
-              <div className="privacy"> 
+          <div className="privacy"> 
                <nav role="navigation">
                 <ul>
                  <li> 
@@ -252,9 +275,9 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
                 </ul>}
                   </li>
                 </ul>
-        </nav>
+                </nav>
                 
-              </div>
+        </div>
               {/* privracy end */}
               <div className="shared" style={{display:'flex', cursor:'pointer'}}>
                
@@ -383,7 +406,9 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         {/* Post fotter part begain */}
           <div className="post_footer">
               <div className="likes">
-              {is_liked ?<FavoriteIcon onClick={id =>HandleLikePost(id)} fontSize="samll" style={{color:'blue', cursor:'pointer'}}/> : <FavoriteIcon onClick={id =>HandleLikePost(id)} fontSize="samll" style={{cursor:'pointer'}}/> }&nbsp; {likes}
+              {is_liked ?<FavoriteIcon onClick={id =>HandleLikePost(id)} fontSize="samll" style={{color:'blue', cursor:'pointer'}}/> : <FavoriteIcon onClick={id =>HandleLikePost(id)} fontSize="samll" style={{cursor:'pointer'}}/> }&nbsp; 
+              <span className={classes.likes} onClick={()=> getPostLikedUserList(id)}>{likes}</span>
+              {postLikedUsers.length !==0 && (<UserList id={id}  opene={true} UserList={postLikedUsers} closeUserList={ClosePostLikedUserList} typeOfUser="Liked Users" from="likes" />)}
               </div>
               <div className="comments" style={{display:'flex'}}>
               <ChatBubbleOutlineIcon fontSize="samll" style={{cursor:'pointer'}} onClick={commentControl}/> &nbsp;{number_of_comment}

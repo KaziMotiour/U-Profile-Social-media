@@ -29,13 +29,22 @@ def likedUser(requser, post_id):
 
 # get all the user List from ManyToManyFields
 class postLikedUser(ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = PostUserDetailsSerializers
     def get_queryset(self):
         pk = self.kwargs.get('pk')
         post = UserPost.objects.get(pk=pk)
         qs = post.likes.all()
         return qs
-    
+
+class postSharedUser(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostUserDetailsSerializers
+    def get_queryset(self):
+        pk = self.kwargs.get('pk')
+        post = UserPost.objects.get(pk=pk)
+        qs = post.shared_user.all()
+        return qs
 
 class PostListView(ListAPIView):
     serializer_class=PostSerializer

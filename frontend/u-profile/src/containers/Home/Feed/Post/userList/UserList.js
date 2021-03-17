@@ -8,6 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import {useDispatch,  useSelector} from 'react-redux'
 import {REMOVE_MUTUAL_FRIEND} from '../../../../../store/actions/ActionTypes'
+import {UserFollowFromLikedUser} from '../../../../../store/actions/UserProfile'
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -45,19 +46,32 @@ createStyles({
 
 
 }))
-export default function UserList({opene, mutualFriendList}) {
+export default function UserList({id, opene, UserList, closeUserList, typeOfUser, from}) {
+  console.log(id,'uselist');
   const [open, setOpen] = React.useState(opene);
-  const dispatch = useDispatch()
   const classes = useStyles()
+  const dispatch = useDispatch()
+
+  const config = { headers: { 
+    'Content-Type':'application/json',
+    'Authorization': "Bearer " + localStorage.getItem('access_token')
+  }}
 
   const handleClose = () => {
     setOpen(false);
-    dispatch({
-        type:REMOVE_MUTUAL_FRIEND
-    })
+    closeUserList()
    
   };
+  const userFollowUnfollow = (username, postId) =>{
+    
+      dispatch(UserFollowFromLikedUser(postId, username, config))
+    
+    
 
+    
+  }
+  
+  console.log(UserList);
   return (
     <div>
       
@@ -70,17 +84,20 @@ export default function UserList({opene, mutualFriendList}) {
         aria-describedby="alert-dialog-slide-description"
       > 
         <div className={classes.title}>
-          <DialogTitle  id="alert-dialog-slide-title">{"Mutual Friends"}</DialogTitle>
+          <DialogTitle  id="alert-dialog-slide-title">{typeOfUser}</DialogTitle>
         
         <CancelIcon  onClick={handleClose} className={classes.DeleteIcon} />
         </div>
-          {mutualFriendList.map(user=>(
+          {UserList.map(user=>(
               <div  className={classes.body}>
                 <div className={classes.userList}>
                 <Avatar src={user.profile.image} className={classes.large}/>&nbsp;&nbsp;
                 {user.full_name !=='None None' ? user.full_name: user.username}
                 </div>
-                <Button color="primary" className={classes.button}>Following</Button>
+                <Button color="primary" className={classes.button}>
+                  <span onClick={()=> userFollowUnfollow(user.username, id)}>{user.is_following ? ('UnFollow') :('Follow')}</span>
+                  
+                  </Button>
               </div>
 
           ))}

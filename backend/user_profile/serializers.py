@@ -18,15 +18,25 @@ class UserInfoSrializer(serializers.ModelSerializer):
 class PostUserDetailsSerializer(serializers.ModelSerializer):
         full_name = serializers.SerializerMethodField(read_only=True)
         profile = UserInfoSrializer(read_only=True)
-
+        is_following = serializers.SerializerMethodField(read_only=True)
         class Meta:
             model = User
-            fields=['id', 'username', 'full_name', 'profile' ]
+            fields=['id', 'username', 'full_name', 'profile', 'is_following' ]
 
         def get_full_name(self, obj):
             user = User_profile.objects.filter(user__username=obj.username).first()
             return str(user.first_name)+' '+ str(user.Last_name)
-
+        
+        def get_is_following(self, obj):   
+            request = self.context.get("request")
+            if obj == request.user:
+                return True
+            else:
+                user = UserFollow.objects.filter(user=request.user).first()
+                if obj in user.following.all():
+                    return True
+                else:
+                    return False
 
 class RecomendedUserList(serializers.ModelSerializer):
         full_name = serializers.SerializerMethodField(read_only=True)

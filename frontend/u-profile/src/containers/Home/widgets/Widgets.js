@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import {useDispatch,  useSelector} from 'react-redux'
 import {RecomendedUser, UserFollow, MutualFriend} from '../../../store/actions/UserProfile'
+import {REMOVE_MUTUAL_FRIEND} from '../../../store/actions/ActionTypes'
 import UserList from '../Feed/Post/userList/UserList'
 
 import "./Widgets.css";
@@ -66,15 +67,21 @@ function Widgets() {
   const HandleUserFollow = (username) =>{
         dispatch(UserFollow(username, config))
   }
+
   const RefreshRecomendedUser = () =>{
     dispatch(RecomendedUser(config))
   }
+
   const HnadleMutualFriend = (id) =>{
     console.log(id,'id');
     dispatch(MutualFriend(id, config))
   }
+  const RemoveMutualFriend = () =>{
+    dispatch({
+      type: REMOVE_MUTUAL_FRIEND
+    })
+  }
 
-  console.log(mutualFriend,'widgets');
 
   return (
     <div className="widgets">
@@ -108,7 +115,7 @@ function Widgets() {
          <CardActions className={classes.flex}>
          {user.mutual_friends!==0 && <Typography color="textSecondary" component="p" c>
               <p className={classes.mutualFriend} onClick={() => HnadleMutualFriend(user.id)} > Mutual friend {user.mutual_friends}</p>
-          {mutualFriend.length !==0 && (<UserList opene={true} mutualFriendList={mutualFriend}/>)}
+          {mutualFriend.length !==0 && (<UserList opene={true} UserList={mutualFriend} closeUserList={RemoveMutualFriend} typeOfUser="Mutual Friend" from="mutualFriend"/>)}
          </Typography>}
            <Button size="small" color="primary" onClick={()=> HandleUserFollow(user.username)}>
              Follow

@@ -1,6 +1,7 @@
-import React from 'react'
-import axios from 'axios'
+    import React from 'react'
+    import axios from 'axios'
 import {LOGGED_IN_USER_INFO, RECOMENDED_USER, MUTUAL_FRIEND} from './ActionTypes'
+import {GetPostLikedUser} from './Utils'
 
 
 
@@ -62,6 +63,17 @@ export const UserFollow = (username, config) => async dispatch =>{
         await axios.get(`http://127.0.0.1:8000/profile/follow/${username}`,config).then(res =>{
             
             dispatch(RecomendedUser(config))
+        })
+    }catch(err){
+        console.log(err,'err');
+    }
+
+}
+export const UserFollowFromLikedUser = (id, username, config) => async dispatch =>{
+    console.log(id,'iddd');
+    try{
+        await axios.get(`http://127.0.0.1:8000/profile/follow/${username}`, config).then(res =>{
+            dispatch(GetPostLikedUser(id, config))
         })
     }catch(err){
         console.log(err,'err');
