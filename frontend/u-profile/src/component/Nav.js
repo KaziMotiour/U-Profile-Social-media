@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React,{useEffect, useState} from 'react';
 import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import AppBar from '@material-ui/core/AppBar';
@@ -128,6 +128,10 @@ const useStyles = makeStyles((theme: Theme) =>
       '&:hover':{
         backgroundColor:'rgb(214, 210, 210)'
       }
+    },
+    noNotify:{
+      marginTop:'500px',
+      color:'rgb(214, 210, 210)',
     }
 
   
@@ -144,8 +148,10 @@ function Nav() {
   const notificationLists = useSelector(state => state.user.notificationList)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [openNotificationBar, setOpenNotificationBar] = useState(false)
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
   const lengthOfNotifcation  = notificationLists.length
   const config = { headers: { 
     'Content-Type':'application/json',
@@ -182,22 +188,14 @@ function Nav() {
 
   const GetNotifcationCount = () =>{
 
-    if (notificationLists.length !== 0){
-      dispatch({
-        type:REMOVE_NOTIFICATION_LIST
-      })
-  }else{   
+    setOpenNotificationBar(!openNotificationBar)
     dispatch(NotificationList(config))
   
-  }
 }
-const CloseNotifcationBar = () =>{
-  dispatch({
-    type:REMOVE_NOTIFICATION_LIST
-  })
+const CloseNotificationBar = () =>{
+  setOpenNotificationBar(false)
 }
 
-  console.log(notificationLists.length!==0 && notificationLists, 'notifcatin list');
 
 
   async function goToLogin (){
@@ -276,7 +274,7 @@ const CloseNotifcationBar = () =>{
   );
 
   return (
-    <div className={classes.grow} >
+    <div className={classes.grow} onClick={openNotificationBar===true && CloseNotificationBar}>
       <AppBar position="static">
         <Toolbar>
           <Typography className={classes.title} variant="h6">
@@ -302,16 +300,14 @@ const CloseNotifcationBar = () =>{
             <IconButton aria-label="show 17 new notifications" color="inherit" onClick={GetNotifcationCount} >
               <Badge badgeContent={notificationCount} color="secondary">    
                 
-             {notificationLists.length!==0 &&
+             {openNotificationBar &&
               <nav role="navigation">
                 <ul className={classes.nav}>
                  <li> 
                    
-                 <ul class="dropdown" className={classes.navs}>
-                 {notificationLists.length!==0 && notificationLists.map(notify=>(
-                   <li className={classes.navli}> <Notification notify={notify} key={notify.id}/></li>
-
-                 ))}
+                 <ul class="dropdown" className={ classes.navs}>
+                 {notificationLists.length!==0 ? (notificationLists.map(notify=>(
+                   <li className={classes.navli}> <Notification notify={notify} key={notify.id}/> </li>))) : <span className={classes.noNotify}>no Notification yeat </span> }
                  
 
                 </ul>

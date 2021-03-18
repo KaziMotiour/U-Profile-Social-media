@@ -38,11 +38,7 @@ function Home(props) {
           })
         }
       }
-    const HandleCLoseNotifcationBar = () =>{
-      dispatch({
-        type:REMOVE_NOTIFICATION_LIST
-      })
-    }
+    
 
     const loggedinUser = useSelector(state => state.user.loggedinUserInfo)
     return (
