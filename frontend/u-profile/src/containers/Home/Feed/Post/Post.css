@@ -221,5 +221,18 @@ a {
     }
    
   }
+
+  @media screen and (min-width: 1200px){
+ 
+    .post{
+        max-width: 500px;
+        margin:auto
+    }
+    .particular-post, .particular-shared-post{
+        max-width: 700px;
+        margin:auto
+    }
+   
+  }
   
   

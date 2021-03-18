@@ -12,7 +12,7 @@ class NotifiactionSerializer(serializers.ModelSerializer):
     post = PostSerializer()
     class Meta:
         model = Notification
-        fields = ['post', 'sender', 'user', 'Notification_type', 'text_preview', 'date' ]
+        fields = ['post', 'sender', 'user', 'Notification_type', 'text_preview', 'is_seen', 'date' ]
 
 
     def get_date(self, obj):

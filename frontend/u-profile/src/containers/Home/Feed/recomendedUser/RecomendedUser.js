@@ -14,6 +14,7 @@ import {REMOVE_MUTUAL_FRIEND} from '../../../../store/actions/ActionTypes'
 import UserList from '../Post/userList/UserList'
 
 import "./RecomendedUser.css";
+import { NotificationCount } from '../../../../store/actions/Utils';
 
 const useStyles = makeStyles({
   root: {
@@ -34,6 +35,9 @@ const useStyles = makeStyles({
     cursor:'pointer',
     fontSize:'10px',
     color:'rgb(46, 46, 45)',
+    marginTop:'5px',
+    margin:'auto',
+    marginLeft:'10px',
     "&:hover":{
       borderBottom:'1px solid grey',
       color:'rgb(125, 37, 37)',
@@ -43,12 +47,17 @@ const useStyles = makeStyles({
   flex:{
      display:'flex',
      flexDirection:'column', 
-     marginTop:'auto',
+
+  
 
       
   },
-  button:{
-    marginTop:'20px'
+  followButton:{
+    marginTop:'20px',
+   
+  },
+  cardTopArea:{
+    height:'100px',
   }
   
 });
@@ -64,7 +73,7 @@ function RecomendUser() {
   }}
 
   useEffect(()=>{
-    
+    dispatch(NotificationCount(config))
     dispatch(RecomendedUser(config))
   },[])
 
@@ -99,7 +108,7 @@ function RecomendUser() {
        {recomendedUser.length !==0 && (recomendedUser.map(user =>(
 
          <Card className={classes.root}>
-         <CardActionArea>
+         <CardActionArea className={classes.cardTopArea}>
            <CardMedia
              className={classes.media}
              image={user.profile.image}
@@ -116,12 +125,16 @@ function RecomendUser() {
              
            </CardContent>
          </CardActionArea>
-         <CardActions className={classes.flex}>
+
          {user.mutual_friends!==0 && <Typography color="textSecondary" component="p" c>
               <p className={classes.mutualFriend} onClick={() => HnadleMutualFriend(user.id)} > Mutual friend {user.mutual_friends}</p>
           {mutualFriend.length !==0 && (<UserList opene={true} UserList={mutualFriend} closeUserList={RemoveMutualFriend} typeOfUser="Mutual Friend" from="mutualFriend"/>)}
          </Typography>}
-           <Button size="small" color="primary" onClick={()=> HandleUserFollow(user.username)} className={user.mutual_friends=== 0 ? classes.button : classes.nothing}>
+
+         <CardActions className={classes.flex}>
+         
+
+           <Button size="small" color="primary" onClick={()=> HandleUserFollow(user.username)} className={user.mutual_friends=== 0 ? classes.followButton : classes.nothing}>
              Follow
            </Button>
            

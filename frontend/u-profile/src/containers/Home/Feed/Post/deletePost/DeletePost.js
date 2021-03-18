@@ -8,6 +8,7 @@ import {useHistory} from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
 import {VerifyJwtToken} from '../../../../../store/actions/Auth'
 import {DeletePosts} from '../../../../../store/actions/PostCrud'
+import {NotificationCount} from '../../../../../store/actions/Utils'
 import SnackBer from '../sharePost/SnackBer'
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -40,6 +41,14 @@ export default function DeletePost({open, id, hondleDeleteFormOpen}) {
     const [newImage, setNewImge] = useState(null)
     const [imgData, setImgData] = useState(null);
 
+    const config = { headers: { 
+      'Content-Type':'application/json',
+      'Authorization': "Bearer " + localStorage.getItem('access_token')
+      }}
+
+    useEffect(()=>{
+      dispatch(NotificationCount(config))
+    },[])
 
     const handleClose = () => {
 
@@ -52,10 +61,6 @@ export default function DeletePost({open, id, hondleDeleteFormOpen}) {
     const HandlePostDelete =() =>{
         dispatch(VerifyJwtToken())
         checkAuthenticatin()  
-        const config = { headers: { 
-        'Content-Type':'application/json',
-        'Authorization': "Bearer " + localStorage.getItem('access_token')
-        }}
         dispatch(DeletePosts(id, config))
         closeDialogg()
   }

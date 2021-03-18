@@ -9,6 +9,7 @@ import {useHistory} from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
 import {VerifyJwtToken} from '../../../../../store/actions/Auth'
 import {SharePost} from '../../../../../store/actions/PostCrud'
+import {NotificationCount} from '../../../../../store/actions/Utils'
 import './SharePost.css'
 import SnackBer from './SnackBer'
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -16,27 +17,30 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function SharedPost(props) {
-    
     const history = useHistory()
     const dispatch  = useDispatch()
     const sharePostInfo = localStorage.getItem('RePost')
     const [open, setOpen] = React.useState(props.open);
     const [sharePostContent, setSharepostContent] = useState('')
+    
+    const config = { headers: { 
+      'Content-Type':'application/json',
+      'Authorization': "Bearer " + localStorage.getItem('access_token')
+      }}
+      
+    useEffect(()=>{
+      dispatch(NotificationCount(config))
+    },[])
 
     const handleClose = () => {
         setOpen(false);
         localStorage.removeItem('RePost')
         props.hondleShareOpen()
-
     };
+
     const HandleSharePost =() =>{
         dispatch(VerifyJwtToken())
         checkAuthenticatin()
-   
-        const config = { headers: { 
-        'Content-Type':'application/json',
-        'Authorization': "Bearer " + localStorage.getItem('access_token')
-        }}
         let formData = new FormData()
         formData.append('sharePostContent', sharePostContent)
         dispatch(SharePost(props.id, formData, config))

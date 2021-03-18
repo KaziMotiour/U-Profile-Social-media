@@ -13,6 +13,7 @@ class NotificationView(ListAPIView):
     def get_queryset(self):
         user = self.request.user
         qs =  Notification.objects.filter(user__id=user.id).order_by('-date')
+        qs.update(is_seen=True)
         return qs
 
 

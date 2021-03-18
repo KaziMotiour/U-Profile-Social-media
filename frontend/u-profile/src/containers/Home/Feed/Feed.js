@@ -4,6 +4,7 @@ import Post from './Post/Post'
 import "./Feed.css";
 import {useDispatch, useSelector} from 'react-redux'
 import {GetPostList} from '../../../store/actions/PostCrud'
+import {NotificationCount} from '../../../store/actions/Utils'
 import Media from './Post/LoadPost'
 import RecomendUser from './recomendedUser/RecomendedUser'
 
@@ -14,9 +15,10 @@ function Feed() {
   const [posts, setPosts] = useState([
     
   ])
+  const config = { headers: {'Authorization': "Bearer " + localStorage.getItem('access_token')}}
 
   useEffect(()=>{
-    const config = { headers: {'Authorization': "Bearer " + localStorage.getItem('access_token')}}
+    dispatch(NotificationCount(config))
     dispatch(GetPostList(config))
 
 },[])

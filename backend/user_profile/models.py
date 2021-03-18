@@ -112,6 +112,7 @@ def Add_Follow_Notification(sender, instance, action, reverse, pk_set, **kwargs)
         user = User.objects.get(pk=list(pk_set)[0])
         who_following = User.objects.get(username=instance)
         notify = Notification.objects.filter(sender=who_following, user=user, Notification_type=3).first()
+        print(notify,'ggg')
         if notify:
             notify.delete()
 

@@ -10,6 +10,7 @@ import { Avatar } from "@material-ui/core";
 import {useHistory} from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
 import {VerifyJwtToken} from '../../../../../store/actions/Auth'
+import {NotificationCount} from '../../../../../store/actions/Utils'
 import {EditPost} from '../../../../../store/actions/PostCrud'
 import './editPost.css'
 import SnackBer from '../sharePost/SnackBer'
@@ -61,6 +62,16 @@ export default function SharedPost({open, id, parent, postUsername, postUserFull
     console.log(editInfo,'edit info');
 
 // load image
+const config = { headers: { 
+  'Content-Type':'application/json',
+  'Authorization': "Bearer " + localStorage.getItem('access_token')
+  }}
+
+  useEffect(()=>{
+    dispatch(NotificationCount(config))
+  },[])
+
+
   const onChangePicture = (e) => {
     if (e.target.files[0]) {
         setNewImge(e.target.files[0]);
@@ -83,10 +94,7 @@ export default function SharedPost({open, id, parent, postUsername, postUserFull
     const HandlePostEdit =() =>{
         dispatch(VerifyJwtToken())
         checkAuthenticatin()  
-        const config = { headers: { 
-        'Content-Type':'application/json',
-        'Authorization': "Bearer " + localStorage.getItem('access_token')
-        }}
+        
         let formData = new FormData()
         if(editContent){
             formData.append('content', editContent)

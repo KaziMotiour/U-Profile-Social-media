@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import {useDispatch,  useSelector} from 'react-redux'
 import {RecomendedUser, UserFollow, MutualFriend} from '../../../store/actions/UserProfile'
+import {NotificationCount} from '../../../store/actions/Utils'
 import {REMOVE_MUTUAL_FRIEND} from '../../../store/actions/ActionTypes'
 import UserList from '../Feed/Post/userList/UserList'
 
@@ -33,6 +34,9 @@ const useStyles = makeStyles({
     cursor:'pointer',
     fontSize:'10px',
     color:'rgb(46, 46, 45)',
+    marginLeft:'5px',
+    marginTop:'10px',
+    marginBottom:'-25px',
     "&:hover":{
       borderBottom:'1px solid grey',
       color:'rgb(125, 37, 37)',
@@ -42,10 +46,17 @@ const useStyles = makeStyles({
   flex:{
      display:'flex',
      flexDirection:'column', 
-     marginTop:'auto'
+
 
       
-  }
+  },
+  cardTopArea:{
+    height:'110px',
+  },
+  followButton:{
+    marginTop:'20px',
+   
+  },
   
 });
 
@@ -60,7 +71,7 @@ function Widgets() {
   }}
 
   useEffect(()=>{
-    
+    dispatch(NotificationCount(config))
     dispatch(RecomendedUser(config))
   },[])
 
@@ -95,7 +106,7 @@ function Widgets() {
        {recomendedUser.length !==0 && (recomendedUser.map(user =>(
 
          <Card className={classes.root}>
-         <CardActionArea>
+         <CardActionArea className={classes.cardTopArea}>
            <CardMedia
              className={classes.media}
              image={user.profile.image}
@@ -112,12 +123,14 @@ function Widgets() {
              
            </CardContent>
          </CardActionArea>
-         <CardActions className={classes.flex}>
+
          {user.mutual_friends!==0 && <Typography color="textSecondary" component="p" c>
-              <p className={classes.mutualFriend} onClick={() => HnadleMutualFriend(user.id)} > Mutual friend {user.mutual_friends}</p>
+              <p className={classes.mutualFriend} onClick={() => HnadleMutualFriend(user.id)} > {user.mutual_friends} Mutual friend </p>
           {mutualFriend.length !==0 && (<UserList opene={true} UserList={mutualFriend} closeUserList={RemoveMutualFriend} typeOfUser="Mutual Friend" from="mutualFriend"/>)}
          </Typography>}
-           <Button size="small" color="primary" onClick={()=> HandleUserFollow(user.username)}>
+
+         <CardActions className={classes.flex}>
+           <Button className={classes.followButton} size="small" color="primary" onClick={()=> HandleUserFollow(user.username)}>
              Follow
            </Button>
            

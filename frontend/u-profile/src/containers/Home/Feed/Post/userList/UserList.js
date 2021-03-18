@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -8,7 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import {useDispatch,  useSelector} from 'react-redux'
 import {REMOVE_MUTUAL_FRIEND} from '../../../../../store/actions/ActionTypes'
-import {UserFollowFromLikedUser, UserFollowFromSharedUser} from '../../../../../store/actions/UserProfile'
+import {NotificationCount} from '../../../../../store/actions/Utils'
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -56,6 +56,11 @@ export default function UserList({id, opene, UserList, closeUserList, typeOfUser
     'Content-Type':'application/json',
     'Authorization': "Bearer " + localStorage.getItem('access_token')
   }}
+
+  useEffect(()=>{
+    dispatch(NotificationCount(config))
+  },[])
+
 
   const handleClose = () => {
     setOpen(false);

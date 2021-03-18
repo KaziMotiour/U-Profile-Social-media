@@ -8,14 +8,18 @@ import {useHistory} from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
 import {GetPostList} from '../../store/actions/PostCrud'
 import {LoggedUserInfo} from '../../store/actions/UserProfile'
+import {REMOVE_NOTIFICATION_LIST} from '../../store/actions/ActionTypes'
 import {VerifyJwtToken} from '../../store/actions/Auth'
 
 
 
 
 function Home(props) {
+
     const dispatch = useDispatch()
     const history = useHistory()
+    const notificationLists = useSelector(state => state.user.notificationList)
+    const notifcationCount = notificationLists.length
     useEffect(() =>{
         dispatch(VerifyJwtToken())
         const access = localStorage.getItem('access_token')
@@ -34,27 +38,35 @@ function Home(props) {
           })
         }
       }
-    
+    const HandleCLoseNotifcationBar = () =>{
+      dispatch({
+        type:REMOVE_NOTIFICATION_LIST
+      })
+    }
 
     const loggedinUser = useSelector(state => state.user.loggedinUserInfo)
     return (
         <div className='flex-row'>
-            <div>
+          <div>
                 <Nav />
-            </div>
+          </div>
         <div className="home">
+
            {/* sidebar */}
            <div className='slider'>
              <Sidebar />
             </div>    
+
             {/* feed */}
             <div className='feed'>
             <Feed />
             </div>
+
             {/* widgets */}
             <div className='widgets'>
             <Widgets />
             </div>
+
         </div>
         </div>
     )

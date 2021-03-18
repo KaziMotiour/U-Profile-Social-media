@@ -185,9 +185,11 @@ def likenotification(sender, instance, action,pk_set, **kwargs):
         content = ''
         
     if action == 'pre_add':
-        notify = Notification(post = post, sender = sender, user=post.user, Notification_type=1, text_preview='')
+        notify = Notification(post = post, sender = sender, user=post.user, Notification_type=1, text_preview=content)
         notify.save()
+
     elif action == 'pre_remove':
         notify = Notification.objects.filter(post = post, sender= sender, user=post.user, Notification_type=1, text_preview=content).first()
+        print(notify,'ddd')
         if notify:
             notify.delete()

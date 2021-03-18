@@ -18,7 +18,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {useHistory} from 'react-router-dom'
 import {REMOVE_POST_LIKED_USER, REMOVE_POST_SHARD_USER} from '../../../../store/actions/ActionTypes'
 import {GetPostList, LikePost, CommentPost, ChangePrivacy} from '../../../../store/actions/PostCrud'
-import {GetPostLikedUser, GetPostSharedUser} from '../../../../store/actions/Utils'
+import {GetPostLikedUser, GetPostSharedUser, NotificationCount} from '../../../../store/actions/Utils'
 import {VerifyJwtToken} from '../../../../store/actions/Auth'
 
 import "./Post.css";
@@ -119,26 +119,34 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
   const [commentOpen, setCommentOpen] = useState(false)
   const loggedin_user_info = useSelector(state=> state.user.loggedinUserInfo)
   const shared_users = shared_user.length
- 
-
+  
   const config = { headers: { 
     'Content-Type':'application/json',
     'Authorization': "Bearer " + localStorage.getItem('access_token')
   }}
 
+  useEffect(() => {
+    dispatch(NotificationCount(config))
+  }, [])
+
+
+
   const commentControl = () =>{
+    dispatch(NotificationCount(config))
     setCommentOpen(!commentOpen)
 
   }
 
   const HandleLikePost = () =>{
+    
     dispatch(VerifyJwtToken())
     checkAuthenticatin()
-   
     dispatch(LikePost(id, config))
+    dispatch(NotificationCount(config))
 
   }
   const HandleCommetPost = (e, id) =>{
+    
     dispatch(VerifyJwtToken())
     checkAuthenticatin()
     if(e.code==='Enter'){
@@ -147,21 +155,26 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
       dispatch(CommentPost(id, formData, config))
       setPostComments('')
     }
+    dispatch(NotificationCount(config))
     
   }
 
   const HandlePrivacyChange =(id, option) =>{
+    
     dispatch(VerifyJwtToken())
     checkAuthenticatin()
     let formData = new FormData()
-      formData.append('privacy', option)
-      dispatch(ChangePrivacy(id, formData, config))
+    formData.append('privacy', option)
+    dispatch(ChangePrivacy(id, formData, config))
+    dispatch(NotificationCount(config))
       
     
   }
 
   const HandleShareOpen = () =>{
+
     setOpenSharePost(!opneSharePost)
+    dispatch(NotificationCount(config))
   }
 
   const  HandleEditOpen = (option) =>{
@@ -171,40 +184,45 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
     }else if(option==='Delete'){
       setOpenDeleteForm(!openDeleteForm)
     }    
+    dispatch(NotificationCount(config))
 }
  
 
 
   const closeEditForm = () =>{
     setOpenEditForm(!openEditForm)
+    dispatch(NotificationCount(config))
   }
 
   const closeDeleteForm = () =>{
     setOpenDeleteForm(!openDeleteForm)
+    dispatch(NotificationCount(config))
   }
 
 
   // GET POST LIKED USER
   const getPostLikedUserList = (id) =>{
-
     dispatch(GetPostLikedUser(id, config))
+    dispatch(NotificationCount(config))
   }
    // REMOVE POST LIKED USER FROM REDUCER
   const ClosePostLikedUserList = () =>{
+    
     dispatch({
       type:REMOVE_POST_LIKED_USER
     })
+    dispatch(NotificationCount(config))
   }
 
   const getPostSharedUserList = (id) =>{
-    console.log(id, 'likedis');
-  
     dispatch(GetPostSharedUser(id, config))
+    dispatch(NotificationCount(config))
   }
   const ClosePostSharedUserList = () =>{
     dispatch({
       type:REMOVE_POST_SHARD_USER
     })
+    dispatch(NotificationCount(config))
   }
 
 
@@ -288,7 +306,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
           <div className="likes" >
             {is_liked ?<FavoriteIcon onClick={id =>HandleLikePost(id)} fontSize="samll" style={{color:'blue', cursor:'pointer'}}/> : <FavoriteIcon onClick={id =>HandleLikePost(id)}  fontSize="samll" style={{ cursor:'pointer'}}/> } &nbsp;
              <span className={classes.likes} onClick={()=> getPostLikedUserList(id)}>{likes}</span>
-             {postLikedUsers.length !==0 && (<UserList opene={true} id={id}  UserList={postLikedUsers} closeUserList={ClosePostLikedUserList} typeOfUser="Liked Users" from="likes"/>)}
+             {postLikedUsers.length !==0 && <UserList opene={true} id={id}  UserList={postLikedUsers} closeUserList={ClosePostLikedUserList} typeOfUser="Liked Users" from="likes"/>}
           </div>
 
           <div className="comments" style={{display:'flex'}}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import AppBar from '@material-ui/core/AppBar';
@@ -19,6 +19,9 @@ import Link from '@material-ui/core/Link';
 import {useDispatch, useSelector} from 'react-redux'
 import { useHistory, withRouter, NavLink } from "react-router-dom";
 import {auth_logout} from '../store/actions/Auth'
+import {NotificationCount, NotificationList} from '../store/actions/Utils'
+import Notification from './notification/NotificationList'
+import {REMOVE_MUTUAL_FRIEND, REMOVE_NOTIFICATION_LIST} from '../store/actions/ActionTypes'
 import zIndex from '@material-ui/core/styles/zIndex';
 import './nav.css'
 
@@ -75,6 +78,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     sectionDesktop: {
       display: 'none',
+      marginRight:'50px',
       [theme.breakpoints.up('md')]: {
         display: 'flex',
       },
@@ -94,7 +98,37 @@ const useStyles = makeStyles((theme: Theme) =>
       width: theme.spacing(5),
       height: theme.spacing(5),
     },
-   
+    nav:{
+      width:'400px',
+      maxHeight:'300px',
+      zIndex:100, 
+      marginLeft:'35px',
+      marginTop:'10px',
+      backgroundColor:'white',
+      
+    
+      
+    },
+    navs:{
+      width:'400px',
+      zIndex:100,
+      marginLeft:'35px',
+      marginTop:'10px',
+      height:'300px',
+      maxHeight:'400px',
+      backgroundColor:'white',
+      padding:'2px',
+      overflowY:'scroll',
+      overflowX:'hidden',
+      borderRadius:'10px',
+    },
+    navli:{
+      display:'flex',
+      width:'98%',
+      '&:hover':{
+        backgroundColor:'rgb(214, 210, 210)'
+      }
+    }
 
   
   }),
@@ -106,10 +140,21 @@ function Nav() {
   const dispatch  = useDispatch()
   const accessToken = useSelector(state => state.auth.access_token)
   const loggedInUser = useSelector(state => state.user.loggedinUserInfo)
+  const notificationCount = useSelector(state => state.user.notificationCount)
+  const notificationLists = useSelector(state => state.user.notificationList)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const lengthOfNotifcation  = notificationLists.length
+  const config = { headers: { 
+    'Content-Type':'application/json',
+    'Authorization': "Bearer " + localStorage.getItem('access_token')
+  }}
+
+  useEffect(()=>{
+    dispatch(NotificationCount(config))
+  },[])
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     console.log(event.currentTarget);
@@ -135,6 +180,26 @@ function Nav() {
     goToLogin()
   }
 
+  const GetNotifcationCount = () =>{
+
+    if (notificationLists.length !== 0){
+      dispatch({
+        type:REMOVE_NOTIFICATION_LIST
+      })
+  }else{   
+    dispatch(NotificationList(config))
+  
+  }
+}
+const CloseNotifcationBar = () =>{
+  dispatch({
+    type:REMOVE_NOTIFICATION_LIST
+  })
+}
+
+  console.log(notificationLists.length!==0 && notificationLists, 'notifcatin list');
+
+
   async function goToLogin (){
     await new Promise((resolve) => setTimeout(() => { 
         const access_token = localStorage.getItem('access_token') 
@@ -155,6 +220,7 @@ function Nav() {
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMenuOpen}
       onClose={handleMenuClose}
+    
     ><div style={{display:'flex', flexDirection:'column'}}>
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
@@ -179,7 +245,7 @@ function Nav() {
       
       <MenuItem>
         <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
+          <Badge badgeContent={notificationCount} color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -210,7 +276,7 @@ function Nav() {
   );
 
   return (
-    <div className={classes.grow}>
+    <div className={classes.grow} >
       <AppBar position="static">
         <Toolbar>
           <Typography className={classes.title} variant="h6">
@@ -233,8 +299,27 @@ function Nav() {
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
            
-            <IconButton aria-label="show 17 new notifications" color="inherit" >
-              <Badge badgeContent={17} color="secondary">    
+            <IconButton aria-label="show 17 new notifications" color="inherit" onClick={GetNotifcationCount} >
+              <Badge badgeContent={notificationCount} color="secondary">    
+                
+             {notificationLists.length!==0 &&
+              <nav role="navigation">
+                <ul className={classes.nav}>
+                 <li> 
+                   
+                 <ul class="dropdown" className={classes.navs}>
+                 {notificationLists.length!==0 && notificationLists.map(notify=>(
+                   <li className={classes.navli}> <Notification notify={notify} key={notify.id}/></li>
+
+                 ))}
+                 
+
+                </ul>
+                  </li>
+                </ul>
+                </nav>}
+
+
                  <NotificationsIcon />
               </Badge>
             </IconButton>
@@ -266,6 +351,7 @@ function Nav() {
           </div>
         </Toolbar>
       </AppBar>
+
       {renderMobileMenu}
       {renderMenu}
 

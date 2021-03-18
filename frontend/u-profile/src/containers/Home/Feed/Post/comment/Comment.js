@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useState, useEffect } from 'react'
 import { Avatar } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'; 
 import TextField from '@material-ui/core/TextField';
@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {useHistory} from 'react-router-dom'
 import {VerifyJwtToken} from '../../../../../store/actions/Auth'
 import {CommentUpdate, CommentDelete} from '../../../../../store/actions/PostCrud'
+import {NotificationCount} from '../../../../../store/actions/Utils'
 import './Comment.css'
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -71,15 +72,20 @@ function Comment(props) {
     const [editCommentOption, setEditCommentOption] = useState('')
     const [postComment, setPostComment] = useState(comment.comment)
     const loggedin_user_info = useSelector(state=> state.user.loggedinUserInfo)
+    const config = { headers: { 
+      'Content-Type':'application/json',
+      'Authorization': "Bearer " + localStorage.getItem('access_token')
+    }}
 
+    useEffect(() => {
+      
+     dispatch(NotificationCount(config))
+    }, [])
 
     const HandleCommetPut = (e, id) =>{
         dispatch(VerifyJwtToken())
         checkAuthenticatin()
-        const config = { headers: { 
-          'Content-Type':'application/json',
-          'Authorization': "Bearer " + localStorage.getItem('access_token')
-        }}
+        
         if(e.code==='Enter'){
           const formData = new FormData()
           formData.append('comment', postComment)
@@ -93,10 +99,6 @@ function Comment(props) {
         dispatch(VerifyJwtToken())
         checkAuthenticatin()
         setEditCommentOption(option)
-        const config = { headers: { 
-            'Content-Type':'application/json',
-            'Authorization': "Bearer " + localStorage.getItem('access_token')
-          }}
         if(option ==='Delete'){
             dispatch(CommentDelete(comment.id, config))
             setEditCommentOption('')

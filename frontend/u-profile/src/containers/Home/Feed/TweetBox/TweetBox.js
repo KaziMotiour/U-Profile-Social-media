@@ -7,6 +7,7 @@ import {CreatePost} from '../../../../store/actions/PostCrud'
 import {useDispatch, useSelector} from 'react-redux'
 import {CheckAuthentication} from '../../../../CheckAuthentication'
 import {VerifyJwtToken} from '../../../../store/actions/Auth'
+import {NotificationCount} from '../../../../store/actions/Utils'
 import "./TweetBox.css";
 
 
@@ -33,6 +34,14 @@ function TweetBox() {
   const [picture, setPicture] = useState(null);
   const [imgData, setImgData] = useState(null);
 
+  const config = { headers: { 
+    'Content-Type':'application/json',
+    'Authorization': "Bearer " + localStorage.getItem('access_token')
+  }}
+
+  useEffect(() => {
+   dispatch(NotificationCount(config))
+  }, [])
 
 
   const onChangePicture = e => {
