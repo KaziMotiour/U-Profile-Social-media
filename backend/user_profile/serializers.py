@@ -76,7 +76,8 @@ class UserProfile(serializers.ModelSerializer):
     followed_by = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = User_profile
-        fields=['id','user', 'first_name', 'Last_name', 'bio', 'Phone',  'facebook_Link', 'twitter_link', 'linkdin_link', 'github_link','image', 'users_name','is_following','following','followed_by' ]
+        fields=['id','user', 'first_name', 'Last_name', 'bio','occupations', 'gander', 'relationship_status', 'location', 'Phone',  'facebook_Link', 'twitter_link', 'linkdin_link', 'github_link','image', 'cover_picture', 'users_name','is_following','following','followed_by' ]
+        
         extra_kwargs = {'user':{'read_only':True}}
 
     # def validate(self, data):
@@ -163,10 +164,10 @@ class UserProfile(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
         full_name = serializers.SerializerMethodField(read_only=True)
         profile=UserProfile(read_only=True)
-        posts = PostSerializer(read_only=True, many=True)
         class Meta:
             model = User
-            fields=['id', 'username', 'full_name','profile', 'posts']
+            fields=['username', 'id','full_name','profile',]
+            
 
         def get_full_name(self, obj):
             user = User_profile.objects.filter(user=obj).first()

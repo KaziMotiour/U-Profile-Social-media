@@ -89,7 +89,7 @@ function Comment(props) {
         if(e.code==='Enter'){
           const formData = new FormData()
           formData.append('comment', postComment)
-          dispatch(CommentUpdate(id, formData, config))
+          dispatch(CommentUpdate(id, props.username,formData, config))
           setEditCommentOption('')
           setOpenCommentEditOption(false)
         }   
@@ -100,7 +100,7 @@ function Comment(props) {
         checkAuthenticatin()
         setEditCommentOption(option)
         if(option ==='Delete'){
-            dispatch(CommentDelete(comment.id, config))
+            dispatch(CommentDelete(comment.id, props.username, config))
             setEditCommentOption('')
             setOpenCommentEditOption(false)
         }

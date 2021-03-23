@@ -11,17 +11,24 @@ from notification.models import Notification
 def upload_to(instance, filename):
     return 'ProfilePic/{filename}'.format(filename=filename)
 
+def uploadCover_to(instance, filename):
+    return 'CoverPic/{filename}'.format(filename=filename)
 class User_profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     first_name = models.CharField(max_length=100, null=True, blank=True)
     Last_name = models.CharField(max_length=100, null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
+    occupations  =  models.CharField(max_length=200, null=True, blank=True)
+    gander = models.CharField(max_length=200, null=True, blank=True)
+    relationship_status = models.CharField(max_length=200, null=True, blank=True)
+    location = models.CharField(max_length=200, null=True, blank=True)
     Phone = models.CharField(max_length=50, null=True, blank=True)
     facebook_Link = models.CharField(max_length=200, null=True, blank=True)
     twitter_link = models.CharField(max_length=200, null=True, blank=True)
     linkdin_link = models.CharField(max_length=200, null=True, blank=True)
     github_link = models.CharField(max_length=200, null=True, blank=True)
     image = models.ImageField(upload_to=upload_to, default='ProfilePic/default.jpg')
+    cover_picture = models.ImageField(upload_to=uploadCover_to, default='CoverPic/meWithNature.jpg')
     
     def __str__(self):
         return str(self.user.username)

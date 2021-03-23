@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
    
   }))
 
-export default function DeletePost({open, id, hondleDeleteFormOpen}) {
+export default function DeletePost({open, username, id, hondleDeleteFormOpen}) {
     console.log('hello from delete form');
     const classes = useStyles()
     const history = useHistory()
@@ -61,7 +61,7 @@ export default function DeletePost({open, id, hondleDeleteFormOpen}) {
     const HandlePostDelete =() =>{
         dispatch(VerifyJwtToken())
         checkAuthenticatin()  
-        dispatch(DeletePosts(id, config))
+        dispatch(DeletePosts(id, username, config))
         closeDialogg()
   }
 

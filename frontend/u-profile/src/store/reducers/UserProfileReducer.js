@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {AUTH_START, AUTH_SUCCESS, AUTH_LOGOUT,AUTH_LOGIN_FAIL, AUTH_REGISTRATION, AUTH_REGISTRATION_FAIL, CAHNGE_PASSWORD, RESET_PASSWORD, LOGGED_IN_USER_INFO, RECOMENDED_USER, MUTUAL_FRIEND, REMOVE_MUTUAL_FRIEND, NOTIFICATION_COUNT, NOTIFICATION_LIST, REMOVE_NOTIFICATION_LIST} from '../actions/ActionTypes'
+import {AUTH_START, AUTH_SUCCESS, AUTH_LOGOUT,AUTH_LOGIN_FAIL, AUTH_REGISTRATION, AUTH_REGISTRATION_FAIL, CAHNGE_PASSWORD, RESET_PASSWORD, LOGGED_IN_USER_INFO, RECOMENDED_USER, MUTUAL_FRIEND, REMOVE_MUTUAL_FRIEND, NOTIFICATION_COUNT, NOTIFICATION_LIST, REMOVE_NOTIFICATION_LIST, USER_PFORILE} from '../actions/ActionTypes'
 import { auth_fail, auth_start } from '../actions/Auth'
 
 const initialState = ({
@@ -8,7 +8,8 @@ const initialState = ({
     recomendedUser: [],
     mutualFriend: [],
     notificationCount : null,
-    notificationList : []
+    notificationList : [],
+    userProfile:null
 
 })
 
@@ -52,6 +53,10 @@ const RemoveNotificationList = (state, action) =>({
     notificationList:[]
 })
 
+const  UserProfile = (state, action) =>({
+    ...state,
+    userProfile:action.userProfile
+})
 
 const UserInfo = (state = initialState, action) =>{
     switch(action.type){
@@ -62,6 +67,7 @@ const UserInfo = (state = initialState, action) =>{
         case NOTIFICATION_COUNT: return NotificationCount(state, action)
         case NOTIFICATION_LIST: return NotificationList(state, action)
         case REMOVE_NOTIFICATION_LIST: return RemoveNotificationList(state, action)
+        case USER_PFORILE: return UserProfile(state, action)
         default: return state
 
     }

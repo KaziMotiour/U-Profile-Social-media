@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   }))
 
-export default function SharedPost({open, id, parent, postUsername, postUserFullname, postUserImage, content, image, loggedInUsername, loggedInUserImage, hondleEditFormOpen}) {
+export default function EditPosts({open, id, username, parent, postUsername, postUserFullname, postUserImage, content, image, loggedInUsername, loggedInUserImage, hondleEditFormOpen}) {
   console.log(id, 'shared');
     const classes = useStyles()
     const history = useHistory()
@@ -106,7 +106,7 @@ const config = { headers: {
         console.log(formData.get('content'));
         console.log(formData.get('image'));
 
-        dispatch(EditPost(id, formData, config))
+        dispatch(EditPost(id, username, formData, config))
 
         closeDialog()
   }

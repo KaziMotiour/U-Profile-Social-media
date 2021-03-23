@@ -43,7 +43,7 @@ export default function SharedPost(props) {
         checkAuthenticatin()
         let formData = new FormData()
         formData.append('sharePostContent', sharePostContent)
-        dispatch(SharePost(props.id, formData, config))
+        dispatch(SharePost(props.id, props.username, formData, config))
         setSharepostContent('')
         closeDialog()
   }

@@ -1,4 +1,4 @@
-import {GET_POST_START, GET_POST_SUCCESS, SHARE_POST_SUCCESS} from './ActionTypes'
+import {GET_POST_START, GET_POST_SUCCESS, SHARE_POST_SUCCESS, GET_USER_WON_POST_SUCCESS} from './ActionTypes'
 import axios from 'axios'
 
 
@@ -13,11 +13,18 @@ export const SharePostSuccess = (shareInfo) =>(
     console.log(shareInfo,'helloooo'),
     {
     
-    type:SHARE_POST_SUCCESS,
+    type:GET_USER_WON_POST_SUCCESS,
     shareInfo:shareInfo
 }
 )
 
+
+export const UserWonPost = (posts) =>(
+    console.log(posts,),
+    {
+    type: GET_USER_WON_POST_SUCCESS,
+    userWonPost : posts
+})
 
 
 
@@ -52,12 +59,13 @@ export const CreatePost = (data, config) => async dispatch =>{
     }
 }
 
-export const LikePost = (id, config) => async dispatch =>{
+export const LikePost = (id, username, config) => async dispatch =>{
 
     try{
         axios.get(`http://127.0.0.1:8000/post/like/${id}`, config).then(res =>{
            
             dispatch(GetPostList(config))
+            dispatch(GetUserWonPostList(username,  config))
         }).catch(function (error){
             if (error.response){
                 console.log(error.response.data.detail);
@@ -68,12 +76,13 @@ export const LikePost = (id, config) => async dispatch =>{
     }
 }
 
-export const CommentPost = (id, data, config) => async dispatch =>{
+export const CommentPost = (id, username, data, config) => async dispatch =>{
     console.log(id, data.get('comment'), config);
     try{
         axios.post(`http://127.0.0.1:8000/post/comment/${id}`, data, config).then(res =>{
            
             dispatch(GetPostList(config))
+            dispatch(GetUserWonPostList(username,  config))
         }).catch(function (error){
             if (error.response){
                 console.log(error.response.data.detail);
@@ -84,12 +93,13 @@ export const CommentPost = (id, data, config) => async dispatch =>{
     }
 }
 
-export const CommentUpdate = (id, data, config) => async dispatch =>{
+export const CommentUpdate = (id, username, data, config) => async dispatch =>{
     console.log(id, data.get('comment'), config);
     try{
         axios.put(`http://127.0.0.1:8000/post/comment/rud/${id}`, data, config).then(res =>{
             
             dispatch(GetPostList(config))
+            dispatch(GetUserWonPostList(username,  config))
         }).catch(function (error){
             if (error.response){
                 console.log(error.response.data.detail);
@@ -99,11 +109,12 @@ export const CommentUpdate = (id, data, config) => async dispatch =>{
         console.log(e);
     }
 }
-export const CommentDelete = (id, config) => async dispatch =>{
+export const CommentDelete = (id, username, config) => async dispatch =>{
     try{
         axios.delete(`http://127.0.0.1:8000/post/comment/rud/${id}`, config).then(res =>{
             
             dispatch(GetPostList(config))
+            dispatch(GetUserWonPostList(username,  config))
         }).catch(function (error){
             if (error.response){
                 console.log(error.response.data.detail);
@@ -116,12 +127,13 @@ export const CommentDelete = (id, config) => async dispatch =>{
 
 
 
-export const ChangePrivacy = (id, data, config) => async dispatch =>{
+export const ChangePrivacy = (id, username, data, config) => async dispatch =>{
     console.log(data.get('privacy'),'privacy');
     try{
         axios.put(`http://127.0.0.1:8000/post/detail/${id}`, data, config).then(res =>{
             
             dispatch(GetPostList(config))
+            dispatch(GetUserWonPostList(username,  config))
         }).catch(function (error){
             if (error.response){
                 console.log(error.response.data.detail);
@@ -133,7 +145,7 @@ export const ChangePrivacy = (id, data, config) => async dispatch =>{
 }
 
 
-export const SharePost = (id, data, config) => async dispatch =>{
+export const SharePost = (id, username, data, config) => async dispatch =>{
     console.log(data.get('sharePostContent'));
     try{
         axios.post(`http://127.0.0.1:8000/post/rePost/${id}`, data, config).then(res =>{
@@ -141,6 +153,7 @@ export const SharePost = (id, data, config) => async dispatch =>{
             
             localStorage.setItem('RePost', res.data.RePost)
             dispatch(GetPostList(config))
+            dispatch(GetUserWonPostList(username, config))
         }).catch(function (error){
             if (error.response){
                 console.log(error.response.data.detail);
@@ -151,12 +164,14 @@ export const SharePost = (id, data, config) => async dispatch =>{
     }
 }
 
-export const EditPost = (id, data, config) => async dispatch =>{
+export const EditPost = (id, username, data, config) => async dispatch =>{
+   
     try{
         axios.put(`http://127.0.0.1:8000/post/detail/${id}`, data, config).then(res =>{
            
             localStorage.setItem('updated','success')
             dispatch(GetPostList(config))
+            dispatch(GetUserWonPostList(username, config))
         }).catch(function (error){
             if (error.response){
                 console.log(error.response.data.detail);
@@ -167,13 +182,14 @@ export const EditPost = (id, data, config) => async dispatch =>{
         console.log(e);
     }
 }
-export const DeletePosts = (id, config) => async dispatch =>{
+export const DeletePosts = (id, username, config) => async dispatch =>{
     try{
         axios.delete(`http://127.0.0.1:8000/post/detail/${id}`, config).then(res =>{
            
     
             localStorage.setItem('deleted','Deleted')
             dispatch(GetPostList(config))
+            dispatch(GetUserWonPostList(username, config))
         }).catch(function (error){
             if (error.response){
                 console.log(error.response.data.detail);
@@ -183,4 +199,19 @@ export const DeletePosts = (id, config) => async dispatch =>{
     }catch(e){
         console.log(e);
     }
+}
+
+
+export const GetUserWonPostList = (username, config) => async dispatch => {
+
+    try{
+        axios.get(`http://127.0.0.1:8000/post/${username}`, config).then(res =>{
+                
+                dispatch(UserWonPost(res.data))
+        }
+        )
+    }catch(err){
+        console.log(err);
+    }
+
 }

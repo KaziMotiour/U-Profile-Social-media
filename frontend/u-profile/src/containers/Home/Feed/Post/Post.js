@@ -25,7 +25,7 @@ import "./Post.css";
 import { CommentTwoTone } from "@material-ui/icons";
 import Comment from './comment/Comment'
 import SharedPost from './sharePost/SharePost'
-import EditPost from './editPost/EditPost'
+import EditPosts from './editPost/EditPost'
 import DeletePost from './deletePost/DeletePost'
 import UserList from './userList/UserList'
 
@@ -99,7 +99,7 @@ const postOptions = [
 
 
 
-const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet, is_saved, likes, postComment, timestamp, is_liked, shared_user }, ref) =>{
+const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet, is_saved, likes, postComment, timestamp, is_liked, shared_user, username }, ref) =>{
 
 
   // drop down
@@ -141,7 +141,8 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
     
     dispatch(VerifyJwtToken())
     checkAuthenticatin()
-    dispatch(LikePost(id, config))
+    dispatch(LikePost(id, username, config))
+
     dispatch(NotificationCount(config))
 
   }
@@ -152,7 +153,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
     if(e.code==='Enter'){
       const formData = new FormData()
       formData.append('comment', postComments)
-      dispatch(CommentPost(id, formData, config))
+      dispatch(CommentPost(id, username, formData, config))
       setPostComments('')
     }
     dispatch(NotificationCount(config))
@@ -165,7 +166,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
     checkAuthenticatin()
     let formData = new FormData()
     formData.append('privacy', option)
-    dispatch(ChangePrivacy(id, formData, config))
+    dispatch(ChangePrivacy(id, username, formData, config))
     dispatch(NotificationCount(config))
       
     
@@ -218,6 +219,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
     dispatch(GetPostSharedUser(id, config))
     dispatch(NotificationCount(config))
   }
+
   const ClosePostSharedUserList = () =>{
     dispatch({
       type:REMOVE_POST_SHARD_USER
@@ -279,11 +281,11 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
                 </ul>
         </nav>}
 
-        {openEditForm && <EditPost open={true} id={id} postUsername={user.username}
+        {openEditForm && <EditPosts open={true} id={id} username={username} postUsername={user.username}
                 postUserFullname={user.full_name && user.full_name} postUserImage={user.profile.image} content={content} image={image} loggedInUsername={loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info.profile.image}
                 hondleEditFormOpen={closeEditForm} />}
         
-        {openDeleteForm && <DeletePost open={true} id={id}  hondleDeleteFormOpen={closeDeleteForm}/>}
+        {openDeleteForm && <DeletePost open={true} username={username} id={id}  hondleDeleteFormOpen={closeDeleteForm}/>}
         </div>
         </div>
           {/* Post header part end */}
@@ -347,7 +349,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
                 {postSharedUsers.length !==0 && <UserList id={() => id} opene={true} UserList={postSharedUsers} closeUserList={ClosePostSharedUserList} typeOfUser="Who share this post" from="shared"/>}
                 
                 {opneSharePost && (
-                <SharedPost open={true} id={id} postUsername={user.username}
+                <SharedPost open={true} username={username} id={id} postUsername={user.username}
                 postUserFullname={user.full_name && user.full_name} postUserImage={user.profile.image} content={content} image={image} loggedInUserUsername={loggedin_user_info.username} loggedInUserFullname={loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info.profile.image}
                 hondleShareOpen={HandleShareOpen}
                 />)}
@@ -361,7 +363,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         <h2 style={{marginLeft:'15px'}}>Commnets</h2>
           
             {postComment && postComment.map(comments => (
-             <Comment comment={comments} />
+             <Comment username={username} comment={comments} />
               
             ))}
           
@@ -413,9 +415,9 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
                   </li>
                 </ul>
         </nav>}
-        {openEditForm && <EditPost open={true} id={id} parent={parent} postUsername={parent.user.username} postUserFullname={parent.user.full_name} postUserImage={parent.user.profile.image} content={content} image={parent.image} loggedInUsername={loggedin_user_info && loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info && loggedin_user_info.profile.image} hondleEditFormOpen={closeEditForm} />}
+        {openEditForm && <EditPosts username={username} open={true} id={id} parent={parent} postUsername={parent.user.username} postUserFullname={parent.user.full_name} postUserImage={parent.user.profile.image} content={content} image={parent.image} loggedInUsername={loggedin_user_info && loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info && loggedin_user_info.profile.image} hondleEditFormOpen={closeEditForm} />}
 
-        {openDeleteForm && <DeletePost open={true} id={id}  hondleDeleteFormOpen={closeDeleteForm}/>}
+        {openDeleteForm && <DeletePost open={true} username={username} id={id}  hondleDeleteFormOpen={closeDeleteForm}/>}
         
       </div>
       {/* post edit options ended */}
@@ -516,7 +518,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
               <div className="shared" style={{display:'flex', cursor:'pointer'}}>
                 <ShareIcon onClick={() => setOpenSharePost(!opneSharePost)} fontSize="default"/> &nbsp; {shared_users} share
               
-                {opneSharePost && (<SharedPost open={true} id={id} postUserFullname={parent.user.full_name} postUsername={parent.user.username} postUserImage={parent.user.profile.image} content={parent.content} image={parent.image} loggedInUserUsername={loggedin_user_info.username} loggedInUserFullname={loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info && loggedin_user_info.profile.image} hondleShareOpen={HandleShareOpen} 
+                {opneSharePost && (<SharedPost open={true} username={username} id={id} postUserFullname={parent.user.full_name} postUsername={parent.user.username} postUserImage={parent.user.profile.image} content={parent.content} image={parent.image} loggedInUserUsername={loggedin_user_info.username} loggedInUserFullname={loggedin_user_info.full_name} loggedInUserImage={loggedin_user_info && loggedin_user_info.profile.image} hondleShareOpen={HandleShareOpen} 
                 
                 /> )}
 
@@ -529,7 +531,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         <div className='comment-section'> 
         <h2 style={{marginLeft:'15px'}}>Commnets</h2>
         {postComment && postComment.map(comments => (
-              <Comment comment={comments} />
+              <Comment username={username}  comment={comments} />
               
             ))}
   

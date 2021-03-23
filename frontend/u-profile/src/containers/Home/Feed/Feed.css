@@ -47,10 +47,8 @@
   border-bottom: 2px solid rgb(230, 236, 240);
 }
 
-@media screen and (min-width: 660px) {
- 
+@media screen and (min-width: 990px) {
   .recomendedUser{
       display: none;
   }
- 
 }

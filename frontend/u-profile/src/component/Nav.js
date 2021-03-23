@@ -220,7 +220,8 @@ const CloseNotificationBar = () =>{
       onClose={handleMenuClose}
     
     ><div style={{display:'flex', flexDirection:'column'}}>
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose} > <Link component={NavLink}
+            underline="none"  to={`/${loggedInUser && loggedInUser.username }`}> Profile </Link></MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={handleMenuClose}><p onClick={HandleLogout}>LogOut</p></MenuItem>
       </div>

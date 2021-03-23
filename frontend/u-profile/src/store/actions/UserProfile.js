@@ -1,7 +1,8 @@
     import React from 'react'
     import axios from 'axios'
-import {LOGGED_IN_USER_INFO, RECOMENDED_USER, MUTUAL_FRIEND} from './ActionTypes'
+import {LOGGED_IN_USER_INFO, RECOMENDED_USER, MUTUAL_FRIEND, USER_PFORILE} from './ActionTypes'
 import {GetPostLikedUser, GetPostSharedUser} from './Utils'
+
 
 
 
@@ -27,7 +28,31 @@ export const loggedin_user_info = (data) =>(
   
   })
 
+  export const UserProfileData = (data) =>(
+    
+  {
+  type: USER_PFORILE,
+  userProfile: data
+
+})
+
+
   
+
+export const UserProfile = (username, config) => async dispatch =>{
+    console.log(username.username, 'usernameee');
+    try{
+        await axios.get(`http://127.0.0.1:8000/profile/${username}`, config).then(res =>{
+        dispatch(UserProfileData(res.data))
+    })
+    }catch(err){
+        console.log(err,'err');
+    }
+
+
+}
+
+
 
 
 export const LoggedUserInfo = (config) => async dispatch =>{
@@ -106,3 +131,5 @@ export const MutualFriend = (id, config) => async dispatch =>{
     }
 
 }
+
+

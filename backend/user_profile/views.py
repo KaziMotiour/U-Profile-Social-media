@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from django.db.models import Q
 from rest_framework.decorators import api_view,  permission_classes
-from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView
+from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .permission import IsOwnerOrReadOnly
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -15,6 +15,11 @@ User = get_user_model()
 # Create your views here.
 
 
+class UserProfileView(RetrieveAPIView):
+    serializer_class=UserSerializer
+    queryset = User.objects.all()
+    lookup_field = "username"
+    
 class EditUserProfile(RetrieveUpdateAPIView):
     # permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     serializer_class = UserProfile
@@ -68,9 +73,7 @@ def ToggleBookmarkViews(request, pk):
         return Response({"toggle_user": "Connot found"}) 
     
 
-class UserListView(ListAPIView):
-    serializer_class=UserSerializer
-    queryset = User.objects.all()
+
 
 class UserdetailView(RetrieveUpdateAPIView):
     serializer_class=UserSerializer

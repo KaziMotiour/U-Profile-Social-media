@@ -11,6 +11,8 @@ from .models import UserPost, PostComment
 from .permission import IsOwnerOrReadOnly
 from user_profile.models import UserFollow
 from django_filters import rest_framework as filters
+from django.contrib.auth import get_user_model
+User = get_user_model()
 # Create your views here.
 class List_of_user(ListAPIView):
     serializer_class=PostSerializer
@@ -18,6 +20,18 @@ class List_of_user(ListAPIView):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = ProductFilter
 
+class UserWonPosts(ListAPIView):
+    serializer_class=PostSerializer
+    def get_queryset(self):
+        LoggedInUser = self.request.user
+        username = self.kwargs.get('username')
+        user = User.objects.get(username=username)
+
+        if LoggedInUser.username == username:
+            return UserPost.objects.filter(user=user)
+        else:
+            return UserPost.objects.filter(user=user).exclude(privacy='onlyme')
+   
 
 
 
