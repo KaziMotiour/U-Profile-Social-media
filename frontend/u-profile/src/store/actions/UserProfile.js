@@ -1,6 +1,6 @@
     import React from 'react'
     import axios from 'axios'
-import {LOGGED_IN_USER_INFO, RECOMENDED_USER, MUTUAL_FRIEND, USER_PFORILE} from './ActionTypes'
+import {LOGGED_IN_USER_INFO, RECOMENDED_USER, MUTUAL_FRIEND, USER_PFORILE, GET_FOLLWER_USER, GET_FOLLWING_USER} from './ActionTypes'
 import {GetPostLikedUser, GetPostSharedUser} from './Utils'
 
 
@@ -34,6 +34,15 @@ export const loggedin_user_info = (data) =>(
   type: USER_PFORILE,
   userProfile: data
 
+})
+export const followerUser = (user) =>({
+    type:GET_FOLLWER_USER,
+    followerUser : user
+})
+
+export const followingUser = (user) =>({
+    type:GET_FOLLWING_USER,
+    followingUser : user
 })
 
 
@@ -125,6 +134,32 @@ export const MutualFriend = (id, config) => async dispatch =>{
         await axios.get(`http://127.0.0.1:8000/profile/mutualfriend/${id}`,config).then(res =>{
             
             dispatch(mutual_friend(res.data))
+        })
+    }catch(err){
+        console.log(err,'err');
+    }
+
+}
+
+export const GetFollowerUser = (id, config) => async dispatch =>{
+   
+    try{
+        await axios.get(`http://127.0.0.1:8000/profile/follower/${id}`,config).then(res =>{
+            // console.log(res.data, 'followwwwwwwwww');
+            dispatch(followerUser(res.data))
+        })
+    }catch(err){
+        console.log(err,'err');
+    }
+
+}
+
+export const GetFollowingUser = (id, config) => async dispatch =>{
+
+    try{
+        await axios.get(`http://127.0.0.1:8000/profile/following/${id}`,config).then(res =>{
+            
+            dispatch(followingUser(res.data))
         })
     }catch(err){
         console.log(err,'err');

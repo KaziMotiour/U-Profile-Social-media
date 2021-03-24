@@ -1,7 +1,11 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
+import {useDispatch, useSelector} from 'react-redux'
 import ProfileInfo from './profileInfo/ProfileInfo'
 import ProfilePost from './profilePost/profilePost'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import {useHistory} from 'react-router-dom'
+import {VerifyJwtToken} from '../../store/actions/Auth'
+
 import Nav from '../../component/Nav'
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -32,6 +36,34 @@ const useStyles = makeStyles((theme: Theme) =>
 function ProfilePage() {
 
     const classes = useStyles()
+    const dispatch = useDispatch()
+    const history = useHistory()
+    const [openGallery, setOpenGalley] = useState(false) 
+    const [openFollwoing, setOpenFollwoing] = useState(false)
+    const [openFollower, setOpenFollower] = useState(false)
+    const [openTimeline, setOpenTimeline] = useState(false)
+
+    const config = { headers: {'Authorization': "Bearer " + localStorage.getItem('access_token')}}
+    useEffect(()=>{
+        dispatch(VerifyJwtToken(config))
+    },[])
+
+    useEffect(()=>{
+        checkAuthenticatin()
+    },[])
+
+
+
+
+    const checkAuthenticatin =()=>{
+        const access_token = localStorage.getItem('access_token')
+        if(!access_token){
+            history.push({
+                pathname: '/login',
+                state: { detail: 'session expired, Try to login again' }
+              })
+        }
+      }
     return (
         <div className={classes.root}>
             <Nav />

@@ -36,3 +36,7 @@ export const SHARE_POST_SUCCESS   = 'SHARE_POST_SUCCESS'
 
 export const GET_USER_WON_POST_SUCCESS   = 'GET_USER_WON_POST_SUCCESS'
 export const USER_PFORILE = 'USER_PFORILE'
+
+// following and follower
+export const GET_FOLLWING_USER = 'GET_FOLLWING_USER'
+export const GET_FOLLWER_USER = 'GET_FOLLWER_USER'

@@ -20,13 +20,21 @@ function Home(props) {
     const history = useHistory()
     const notificationLists = useSelector(state => state.user.notificationList)
     const notifcationCount = notificationLists.length
-    useEffect(() =>{
-        dispatch(VerifyJwtToken())
-        const access = localStorage.getItem('access_token')
-        const config = { headers: {'Authorization': "Bearer " + localStorage.getItem('access_token')}}
 
+    const access = localStorage.getItem('access_token')
+    const config = { headers: {'Authorization': "Bearer " + localStorage.getItem('access_token')}}
+
+    useEffect(() =>{
+
+        dispatch(VerifyJwtToken())
         access && dispatch(LoggedUserInfo(config))
+        
+      },[])
+
+      useEffect(()=>{
+
         checkAuthenticatin()
+        
       },[])
 
       const checkAuthenticatin =()=>{

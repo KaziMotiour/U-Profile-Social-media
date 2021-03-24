@@ -102,16 +102,16 @@ class UserProfile(serializers.ModelSerializer):
             return False
 
     def get_following(self, obj):
-        request = self.context.get("request")
         user = UserFollow.objects.filter(user__username=obj.user.username).first()
         if user:
             return user.following.count()
         return 0
         
     def get_followed_by(self, obj):
-        request = self.context.get("request")
-        return obj.user.UserFollowing.all().count()
-        
+        user = UserFollow.objects.filter(user__username=obj.user.username).first()
+        if user:
+            return user.followed_by.count()
+        return 0
 
 
     def validate_facebook_Link(self, value):
@@ -185,3 +185,12 @@ class PostBookmarkSerializer(serializers.ModelSerializer):
     class Meta:
         model=PostBookmark
         fields=['user', 'post']
+
+
+class FollowingOrFollower(serializers.ModelSerializer):
+        
+        class Meta:
+            model = UserFollow
+            fields = ['user', 'following', 'followed_by']
+
+        

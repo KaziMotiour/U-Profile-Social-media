@@ -3,6 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Post from '../../Home/Feed/Post/Post'
 import Media from '../../Home/Feed/Post/LoadPost'
 import UserInformation from './UserInformation'
+import DemoGallery from './DemoGallery'
 import {useDispatch, useSelector} from 'react-redux'
 import {GetPostList, GetUserWonPostList} from '../../../store/actions/PostCrud'
 import {UserProfile} from '../../../store/actions/UserProfile'
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
         borderLeft:'1px solid #EBECED',
         borderRight:'1px solid #EBECED',
     },
-    userImages:{
+    DemoGallery:{
         flex:1,
         ['@media (max-width: 990px)']: { // eslint-disable-line no-useless-computed-key
             display: 'none',
@@ -92,8 +93,8 @@ function ProfilePost() {
             {allPost && allPost.length !==0 ? userposts : (<Media />) }
             </div>
 
-            <div className={classes.userImages}>
-            hello
+            <div className={classes.DemoGallery}>
+            <DemoGallery usePost ={allPost} userInfo={userProfile}/>
             </div>
             
         </div>

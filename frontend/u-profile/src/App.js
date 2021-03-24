@@ -20,10 +20,12 @@ function  App() {
   const accessToken = useSelector(state => state.auth.access_token)
   const dispatch = useDispatch()
   const history = useHistory()
+  
+  const config = { headers: {'Authorization': "Bearer " + localStorage.getItem('access_token')}}
 
   useEffect(() =>{
+
     dispatch(VerifyJwtToken())
-    const config = { headers: {'Authorization': "Bearer " + localStorage.getItem('access_token')}}
     dispatch(LoggedUserInfo(config))
     
   },[])

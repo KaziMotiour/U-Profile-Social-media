@@ -21,6 +21,8 @@ const useStyles = makeStyles((theme: Theme) =>
         borderRadius:'10px',
         paddingBottom:'10px',
         backgroundColor:'rgb(240, 242, 245)',
+        maxWidth:'80%',
+        margin:'auto'
 
 
     },
@@ -31,6 +33,8 @@ const useStyles = makeStyles((theme: Theme) =>
         borderRadius:'10px',
         paddingBottom:'10px',
         backgroundColor:'rgb(240, 242, 245)',
+        maxWidth:'80%',
+        margin:'auto'
 
 
     },
@@ -83,7 +87,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 
 function UserInformation({userInfo}) {
-    console.log(userInfo, 'usern infooooooooo');
     const classes = useStyles()
     
     return (
@@ -93,6 +96,7 @@ function UserInformation({userInfo}) {
                     User info
                 </div>
 
+                {/* UserInfo */}
                 <div className={classes.infoList}>
                 <PermIdentityIcon className={classes.icon}/> 
                     <p className={classes.info}>{userInfo && userInfo.profile.bio}</p>
@@ -123,6 +127,7 @@ function UserInformation({userInfo}) {
                 </div>
             </div>
 
+            {/* social links */}
             <div className={classes.root2}>
                 <div className={classes.heading} > 
                     Social Links

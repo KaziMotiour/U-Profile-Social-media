@@ -6,7 +6,7 @@ from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView, Retrieve
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .permission import IsOwnerOrReadOnly
 from rest_framework.parsers import MultiPartParser, FormParser
-from .serializers import UserProfile, UserSerializer, PostBookmarkSerializer, PostBookmarkSerializer,PostUserDetailsSerializer, RecomendedUserList
+from .serializers import UserProfile, UserSerializer, PostBookmarkSerializer, PostBookmarkSerializer,PostUserDetailsSerializer, RecomendedUserList, FollowingOrFollower
 from .models import User_profile, PostBookmark, UserFollow
 from django.contrib.auth import get_user_model
 from UserPost.models import UserPost, Post
@@ -104,3 +104,19 @@ class MutualFeiend(ListAPIView):
         recomended_user = UserFollow.objects.filter(user=RE_user).first()
         return requested_user.following.filter(id__in = recomended_user.following.all())
 
+class Following(ListAPIView):
+    serializer_class = PostUserDetailsSerializer
+    def get_queryset(self):
+        R_user = self.kwargs.get('pk')
+        requested_user =UserFollow.objects.filter(user=R_user).first()
+        
+        return requested_user.following.all()
+
+
+class Follower(ListAPIView):
+    serializer_class = PostUserDetailsSerializer
+    def get_queryset(self):
+        user = self.kwargs.get('pk')
+        requested_user =UserFollow.objects.filter(user=user).first()
+        
+        return requested_user.followed_by.all()

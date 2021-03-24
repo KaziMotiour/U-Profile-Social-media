@@ -3,32 +3,57 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Avatar } from "@material-ui/core";
 import {useDispatch, useSelector} from 'react-redux'
 import {useParams} from 'react-router-dom'
+import Button from '@material-ui/core/Button';
 
 import {UserProfile} from '../../../store/actions/UserProfile'
 
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+
+   
+    
     coverPic:{
-        width:'70%', 
-        maxWidth:'800px',
+        minWidth:'55%', 
+        maxWidth:'60%',
         margin:'auto',
         ['@media (max-width: 920px)']: { // eslint-disable-line no-useless-computed-key
             width: '90%',
+            maxWidth:'90%',
             
           },  
     },
 
-    pofileInfo:{
-        width:'65%',
+    UserInfo:{
+        width:'70%',
+        maxWidth:'800px',
         height:'50px',
-        backgroundColor:'rgb(235, 236, 237)',
+        backgroundColor:'rgb(245, 245, 245)',
+        justifyContent:'space-between',
         margin:'auto',
         display:'flex',
-        justifyContent:'space-around',
+       
         alignItems:'center',
         ['@media (max-width: 920px)']: { // eslint-disable-line no-useless-computed-key
+            
             width: '100%',
+            
+          },
+    },
+    UserInfo2:{
+        width:'70%',
+        maxWidth:'800px',
+        height:'50px',
+        backgroundColor:'rgb(245, 245, 245)',
+        justifyContent:'center',
+        margin:'auto',
+        display:'flex',
+       
+        alignItems:'center',
+        ['@media (max-width: 920px)']: { // eslint-disable-line no-useless-computed-key
+            
+            width: '100%',
+            
             
           },
     },
@@ -37,18 +62,76 @@ const useStyles = makeStyles((theme: Theme) =>
         height: theme.spacing(15),
         marginLeft:20,
         marginTop:-80,
+        ['@media (max-width: 600px)']: { // eslint-disable-line no-useless-computed-key
+            width: '100px',
+            height: '100px',
+            
+          },
       },
-      abouts:{
+      flex:{
         display:'flex'
       },
-      aboutItems:{
+      menusItems:{
           marginRight:15,
           padding:3,
           cursor:'pointer',
           '&:hover':{
               borderBottom:'.5px solid rgb(64, 81, 181)'
-          }
+          },
+          ['@media (max-width: 500px)']: { // eslint-disable-line no-useless-computed-key
+            marginRight:8,
+            fontSize:13,
+            
+          },
+      },
+      follow:{
+          marginRight:50,
+          
+          ['@media (max-width: 500px)']: { // eslint-disable-line no-useless-computed-key
+            marginRight:20,
+            
+          },
+      },
+      userName:{
+          fontSize:22,
+          ['@media (max-width: 990px)']: { // eslint-disable-line no-useless-computed-key
+            fontSize:20,
+            
+          },
+      },
+
+      menusItemsAbout:{
+        marginRight:15,
+        padding:3,
+        cursor:'pointer',
+        '&:hover':{
+            borderBottom:'.5px solid rgb(64, 81, 181)'
+        },
+        ['@media (min-width: 990px)']: { // eslint-disable-line no-useless-computed-key
+            display:'none'
+            
+          },
+        ['@media (max-width: 500px)']: { // eslint-disable-line no-useless-computed-key
+            marginRight:8,
+            fontSize:13,
+            
+          },
+      },
+      image:{
+        maxHeight:'300px',
+        width:'100%',
+        ['@media (min-width: 1500px)']: { // eslint-disable-line no-useless-computed-key
+            maxHeight:'450px',
+          },
+          ['@media (max-width: 500px)']: { // eslint-disable-line no-useless-computed-key
+            maxHeight:'250px',
+          },
+      },
+      followButton:{
+          borderRadius:20,
       }
+      
+      
     
   })
 )
@@ -59,40 +142,54 @@ function ProfileInfo() {
     const {username} = useParams()
     const loggedInUser = useSelector(state => state.user.loggedinUserInfo)
     const userProfile = useSelector(state => state.user.userProfile)
-    console.log(username, 'usernameee');
+
     const config = { headers: {'Authorization': "Bearer " + localStorage.getItem('access_token')}}
-   
+    
+
     useEffect(()=>{
         dispatch(UserProfile(username, config))
     },[])
     
-    console.log(userProfile && userProfile, 'dddddddddddddddddddddd');
-
-
-
     return (
         <div className={classes.profileInfo}>
 
             <div className={classes.coverPic}>
-                <img  className={classes.image} style={{maxHeight:'300px', width:'100%'}}  
+                <img  className={classes.image}   
                 src={userProfile ? userProfile.profile.cover_picture : ''} /> 
             </div>
             
-            <div className={classes.pofileInfo}>
+            <div className={classes.UserInfo}>
 
-                <div>
-                 <Avatar src={userProfile ? userProfile.profile.image: ''} className={classes.large}/>
+                <div className={classes.flex}>
+                    <div>
+                        <Avatar src={userProfile ? userProfile.profile.image: ''} className={classes.large}/>
+                    </div>
+                    <div className={classes.userName}>
+                        {userProfile ? userProfile.full_name!=='None None' ? userProfile.full_name : userProfile.username :''}
+                    </div>
                 </div>
 
-                <div className={classes.abouts}>
-                    <h4 className={classes.aboutItems}>following {userProfile && userProfile.profile.following}</h4>
-                    <h4 className={classes.aboutItems}>follower {userProfile && userProfile.profile.followed_by}</h4>
-                    <h4 className={classes.aboutItems}>hello</h4>
+                <div className={classes.follow}>
+                    {userProfile && userProfile.profile.is_following ? <Button className={classes.followButton}   variant="outlined" color="primary">Unfollow</Button> 
+                    :
+                    <Button className={classes.followButton} variant="outlined" color="primary">
+                    Follow </Button>}
                 </div>
 
-                <div className={classes.abouts}>
-                {userProfile && userProfile.profile.is_following ? <h4 >UnFollow</h4>:<h4 >follow</h4>}
-                    
+            </div>
+
+
+            <div className={classes.UserInfo2}>
+
+                <div className={classes.menu}>
+                   
+                 <div className={classes.flex}>
+                 <p className={classes.menusItems}> Timeline </p>
+                    <p className={classes.menusItems}>Following {userProfile && userProfile.profile.following}</p>
+                    <p className={classes.menusItems}>Follower {userProfile && userProfile.profile.followed_by}</p>
+                    <p className={classes.menusItemsAbout} >About</p>
+                    <p className={classes.menusItems}>Gallery</p>
+                    </div>
                 </div>
             </div>
 

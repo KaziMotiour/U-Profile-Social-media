@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {AUTH_START, AUTH_SUCCESS, AUTH_LOGOUT,AUTH_LOGIN_FAIL, AUTH_REGISTRATION, AUTH_REGISTRATION_FAIL, CAHNGE_PASSWORD, RESET_PASSWORD, LOGGED_IN_USER_INFO, RECOMENDED_USER, MUTUAL_FRIEND, REMOVE_MUTUAL_FRIEND, NOTIFICATION_COUNT, NOTIFICATION_LIST, REMOVE_NOTIFICATION_LIST, USER_PFORILE} from '../actions/ActionTypes'
+import {AUTH_START, AUTH_SUCCESS, AUTH_LOGOUT,AUTH_LOGIN_FAIL, AUTH_REGISTRATION, AUTH_REGISTRATION_FAIL, CAHNGE_PASSWORD, RESET_PASSWORD, LOGGED_IN_USER_INFO, RECOMENDED_USER, MUTUAL_FRIEND, REMOVE_MUTUAL_FRIEND, NOTIFICATION_COUNT, NOTIFICATION_LIST, REMOVE_NOTIFICATION_LIST, USER_PFORILE, GET_FOLLWING_USER, GET_FOLLWER_USER} from '../actions/ActionTypes'
 import { auth_fail, auth_start } from '../actions/Auth'
 
 const initialState = ({
@@ -9,7 +9,9 @@ const initialState = ({
     mutualFriend: [],
     notificationCount : null,
     notificationList : [],
-    userProfile:null
+    userProfile:null,
+    followerUser:[],
+    followingUser:[],
 
 })
 
@@ -58,6 +60,16 @@ const  UserProfile = (state, action) =>({
     userProfile:action.userProfile
 })
 
+const FollowerUser = (state, action) =>({
+    ...state,
+    followerUser:action.followerUser
+})
+
+const FollowingUser = (state, action) =>({
+    ...state,
+    followingUser:action.followingUser
+})
+
 const UserInfo = (state = initialState, action) =>{
     switch(action.type){
         case LOGGED_IN_USER_INFO: return loggedinUserInfo(state, action)
@@ -68,6 +80,8 @@ const UserInfo = (state = initialState, action) =>{
         case NOTIFICATION_LIST: return NotificationList(state, action)
         case REMOVE_NOTIFICATION_LIST: return RemoveNotificationList(state, action)
         case USER_PFORILE: return UserProfile(state, action)
+        case GET_FOLLWER_USER: return FollowerUser(state, action)
+        case GET_FOLLWING_USER: return FollowingUser(state, action)
         default: return state
 
     }
