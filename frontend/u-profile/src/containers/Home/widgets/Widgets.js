@@ -13,6 +13,8 @@ import {RecomendedUser, UserFollow, MutualFriend} from '../../../store/actions/U
 import {NotificationCount} from '../../../store/actions/Utils'
 import {REMOVE_MUTUAL_FRIEND} from '../../../store/actions/ActionTypes'
 import UserList from '../Feed/Post/userList/UserList'
+import {useParams, NavLink} from 'react-router-dom' 
+import Link from '@material-ui/core/Link';
 
 import "./Widgets.css";
 
@@ -76,7 +78,7 @@ function Widgets() {
   },[])
 
   const HandleUserFollow = (username) =>{
-        dispatch(UserFollow(username, config))
+        dispatch(UserFollow(username, username, config))
   }
 
   const RefreshRecomendedUser = () =>{
@@ -106,6 +108,7 @@ function Widgets() {
        {recomendedUser.length !==0 && (recomendedUser.map(user =>(
 
          <Card className={classes.root}>
+          <Link component={NavLink}  underline="none"  to={`/${user.username }`}>
          <CardActionArea className={classes.cardTopArea}>
            <CardMedia
              className={classes.media}
@@ -123,6 +126,7 @@ function Widgets() {
              
            </CardContent>
          </CardActionArea>
+         </Link>
 
          {user.mutual_friends!==0 && <Typography color="textSecondary" component="p" c>
               <p className={classes.mutualFriend} onClick={() => HnadleMutualFriend(user.id)} > {user.mutual_friends} Mutual friend </p>

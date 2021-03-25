@@ -28,15 +28,13 @@ class PostUserDetailsSerializer(serializers.ModelSerializer):
             return str(user.first_name)+' '+ str(user.Last_name)
         
         def get_is_following(self, obj):   
+            print(obj)
             request = self.context.get("request")
-            if obj == request.user:
+            user = UserFollow.objects.filter(user=request.user).first()
+            if obj in user.following.all():
                 return True
             else:
-                user = UserFollow.objects.filter(user=request.user).first()
-                if obj in user.following.all():
-                    return True
-                else:
-                    return False
+                return False
 
 class RecomendedUserList(serializers.ModelSerializer):
         full_name = serializers.SerializerMethodField(read_only=True)

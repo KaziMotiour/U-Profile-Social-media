@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {useParams} from 'react-router-dom'
 import Button from '@material-ui/core/Button';
 
-import {UserProfile} from '../../../store/actions/UserProfile'
+import {UserProfile, UserFollow} from '../../../store/actions/UserProfile'
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -136,7 +136,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-function ProfileInfo() {
+function ProfileInfo({openTimelineOpen, opneFollowers, opneFollowing, opneGallery}) {
     const classes = useStyles()
     const dispatch = useDispatch()
     const {username} = useParams()
@@ -150,6 +150,11 @@ function ProfileInfo() {
         dispatch(UserProfile(username, config))
     },[])
     
+    const FollowOrUnfollow  = () =>{
+        const profile=true 
+        const username = userProfile.username
+        dispatch(UserFollow(username, username, config,  profile,))
+    }
     return (
         <div className={classes.profileInfo}>
 
@@ -170,9 +175,9 @@ function ProfileInfo() {
                 </div>
 
                 <div className={classes.follow}>
-                    {userProfile && userProfile.profile.is_following ? <Button className={classes.followButton}   variant="outlined" color="primary">Unfollow</Button> 
+                    {userProfile && userProfile.profile.is_following ? <Button onClick={FollowOrUnfollow} className={classes.followButton}   variant="outlined" color="primary">Unfollow</Button> 
                     :
-                    <Button className={classes.followButton} variant="outlined" color="primary">
+                    <Button onClick={FollowOrUnfollow} className={classes.followButton} variant="outlined" color="primary">
                     Follow </Button>}
                 </div>
 
@@ -184,11 +189,16 @@ function ProfileInfo() {
                 <div className={classes.menu}>
                    
                  <div className={classes.flex}>
-                 <p className={classes.menusItems}> Timeline </p>
-                    <p className={classes.menusItems}>Following {userProfile && userProfile.profile.following}</p>
-                    <p className={classes.menusItems}>Follower {userProfile && userProfile.profile.followed_by}</p>
+                 <p className={classes.menusItems} onClick={openTimelineOpen}> Timeline </p>
+
+                    <p className={classes.menusItems} onClick={opneFollowing}>Following ({userProfile && userProfile.profile.following})</p>
+
+                    <p className={classes.menusItems}  onClick={opneFollowers}>Follower ({userProfile && userProfile.profile.followed_by})</p>
+
+                    <p className={classes.menusItems} onClick={opneGallery}>Gallery</p>
+
                     <p className={classes.menusItemsAbout} >About</p>
-                    <p className={classes.menusItems}>Gallery</p>
+                   
                     </div>
                 </div>
             </div>

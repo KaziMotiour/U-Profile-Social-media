@@ -11,7 +11,7 @@ urlpatterns = [
     path('bookmark/<int:pk>', ToggleBookmarkViews, name="postBookmarkViews"),
     path('recomemdedUser/', RecomendedUser.as_view(), name="postBookmarkViews"),
     path('mutualfriend/<int:pk>', MutualFeiend.as_view(), name="postBookmarkViews"),
-    path('following/<int:pk>/', Following.as_view(), name="FollowingOrFollower"),
-     path('follower/<int:pk>/', Follower.as_view(), name="FollowingOrFollower"),
+    path('following/<slug:username>/', Following.as_view(), name="FollowingOrFollower"),
+     path('follower/<slug:username>/', Follower.as_view(), name="FollowingOrFollower"),
 
 ]

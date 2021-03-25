@@ -5,6 +5,8 @@ import { Avatar } from "@material-ui/core";
 import { BorderBottom } from '@material-ui/icons';
 import {GetFollowerUser} from '../../../store/actions/UserProfile'
 import {useDispatch, useSelector} from 'react-redux'
+import {useParams, NavLink} from 'react-router-dom'  
+import Link from '@material-ui/core/Link';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -83,9 +85,8 @@ function DemoGallery({usePost, userInfo}) {
     const dispatch = useDispatch()
     const follower = useSelector(state => state.user.followerUser)
     const config = { headers: {'Authorization': "Bearer " + localStorage.getItem('access_token')}}
-    console.log(follower, 'fllllllll');
     useEffect(()=>{
-       {userInfo && dispatch(GetFollowerUser(userInfo.id, config))}
+       {userInfo && dispatch(GetFollowerUser(userInfo.username, config))}
     },[userInfo])
     
     return (
@@ -98,7 +99,7 @@ function DemoGallery({usePost, userInfo}) {
                 {/* UserInfo */}
                 <div className={classes.gallery}>
                     {usePost && usePost.slice(0, 5).map(post =>(
-                       <span>{post.image && <img className={classes.image} src={post.image} />} </span>
+                       <span>{post.image && <a href={post.image}>   <img className={classes.image} src={post.image} /> </a>} </span>
                     ))}
                 
                 </div>
@@ -112,8 +113,11 @@ function DemoGallery({usePost, userInfo}) {
                 <div className={classes.sociallink}>
                    {follower && follower.slice(0,5).map(user =>(
                        <div style={{display:'flex'}}>
+                            
                            <Avatar src={user.profile.image} className={classes.avater}/> &nbsp;
+                           <Link component={NavLink}  underline="none"  to={`/${user.username }`}>
                            {user.full_name !=='None None' ? user.full_name: user.username}
+                           </Link>
                        </div>
 
                    ))} 

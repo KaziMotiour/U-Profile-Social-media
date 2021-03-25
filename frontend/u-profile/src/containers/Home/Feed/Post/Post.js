@@ -15,7 +15,7 @@ import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import TextField from '@material-ui/core/TextField';
 //end drop down import
 import {useDispatch, useSelector} from 'react-redux'
-import {useHistory} from 'react-router-dom'
+import {useHistory, NavLink} from 'react-router-dom'
 import {REMOVE_POST_LIKED_USER, REMOVE_POST_SHARD_USER} from '../../../../store/actions/ActionTypes'
 import {GetPostList, LikePost, CommentPost, ChangePrivacy} from '../../../../store/actions/PostCrud'
 import {GetPostLikedUser, GetPostSharedUser, NotificationCount} from '../../../../store/actions/Utils'
@@ -28,6 +28,8 @@ import SharedPost from './sharePost/SharePost'
 import EditPosts from './editPost/EditPost'
 import DeletePost from './deletePost/DeletePost'
 import UserList from './userList/UserList'
+
+import Link from '@material-ui/core/Link';
 
 // dropdown style
 const useStyles = makeStyles((theme: Theme) =>
@@ -119,7 +121,6 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
   const [commentOpen, setCommentOpen] = useState(false)
   const loggedin_user_info = useSelector(state=> state.user.loggedinUserInfo)
   const shared_users = shared_user.length
-  
   const config = { headers: { 
     'Content-Type':'application/json',
     'Authorization': "Bearer " + localStorage.getItem('access_token')
@@ -256,11 +257,15 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         </div>
       
         <div className="post__headerText">
-            <h3> {user.full_name!=='None None'? user.full_name : user.username}
+        <Link component={NavLink}  underline="none"  to={`/${user.username }`}>
+            <h3>
+           
+               {user.full_name!=='None None'? user.full_name : user.username}
                 {/* {varified && <VerifiedUserIcon className="post_badge" /> } */}
                 <span className="post_username"> @{user.username} </span> 
-
+                
             </h3 >
+            </Link>
             {timestamp.substr(0,10)} {timestamp.substr(10,6)}
         
         </div>
@@ -297,7 +302,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
             
           </div>
           
-          {image && <img className={classes.image}   src={image} /> }
+          {image && <a href={image}> <img className={classes.image}   src={image} /> </a>}
               
         </div>
         {/* Post body part end */}
@@ -391,10 +396,15 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         </div>
       
         <div className="post__headerText">
-            <h3> {user.full_name!=='None None'? user.full_name : user.username}
+            <h3>
+            <Link component={NavLink}  underline="none"  to={`/${user.username }`}>
+               {user.full_name!=='None None'? user.full_name : user.username}
+               </Link>
                 {/* {varified && <VerifiedUserIcon className="post_badge" /> } */}
                 <span className="post_username"> shared </span> 
-               {parent.user.username}'s post
+                <Link component={NavLink}  underline="none"  to={`/${parent.user.username }`}>
+               {parent.user.username}'s </Link> post
+
             </h3 >
             {timestamp.substr(0,10)} {timestamp.substr(10,6)}
         </div>
@@ -440,11 +450,13 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         </div>
       
         <div className="post__headerText">
+        <Link component={NavLink}  underline="none"  to={`/${parent.user.username }`}>
             <h3>{parent.user.full_name !=='None None' ? parent.user.full_name : parent.user.username}
                 {/* {varified && <VerifiedUserIcon className="post_badge" /> } */}
                 <span className="post_username"> @{parent.user.username}</span> 
 
             </h3 >
+            </Link>
             {parent.timestamp.substr(0,10)} {parent.timestamp.substr(10,6)}
         </div>
         </div>
@@ -453,7 +465,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
             <p>  {parent.content}</p>
           
           </div>
-          {parent.image && <img className={classes.shareimage}   src={parent.image} /> }
+          {parent.image && <a href={parent.image}> <img className={classes.shareimage}   src={parent.image} /> </a>}
           
               
         </div>

@@ -49,7 +49,6 @@ export const followingUser = (user) =>({
   
 
 export const UserProfile = (username, config) => async dispatch =>{
-    console.log(username.username, 'usernameee');
     try{
         await axios.get(`http://127.0.0.1:8000/profile/${username}`, config).then(res =>{
         dispatch(UserProfileData(res.data))
@@ -65,7 +64,6 @@ export const UserProfile = (username, config) => async dispatch =>{
 
 
 export const LoggedUserInfo = (config) => async dispatch =>{
-        console.log(config,  'config');
     try{
             await axios.get('http://127.0.0.1:8000/profile/loggedinUser',config).then(res =>{
                
@@ -91,20 +89,24 @@ export const RecomendedUser = (config) => async dispatch =>{
 
 }
 
-export const UserFollow = (username, config) => async dispatch =>{
-
+export const UserFollow = (username, profileUser, config, profile ) => async dispatch =>{
     try{
-        await axios.get(`http://127.0.0.1:8000/profile/follow/${username}`,config).then(res =>{
+        await axios.get(`http://127.0.0.1:8000/profile/follow/${username}`, config).then(res =>{
             
             dispatch(RecomendedUser(config))
+            dispatch(GetFollowerUser(profileUser, config))
+            dispatch(GetFollowingUser(profileUser, config))
+
+           {profile && dispatch(UserProfile(username, config))}
         })
     }catch(err){
         console.log(err,'err');
     }
 
 }
+
 export const UserFollowFromLikedUser = (id, username, config) => async dispatch =>{
-    console.log(id,'iddd');
+   
     try{
         await axios.get(`http://127.0.0.1:8000/profile/follow/${username}`, config).then(res =>{
             dispatch(GetPostLikedUser(id, config))
@@ -116,7 +118,7 @@ export const UserFollowFromLikedUser = (id, username, config) => async dispatch 
 }
 
 export const UserFollowFromSharedUser = (id, username, config) => async dispatch =>{
-    console.log(id,'iddd');
+    
     try{
         await axios.get(`http://127.0.0.1:8000/profile/follow/${username}`, config).then(res =>{
             dispatch(GetPostSharedUser(id, config))
@@ -141,10 +143,10 @@ export const MutualFriend = (id, config) => async dispatch =>{
 
 }
 
-export const GetFollowerUser = (id, config) => async dispatch =>{
+export const GetFollowerUser = (username, config) => async dispatch =>{
    
     try{
-        await axios.get(`http://127.0.0.1:8000/profile/follower/${id}`,config).then(res =>{
+        await axios.get(`http://127.0.0.1:8000/profile/follower/${username}`,config).then(res =>{
             // console.log(res.data, 'followwwwwwwwww');
             dispatch(followerUser(res.data))
         })
@@ -154,10 +156,10 @@ export const GetFollowerUser = (id, config) => async dispatch =>{
 
 }
 
-export const GetFollowingUser = (id, config) => async dispatch =>{
+export const GetFollowingUser = (username, config) => async dispatch =>{
 
     try{
-        await axios.get(`http://127.0.0.1:8000/profile/following/${id}`,config).then(res =>{
+        await axios.get(`http://127.0.0.1:8000/profile/following/${username}`,config).then(res =>{
             
             dispatch(followingUser(res.data))
         })

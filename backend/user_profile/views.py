@@ -106,17 +106,18 @@ class MutualFeiend(ListAPIView):
 
 class Following(ListAPIView):
     serializer_class = PostUserDetailsSerializer
+    lookup_field="username"
     def get_queryset(self):
-        R_user = self.kwargs.get('pk')
-        requested_user =UserFollow.objects.filter(user=R_user).first()
-        
+        username = self.kwargs.get('username')
+        requested_user =UserFollow.objects.filter(user__username=username).first()
         return requested_user.following.all()
 
 
 class Follower(ListAPIView):
     serializer_class = PostUserDetailsSerializer
+    lookup_field="username"
     def get_queryset(self):
-        user = self.kwargs.get('pk')
-        requested_user =UserFollow.objects.filter(user=user).first()
+        username = self.kwargs.get('username')
+        requested_user =UserFollow.objects.filter(user__username=username).first()
         
         return requested_user.followed_by.all()
