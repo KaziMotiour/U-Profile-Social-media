@@ -180,7 +180,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
   }
 
   const  HandleEditOpen = (option) =>{
-    console.log(option, 'optionss');
+
     if (option==='Edit'){
       setOpenEditForm(!openEditForm)
     }else if(option==='Delete'){

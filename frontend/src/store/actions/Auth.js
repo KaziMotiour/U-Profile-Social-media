@@ -134,3 +134,22 @@ export const Registration = (email, username, password, password2) => async disp
   
 
 }
+
+
+export const ChangeUserPassword = (formData, config) => async dispatch =>{
+
+  try{
+
+      await axios.put('http://127.0.0.1:8000/auth/change-password/',formData, config).then(res =>{
+        console.log(res.data, 'updatedddddddd');
+      }).catch(function (error) {
+        console.log(error.response.data, 'res');
+
+          
+       })
+  }catch(err){
+      // console.log(err,'err');
+  }
+
+
+}

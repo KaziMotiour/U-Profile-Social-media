@@ -22,11 +22,16 @@ class List_of_user(ListAPIView):
 
 class UserWonPosts(ListAPIView):
     serializer_class=PostSerializer
+    # queryset = UserPost.objects.all()
     def get_queryset(self):
         LoggedInUser = self.request.user
         username = self.kwargs.get('username')
+        print(username, 'usernameeeeeeeeee')
+        if username =='list':
+            return UserPost.objects.all()
+        
         user = User.objects.get(username=username)
-
+        
         if LoggedInUser.username == username:
             return UserPost.objects.filter(user=user)
         else:
@@ -61,11 +66,13 @@ class postSharedUser(ListAPIView):
         return qs
 
 class PostListView(ListAPIView):
+    print('post liststttttt ')
     serializer_class=PostSerializer
     # queryset = UserPost.objects.all()
    
     def get_queryset(self):
         users = self.request.user
+        print(users,'post list')
         follow_user = UserFollow.objects.get(user=users)
         print(follow_user.following.all())
         qs = UserPost.objects.filter(Q(user__in = follow_user.following.all()) | Q(user=users) | Q(privacy='public')).exclude(privacy='onlyme')

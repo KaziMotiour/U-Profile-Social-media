@@ -15,8 +15,12 @@ function Feed() {
   const [posts, setPosts] = useState([
     
   ])
-  const config = { headers: {'Authorization': "Bearer " + localStorage.getItem('access_token')}}
 
+  const config = { headers: { 
+    'Content-Type':'application/json',
+    'Authorization': "Bearer " + localStorage.getItem('access_token')
+  }}
+  
   useEffect(()=>{
     dispatch(NotificationCount(config))
     dispatch(GetPostList(config))

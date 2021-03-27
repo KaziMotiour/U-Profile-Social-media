@@ -32,7 +32,7 @@ export const GetPostList = (config) => async dispatch => {
 
     try{
         dispatch(GetPostStart)
-        axios.get('http://127.0.0.1:8000/post/list',config).then(res =>{
+        axios.get('http://127.0.0.1:8000/post/list/',config).then(res =>{
                 
                 dispatch(GetPostSuccess(res.data))
         }

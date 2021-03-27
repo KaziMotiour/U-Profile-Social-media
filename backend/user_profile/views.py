@@ -25,9 +25,14 @@ class EditUserProfile(RetrieveUpdateAPIView):
     serializer_class = UserProfile
     queryset = User_profile.objects.all()
 
+
     
 class GetLoggedinUser(ListAPIView):
+
+    print('User logggggggggggggggggg')
+
     permission_classes=[IsAuthenticated]
+    
     serializer_class = PostUserDetailsSerializer
     def get_queryset(self):
         user = self.request.user

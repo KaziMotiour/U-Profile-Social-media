@@ -73,8 +73,8 @@ function TweetBox() {
       'Content-Type':'application/json',
       'Authorization': "Bearer " + localStorage.getItem('access_token')
     }}
-    let formData = new FormData();
-    formData.append("content", postContent);
+      let formData = new FormData();
+      formData.append("content", postContent);
     if(picture){
       formData.append("image", picture);
     }

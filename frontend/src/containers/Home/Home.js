@@ -22,12 +22,18 @@ function Home(props) {
     const notifcationCount = notificationLists.length
 
     const access = localStorage.getItem('access_token')
-    const config = { headers: {'Authorization': "Bearer " + localStorage.getItem('access_token')}}
+
+    const config = { headers: { 
+      'Content-Type':'application/json',
+      'Authorization': "Bearer " + localStorage.getItem('access_token')
+    }}
+  
 
     useEffect(() =>{
 
         dispatch(VerifyJwtToken())
-        access && dispatch(LoggedUserInfo(config))
+
+        {access && dispatch(LoggedUserInfo(config))}
         
       },[])
 

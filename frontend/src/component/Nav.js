@@ -222,7 +222,12 @@ const CloseNotificationBar = () =>{
     ><div style={{display:'flex', flexDirection:'column'}}>
       <MenuItem onClick={handleMenuClose} > <Link component={NavLink}
             underline="none"  to={`/${loggedInUser && loggedInUser.username }`}> Profile </Link></MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+      <Link component={NavLink}
+            underline="none"  to={`/accountSetings`}> 
+        My account
+        </Link>
+        </MenuItem>
       <MenuItem onClick={handleMenuClose}><p onClick={HandleLogout}>LogOut</p></MenuItem>
       </div>
     </Menu>

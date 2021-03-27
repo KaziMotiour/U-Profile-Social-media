@@ -14,6 +14,7 @@ import {AuthenticRoute, LogedInRoute} from './PrivateRoute'
 import {VerifyJwtToken} from './store/actions/Auth'
 import {LoggedUserInfo} from './store/actions/UserProfile'
 import ProfilePage from './containers/profilePage/ProfilePage'
+import UpdateProfileInfo from './containers/profileSettings/UpdateProfileInfo'
 
 function  App() {
 
@@ -50,7 +51,9 @@ function  App() {
           <LogedInRoute exect path='/Login' component={Login}/>
           <LogedInRoute exect path='/singup' component={Singup}/>
           <LogedInRoute exect path='/forgetpassword' component={ForgetPassword}/>
+          <AuthenticRoute exect path='/accountSetings' component={UpdateProfileInfo}/>
           <AuthenticRoute exect path='/:username' component={ProfilePage}/>
+          
           <AuthenticRoute exect path='/' component={Home}/>
           </Switch>
         </Layout>

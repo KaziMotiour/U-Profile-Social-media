@@ -52,6 +52,7 @@ export const UserProfile = (username, config) => async dispatch =>{
     try{
         await axios.get(`http://127.0.0.1:8000/profile/${username}`, config).then(res =>{
         dispatch(UserProfileData(res.data))
+        
     })
     }catch(err){
         console.log(err,'err');
@@ -59,13 +60,37 @@ export const UserProfile = (username, config) => async dispatch =>{
 
 
 }
+export const EditUserProfile = (id, username, formData, config) => async dispatch =>{
+    console.log(id, 'idddddddddddddddddddddd');
+    try{
+        await axios.put(`http://127.0.0.1:8000/profile/edit-profile/${id}`, formData, config).then(res =>{
+        dispatch(UserProfile(username, config))
+        console.log('updatedddddddddddddd');
+    }).catch(function (error) {
+        // handle error
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            // console.log(error.response.data.detail, 'res_data');
+            const errors = error.response.data.detail
+            console.log(error.response.data.detail,'errorrororo');
+        }})
+    }catch(err){
+        console.log(err,'err');
+    }
+
+
+}
+
+  
 
 
 
 
 export const LoggedUserInfo = (config) => async dispatch =>{
+    console.log(config,'logged configgggg');
     try{
-            await axios.get('http://127.0.0.1:8000/profile/loggedinUser',config).then(res =>{
+            await axios.get('http://127.0.0.1:8000/profile/loggedinUser/', config).then(res =>{
                
             dispatch(loggedin_user_info(res.data[0]))
         })

@@ -72,6 +72,7 @@ function Widgets() {
     'Authorization': "Bearer " + localStorage.getItem('access_token')
   }}
 
+
   useEffect(()=>{
     dispatch(NotificationCount(config))
     dispatch(RecomendedUser(config))
