@@ -1,11 +1,14 @@
 import React,{useState, useEffect} from 'react';
 import Button from '@material-ui/core/Button';
+import { useDispatch, useSelector } from 'react-redux';
+import {REMOVE_PASSWORD_CHANGE_SUCCESS, REMOVE_USER_PROFILE_UPDATE_SUCCESS} from '../../../../../store/actions/ActionTypes'
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from "@material-ui/core/SnackbarContent";
 
 
 function SnackBer(props) {
   
+    const dispatch = useDispatch()
     const [state, setState] = React.useState({
         snackBerOpen: false,
         vertical: 'top',
@@ -33,16 +36,29 @@ function SnackBer(props) {
       }else if(props.success_info === 'False') {
         confirmInfo="Already shared for today"
         closeDialog()
+      }else if(props.success_info === 'pass_changed') {
+        confirmInfo="Password Changed successfully"
+        
+        closeDialog('pass')
+      }else if(props.success_info === 'profile_updated') {
+        confirmInfo="Profile updated successfully"
+        
+        closeDialog('prof')
       }
       const handleOpen = () =>{
         setState({ ...state, snackBerOpen: true });
       }
 
-      async function closeDialog (){
+      async function closeDialog (dis){
         await new Promise((resolve) => setTimeout(() => { 
-            setState({ ...state, snackBerOpen: false });
-
-          
+            setState({ ...state, snackBerOpen: false });  
+            dis === 'pass' && dispatch({
+              type:REMOVE_PASSWORD_CHANGE_SUCCESS,
+              
+            })  
+            dis === 'prof' && dispatch({
+              type:REMOVE_USER_PROFILE_UPDATE_SUCCESS
+            })
         }, 2000))
       }
 

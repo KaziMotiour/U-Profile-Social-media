@@ -7,6 +7,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import {ChangeUserPassword} from '../../store/actions/Auth'
 import { useDispatch, useSelector } from 'react-redux';
+import SnackBer from '../Home/Feed/Post/sharePost/SnackBer'
 
 const useStyles = makeStyles((theme: Theme) =>
 createStyles({
@@ -42,9 +43,13 @@ export default function ChangePassword() {
 
     const classes = useStyles()
     const dispatch=useDispatch()
+    const error = useSelector(state => state.auth.passwordChange_error)
+    const success = useSelector(state => state.auth.passwordChange_Success)
     const [oldPasswordRequired, setOldPasswordRequired] = useState(false)
     const [newPasswordRequired, setNewPasswordRequired] = useState(false)
+    const [openSnackber, setOpenSnackber] = useState(false)
 
+    console.log(success,'change d');
     const [inputData, setInputData] = useState({
         old_password:'',
         new_password:''
@@ -55,19 +60,29 @@ export default function ChangePassword() {
         'Content-Type':'application/json',
         'Authorization': "Bearer " + localStorage.getItem('access_token')
       }}
+
     const HandleChangePassword = () =>{
 
-        {inputData.old_password==='' && setOldPasswordRequired(true)}
-        {inputData.new_password==='' && setNewPasswordRequired(true)}
+        {inputData.old_password ==='' && setOldPasswordRequired(true)}
+        {inputData.new_password ==='' && setNewPasswordRequired(true)}
+        
         if (inputData.old_password !=='' && inputData.new_password !==''){
             let formData = new FormData();
             formData.append('old_password', inputData.old_password)
             formData.append('new_password', inputData.new_password)
             dispatch(ChangeUserPassword(formData, config))
         }
+        setInputData({
+            old_password:'',
+            new_password:''
+        })
     }
 
+    
 
+   useEffect(()=>(
+     success!==null ? setOpenSnackber(true) : setOpenSnackber(false)
+   ),[success])
 
 
 
@@ -85,10 +100,12 @@ export default function ChangePassword() {
             name="oldPassword"
             label="Old Password"
             fullWidth
+            value={inputData.old_password}
             autoComplete="shipping country"
             onChange={ e => setInputData({...inputData, old_password:e.target.value }) }
           />
           {oldPasswordRequired && <span style={{color:'red'}}>This is required</span>}
+          {error && <span style={{color:'red'}}>{error.old_password}</span>}
         </Grid>
         <Grid   className={classes.forms} item sm={9} xs={10}>
           <TextField
@@ -96,11 +113,13 @@ export default function ChangePassword() {
             id="country"
             name="newPassword"
             label="New Password"
+            value={inputData.new_password}
             fullWidth
             autoComplete="shipping country"
             onChange={ e => setInputData({...inputData,new_password:e.target.value }) }
           />
           {newPasswordRequired && <span style={{color:'red'}}>This is required</span>}
+          {error && <span style={{color:'red'}}>{error.new_password}</span>}
         </Grid>
 
         <Grid className={classes.forms} item sm={9}  xs={12}  style={{marginBottom:40, marginTop:20,}}>
@@ -109,7 +128,7 @@ export default function ChangePassword() {
         </Button>
         </Grid>
 
-        
+        {openSnackber && <SnackBer   open={true} success_info='pass_changed' />}
 
     </div>
       </div>

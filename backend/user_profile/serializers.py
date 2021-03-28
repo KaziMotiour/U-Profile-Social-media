@@ -114,6 +114,8 @@ class UserProfile(serializers.ModelSerializer):
 
     def validate_facebook_Link(self, value):
         validates = URLValidator()
+        if value=='':
+            return value
         try:
             validates(value) 
             return value
@@ -122,27 +124,33 @@ class UserProfile(serializers.ModelSerializer):
     
     def validate_twitter_link(self, value):
         validates = URLValidator()
+        if value=='':
+            return value
         try:
             validates(value) 
             return value
         except:
-            raise serializers.ValidationError({'facebook':'please provide a valid link'}) 
+            raise serializers.ValidationError({'twitter':'please provide a valid link'}) 
     
     def validate_linkdin_link(self, value):
         validates = URLValidator()
+        if value=='':
+            return value
         try:
             validates(value) 
             return value
         except:
-            raise serializers.ValidationError({'facebook':'please provide a valid link'}) 
+            raise serializers.ValidationError({'linkdin':'please provide a valid link'}) 
     
     def validate_github_link(self, value):
         validates = URLValidator()
+        if value=='':
+            return value
         try:
             validates(value) 
             return value
         except:
-            raise serializers.ValidationError({'facebook':'please provide a valid link'}) 
+            raise serializers.ValidationError({'github':'please provide a valid link'}) 
 
         
 

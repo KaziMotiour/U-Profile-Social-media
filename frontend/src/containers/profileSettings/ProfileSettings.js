@@ -7,6 +7,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {UserProfile, UserFollow, LoggedUserInfo, EditUserProfile} from '../../store/actions/UserProfile'
 import { Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
+import SnackBer from '../Home/Feed/Post/sharePost/SnackBer'
 
 const useStyles = makeStyles((theme: Theme) =>
 createStyles({
@@ -48,6 +49,11 @@ export default function ProfileSettings({userInfo}) {
     const classes = useStyles()
     const dispatch = useDispatch()
     const loggedInUser = useSelector(state => state.user.loggedinUserInfo)
+    const ProfileUpdateError = useSelector(state => state.user.userUpdateFail)
+    const ProfileUpdateSuccess = useSelector(state => state.user.userUpdateSuccess)
+
+    
+
     const [openEdit, setOpenEdit] = useState(false)
 
     const [profileInfo, setProfileInfo] = useState({
@@ -62,8 +68,9 @@ export default function ProfileSettings({userInfo}) {
        facebook_Link: userInfo.profile.facebook_Link,
        twitter_link: userInfo.profile.twitter_link,
        linkdin_link: userInfo.profile.linkdin_link,
-       github_link: userInfo.profile.linkdin_link, 
+       github_link: userInfo.profile.github_link, 
     })
+    console.log(profileInfo.github_link, 'githubbbb');
     const config = { headers: { 
         'Content-Type':'application/json',
         'Authorization': "Bearer " + localStorage.getItem('access_token')
@@ -84,14 +91,18 @@ export default function ProfileSettings({userInfo}) {
         {profileInfo.location !==null  && formData.append("location", profileInfo.location); }
         {profileInfo.phone !==null  && formData.append("Phone", profileInfo.phone); }
         {profileInfo.facebook_Link !==null  && formData.append("facebook_Link", profileInfo.facebook_Link);}
-        {profileInfo.twitter_link !==null && formData.append("twitter_link", profileInfo.twitter_link); }
+        {profileInfo.twitter_link !==null  && formData.append("twitter_link", profileInfo.twitter_link); }
         {profileInfo.linkdin_link !==null  && formData.append("linkdin_link", profileInfo.linkdin_link); }
         {profileInfo.github_link !==null  && formData.append("github_link", profileInfo.github_link); }
 
         dispatch(EditUserProfile(userInfo.profile.id, userInfo.username,  formData, config ))
-        setOpenEdit(false)
+        
     }
-    console.log(profileInfo.linkdin_link,'linkkkkkk');
+
+    useEffect(()=>{
+      {ProfileUpdateSuccess===true && setOpenEdit(false)}
+
+  },[ProfileUpdateSuccess])
 
   return (
     <div className={classes.root}>
@@ -208,7 +219,7 @@ export default function ProfileSettings({userInfo}) {
 
         <Grid   className={classes.forms} item sm={9} xs={10}>
         {!openEdit && <p className={classes.lavelName}> Linkdin: {userInfo && userInfo.profile.linkdin_link}</p>}
-           {openEdit && <TextField
+           {openEdit && <div> <TextField
             id="linkdin_link"
             name="linkdin_link"
             label="Linkdin Profile"
@@ -216,11 +227,14 @@ export default function ProfileSettings({userInfo}) {
             fullWidth
             autoComplete="shipping country"
             onChange={e => setProfileInfo({...profileInfo, [e.target.name]:e.target.value})}
-          />}
+          />
+          <span style={{color:'red'}}>{ProfileUpdateError && ProfileUpdateError.linkdin_link && ProfileUpdateError.linkdin_link.linkdin }</span>
+          </div>
+          }
         </Grid>
         <Grid   className={classes.forms} item sm={9} xs={10}>
         {!openEdit && <p className={classes.lavelName}> GitHub: {userInfo && userInfo.profile.github_link}</p>}
-           {openEdit && <TextField
+           {openEdit && <div><TextField
             id="github_link"
             name="github_link"
             label="GitHub Profile"
@@ -228,11 +242,14 @@ export default function ProfileSettings({userInfo}) {
             fullWidth
             autoComplete="shipping country"
             onChange={e => setProfileInfo({...profileInfo, [e.target.name]:e.target.value})}
-          />}
+          />
+          <span style={{color:'red'}}>{ProfileUpdateError && ProfileUpdateError.github_link && ProfileUpdateError.github_link.github }</span>
+          </div>}
         </Grid>
+
         <Grid   className={classes.forms} item sm={9} xs={10}>
         {!openEdit && <p className={classes.lavelName}> Facebook : {userInfo && userInfo.profile.facebook_Link} </p>}
-           {openEdit && <TextField
+           {openEdit && <div> <TextField
             id="facebook_Link"
             name="facebook_Link"
             label="Facebook profile"
@@ -240,11 +257,14 @@ export default function ProfileSettings({userInfo}) {
             fullWidth
             autoComplete="shipping country"
             onChange={e => setProfileInfo({...profileInfo, [e.target.name]:e.target.value})}
-          />}
+          />
+          <span style={{color:'red'}}>{ProfileUpdateError && ProfileUpdateError.facebook_Link && ProfileUpdateError.facebook_Link.facebook }</span>
+          </div>}
         </Grid>
+
         <Grid   className={classes.forms} item sm={9} xs={10}>
         {!openEdit && <p className={classes.lavelName}> Twitter : {userInfo && userInfo.profile.twitter_link}</p>}
-           {openEdit && <TextField
+           {openEdit && <div><TextField
             id="twitter_link"
             name="twitter_link"
             label="Twitter Profile"
@@ -252,7 +272,11 @@ export default function ProfileSettings({userInfo}) {
             fullWidth
             autoComplete="shipping country"
             onChange={e => setProfileInfo({...profileInfo, [e.target.name]:e.target.value})}
-          />}
+          />
+            <span style={{color:'red'}}>{ProfileUpdateError && ProfileUpdateError.twitter_link && ProfileUpdateError.twitter_link.twitter }</span>
+          </div>
+           }
+
         </Grid>
 
         <Grid className={classes.forms} item sm={9}  xs={12}  style={{marginBottom:40, marginTop:20,}}>
@@ -269,7 +293,8 @@ export default function ProfileSettings({userInfo}) {
         
         }
         </Grid>
-
+        
+        {ProfileUpdateSuccess===true && <SnackBer open={true} success_info="profile_updated"/>}
         
 
     </div>

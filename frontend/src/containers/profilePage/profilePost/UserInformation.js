@@ -137,15 +137,15 @@ function UserInformation({userInfo}) {
                 </div>}
 
                 {userInfo && userInfo.profile.github_link && <div className={classes.social}>
-                <GitHubIcon /> GitHub
+                <GitHubIcon /> <a className={classes.socialLink} href={userInfo.profile.github_link} target="_blank"> GitHub </a>
                 </div> }
 
                 {userInfo && userInfo.profile.linkdin_link && <div className={classes.social}>
-                <LinkedInIcon /> LinkedIn
+                <LinkedInIcon /><a className={classes.socialLink} href={userInfo.profile.linkdin_link} target="_blank"> LinkedIn </a>
                 </div>}
                 {userInfo && userInfo.profile.twitter_link &&
                 <div className={classes.social}>
-                <TwitterIcon /> Twitter
+                <TwitterIcon />  <a className={classes.socialLink} href={userInfo.profile.twitter_link} target="_blank"> Twitter </a>
                 </div>}
             </div>
             

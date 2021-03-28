@@ -1,6 +1,6 @@
     import React from 'react'
     import axios from 'axios'
-import {LOGGED_IN_USER_INFO, RECOMENDED_USER, MUTUAL_FRIEND, USER_PFORILE, GET_FOLLWER_USER, GET_FOLLWING_USER} from './ActionTypes'
+import {LOGGED_IN_USER_INFO, RECOMENDED_USER, MUTUAL_FRIEND, USER_PFORILE, GET_FOLLWER_USER, GET_FOLLWING_USER, USER_PROFILE_UPDATE_FAIL, USER_PROFILE_UPDATE_SUCCESS} from './ActionTypes'
 import {GetPostLikedUser, GetPostSharedUser} from './Utils'
 
 
@@ -46,6 +46,12 @@ export const followingUser = (user) =>({
 })
 
 
+export const userProfileUpdateFail = (error) =>(
+
+    {
+    type:USER_PROFILE_UPDATE_FAIL,
+    ProfileUpdateError : error
+})
   
 
 export const UserProfile = (username, config) => async dispatch =>{
@@ -60,20 +66,23 @@ export const UserProfile = (username, config) => async dispatch =>{
 
 
 }
+
+
 export const EditUserProfile = (id, username, formData, config) => async dispatch =>{
-    console.log(id, 'idddddddddddddddddddddd');
+    console.log(formData.get('github_link'),'idddddddddddddddddddddd');
     try{
         await axios.put(`http://127.0.0.1:8000/profile/edit-profile/${id}`, formData, config).then(res =>{
+
+        dispatch({ type:USER_PROFILE_UPDATE_SUCCESS})
         dispatch(UserProfile(username, config))
-        console.log('updatedddddddddddddd');
+      
     }).catch(function (error) {
         // handle error
         if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
-            // console.log(error.response.data.detail, 'res_data');
-            const errors = error.response.data.detail
-            console.log(error.response.data.detail,'errorrororo');
+            
+            const errors = error.response.data
+            dispatch(userProfileUpdateFail(errors))
+    
         }})
     }catch(err){
         console.log(err,'err');
@@ -185,7 +194,7 @@ export const GetFollowingUser = (username, config) => async dispatch =>{
 
     try{
         await axios.get(`http://127.0.0.1:8000/profile/following/${username}`,config).then(res =>{
-            
+            console.log(res.data, 'folloing');
             dispatch(followingUser(res.data))
         })
     }catch(err){

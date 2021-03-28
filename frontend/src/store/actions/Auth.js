@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import {AUTH_START, AUTH_SUCCESS, AUTH_LOGOUT, AUTH_LOGIN_FAIL, AUTH_REGISTRATION, AUTH_REGISTRATION_FAIL, CAHNGE_PASSWORD, RESET_PASSWORD, VERIFY_JWT_TOKEN} from './ActionTypes'
+import {AUTH_START, AUTH_SUCCESS, AUTH_LOGOUT, AUTH_LOGIN_FAIL, AUTH_REGISTRATION, AUTH_REGISTRATION_FAIL, CAHNGE_PASSWORD, RESET_PASSWORD, VERIFY_JWT_TOKEN, PASSWORD_CHANGE_FILED, PASSWORD_CHANGE_SUCCESS } from './ActionTypes'
 
 export const auth_start = () =>({
       type:AUTH_START
@@ -40,6 +40,23 @@ export const auth_registratin_fail = (errors) =>(
   registration_error: errors
 
 })
+
+export const password_change_filed = (errors) =>(
+
+  {
+  type: PASSWORD_CHANGE_FILED,
+  passwordChangeError: errors
+
+})
+
+export const password_change_success = (success) =>(
+console.log(success, 'from success '),
+  {
+  type: PASSWORD_CHANGE_SUCCESS,
+  passwordChangedSuccess: success.message
+
+})
+
 
 
 
@@ -106,6 +123,7 @@ export const Registration = (email, username, password, password2) => async disp
     console.log(email, username, password, password2);
     try{
         await axios.post('http://127.0.0.1:8000/auth/singup/',{email, username, password, password2}).then(res =>{
+
             dispatch(auth_registratin(res.data))
         }).catch(function (error) {
             // handle error
@@ -140,11 +158,12 @@ export const ChangeUserPassword = (formData, config) => async dispatch =>{
 
   try{
 
-      await axios.put('http://127.0.0.1:8000/auth/change-password/',formData, config).then(res =>{
-        console.log(res.data, 'updatedddddddd');
-      }).catch(function (error) {
-        console.log(error.response.data, 'res');
+      await axios.put('http://127.0.0.1:8000/auth/change-password/',formData, config).then(res =>{  
+        dispatch(password_change_success(res.data))
 
+      }).catch(function (error) {
+      
+        dispatch(password_change_filed(error.response.data))
           
        })
   }catch(err){

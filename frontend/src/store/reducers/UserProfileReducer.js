@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {AUTH_START, AUTH_SUCCESS, AUTH_LOGOUT,AUTH_LOGIN_FAIL, AUTH_REGISTRATION, AUTH_REGISTRATION_FAIL, CAHNGE_PASSWORD, RESET_PASSWORD, LOGGED_IN_USER_INFO, RECOMENDED_USER, MUTUAL_FRIEND, REMOVE_MUTUAL_FRIEND, NOTIFICATION_COUNT, NOTIFICATION_LIST, REMOVE_NOTIFICATION_LIST, USER_PFORILE, GET_FOLLWING_USER, GET_FOLLWER_USER} from '../actions/ActionTypes'
+import {AUTH_START, AUTH_SUCCESS, AUTH_LOGOUT,AUTH_LOGIN_FAIL, AUTH_REGISTRATION, AUTH_REGISTRATION_FAIL, CAHNGE_PASSWORD, RESET_PASSWORD, LOGGED_IN_USER_INFO, RECOMENDED_USER, MUTUAL_FRIEND, REMOVE_MUTUAL_FRIEND, NOTIFICATION_COUNT, NOTIFICATION_LIST, REMOVE_NOTIFICATION_LIST, USER_PFORILE, GET_FOLLWING_USER, GET_FOLLWER_USER,  USER_PROFILE_UPDATE_SUCCESS, USER_PROFILE_UPDATE_FAIL, REMOVE_USER_PROFILE_UPDATE_SUCCESS} from '../actions/ActionTypes'
 import { auth_fail, auth_start } from '../actions/Auth'
 
 const initialState = ({
@@ -12,6 +12,8 @@ const initialState = ({
     userProfile:null,
     followerUser:[],
     followingUser:[],
+    userUpdateSuccess : false,
+    userUpdateFail : null,
 
 })
 
@@ -70,6 +72,30 @@ const FollowingUser = (state, action) =>({
     followingUser:action.followingUser
 })
 
+const userProfileUpdateSuccess = (state, action) =>(
+    console.log('from success info'),
+    {
+    ...state,
+    userUpdateSuccess:true,
+    userUpdateFail:null
+})
+
+const removeUserProfileUpdateSuccess = (state, action) =>(
+   
+    {
+    ...state,
+    userUpdateSuccess:false,
+})
+
+
+const userProfileUpdateFail = (state, action) =>(
+    
+    {
+    ...state,
+    userUpdateFail:action.ProfileUpdateError
+})
+
+
 const UserInfo = (state = initialState, action) =>{
     switch(action.type){
         case LOGGED_IN_USER_INFO: return loggedinUserInfo(state, action)
@@ -82,6 +108,9 @@ const UserInfo = (state = initialState, action) =>{
         case USER_PFORILE: return UserProfile(state, action)
         case GET_FOLLWER_USER: return FollowerUser(state, action)
         case GET_FOLLWING_USER: return FollowingUser(state, action)
+        case USER_PROFILE_UPDATE_SUCCESS: return userProfileUpdateSuccess(state, action)
+        case REMOVE_USER_PROFILE_UPDATE_SUCCESS: return removeUserProfileUpdateSuccess(state, action)
+        case USER_PROFILE_UPDATE_FAIL: return userProfileUpdateFail(state, action)
         default: return state
 
     }
