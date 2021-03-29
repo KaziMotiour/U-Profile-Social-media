@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import Nav from '../../component/Nav'
 import ProfileSettings from './ProfileSettings'
 import ChangePassword from './ChangePassword'
+import ChangeProfilePicture from './ChangeProfilePicture'
 import {useDispatch, useSelector} from 'react-redux'
 import {UserProfile, UserFollow, LoggedUserInfo} from '../../store/actions/UserProfile'
 
@@ -70,6 +71,7 @@ function UpdateProfileInfo() {
     const loggedInUser = useSelector(state => state.user.loggedinUserInfo)
     const userProfile = useSelector(state => state.user.userProfile)
     const [openProfileSettings, setOpenProfileSettings]=useState(true)
+    const [openProfilePictureChange, setOpenProfilePictureChange]=useState(false)
     const [openChangePassword, setOpenChangePassword]=useState(false)
 
     const config = { headers: {'Authorization': "Bearer " + localStorage.getItem('access_token')}}
@@ -85,11 +87,19 @@ function UpdateProfileInfo() {
     const handleOpenChangePassowrdForm = () =>{
         setOpenChangePassword(true)
         setOpenProfileSettings(false)
+        setOpenProfilePictureChange(false)
     }
     const handleOpenProfileSettings = () =>{
         setOpenChangePassword(false)
+        setOpenProfilePictureChange(false)
         setOpenProfileSettings(true)
     }
+
+    const handleOpenProfilePricturChange = () =>{
+      setOpenChangePassword(false)
+      setOpenProfileSettings(false)
+      setOpenProfilePictureChange(true)
+  }
 
     return (
         <div className={classes.root}>
@@ -100,7 +110,7 @@ function UpdateProfileInfo() {
                 <Button onClick={handleOpenProfileSettings} className={classes.button} variant="contained" color="primary">
                    profile info
                 </Button>
-                <Button className={classes.button} variant="contained" color="primary">
+                <Button onClick={handleOpenProfilePricturChange} className={classes.button} variant="contained" color="primary">
                        profile picture
                 </Button>
                 <Button onClick={handleOpenChangePassowrdForm} className={classes.button} variant="contained" color="primary">
@@ -112,6 +122,7 @@ function UpdateProfileInfo() {
             <div className={classes.UpdateInfo}>
                {openProfileSettings && userProfile && <ProfileSettings  userInfo={userProfile} />}
               { openChangePassword &&  < ChangePassword />}
+              {openProfilePictureChange && <ChangeProfilePicture  userInfo={userProfile}/>}
             </div>
             </div>
         </div>

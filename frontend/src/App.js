@@ -15,6 +15,9 @@ import {VerifyJwtToken} from './store/actions/Auth'
 import {LoggedUserInfo} from './store/actions/UserProfile'
 import ProfilePage from './containers/profilePage/ProfilePage'
 import UpdateProfileInfo from './containers/profileSettings/UpdateProfileInfo'
+import SinglePost from './containers/Home/Feed/Post/singlePost/SinglePost'
+import NotificationForMobile from './component/notification/NotificationForMobile'
+import {NotificationCount} from './store/actions/Utils'
 
 function  App() {
 
@@ -28,6 +31,7 @@ function  App() {
 
     dispatch(VerifyJwtToken())
     dispatch(LoggedUserInfo(config))
+
     
   },[])
 
@@ -40,8 +44,8 @@ function  App() {
     const access_token = localStorage.getItem('access_token')
     if(!access_token){
       <Redirect to="/login" />
-    }
-  }
+    
+  }}
 
   return (
     <div className="App">
@@ -52,8 +56,9 @@ function  App() {
           <LogedInRoute exect path='/singup' component={Singup}/>
           <LogedInRoute exect path='/forgetpassword' component={ForgetPassword}/>
           <AuthenticRoute exect path='/accountSetings' component={UpdateProfileInfo}/>
+          <AuthenticRoute exect path='/notification' component={NotificationForMobile}/>
+          <AuthenticRoute exect path='/post/:postId' component={SinglePost}/>
           <AuthenticRoute exect path='/:username' component={ProfilePage}/>
-          
           <AuthenticRoute exect path='/' component={Home}/>
           </Switch>
         </Layout>

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {AUTH_START, AUTH_SUCCESS, AUTH_LOGOUT,AUTH_LOGIN_FAIL, AUTH_REGISTRATION, AUTH_REGISTRATION_FAIL, CAHNGE_PASSWORD, RESET_PASSWORD, LOGGED_IN_USER_INFO, RECOMENDED_USER, MUTUAL_FRIEND, REMOVE_MUTUAL_FRIEND, NOTIFICATION_COUNT, NOTIFICATION_LIST, REMOVE_NOTIFICATION_LIST, USER_PFORILE, GET_FOLLWING_USER, GET_FOLLWER_USER,  USER_PROFILE_UPDATE_SUCCESS, USER_PROFILE_UPDATE_FAIL, REMOVE_USER_PROFILE_UPDATE_SUCCESS} from '../actions/ActionTypes'
+import { LOGGED_IN_USER_INFO, RECOMENDED_USER, MUTUAL_FRIEND, REMOVE_MUTUAL_FRIEND, NOTIFICATION_COUNT, NOTIFICATION_LIST, REMOVE_NOTIFICATION_LIST, USER_PFORILE, GET_FOLLWING_USER, GET_FOLLWER_USER,  USER_PROFILE_UPDATE_SUCCESS, USER_PROFILE_UPDATE_FAIL, REMOVE_USER_PROFILE_UPDATE_SUCCESS, } from '../actions/ActionTypes'
 import { auth_fail, auth_start } from '../actions/Auth'
 
 const initialState = ({
@@ -8,7 +8,7 @@ const initialState = ({
     recomendedUser: [],
     mutualFriend: [],
     notificationCount : null,
-    notificationList : [],
+    notifications : [],
     userProfile:null,
     followerUser:[],
     followingUser:[],
@@ -45,10 +45,9 @@ const NotificationCount = (state, action) =>({
 })
 
 const NotificationList = (state, action) =>(
-    console.log(action, 'action'),
     {
     ...state,
-    notificationList:action.notificatonList
+    notifications:action.notificatonList
 
 })
 

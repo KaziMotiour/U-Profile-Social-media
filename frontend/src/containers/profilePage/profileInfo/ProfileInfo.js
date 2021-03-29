@@ -136,7 +136,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-function ProfileInfo({openTimelineOpen, opneFollowers, opneFollowing, opneGallery}) {
+function ProfileInfo({openTimelineOpen, opneFollowers, opneFollowing, opneGallery, openAbout}) {
     const classes = useStyles()
     const dispatch = useDispatch()
     const {username} = useParams()
@@ -174,12 +174,13 @@ function ProfileInfo({openTimelineOpen, opneFollowers, opneFollowing, opneGaller
                     </div>
                 </div>
 
+                {loggedInUser && userProfile && loggedInUser.username!==userProfile.username && 
                 <div className={classes.follow}>
                     {userProfile && userProfile.profile.is_following ? <Button onClick={FollowOrUnfollow} className={classes.followButton}   variant="outlined" color="primary">Unfollow</Button> 
                     :
                     <Button onClick={FollowOrUnfollow} className={classes.followButton} variant="outlined" color="primary">
                     Follow </Button>}
-                </div>
+                </div>}
 
             </div>
 
@@ -197,7 +198,7 @@ function ProfileInfo({openTimelineOpen, opneFollowers, opneFollowing, opneGaller
 
                     <p className={classes.menusItems} onClick={opneGallery}>Gallery</p>
 
-                    <p className={classes.menusItemsAbout} >About</p>
+                    <p className={classes.menusItemsAbout} onClick={openAbout}>About</p>
                    
                     </div>
                 </div>

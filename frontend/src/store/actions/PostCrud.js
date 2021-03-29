@@ -1,4 +1,4 @@
-import {GET_POST_START, GET_POST_SUCCESS, SHARE_POST_SUCCESS, GET_USER_WON_POST_SUCCESS} from './ActionTypes'
+import {GET_POST_START, GET_POST_SUCCESS, SHARE_POST_SUCCESS, GET_USER_WON_POST_SUCCESS, GET_SINGLE_POST} from './ActionTypes'
 import axios from 'axios'
 
 
@@ -18,15 +18,18 @@ export const SharePostSuccess = (shareInfo) =>(
 }
 )
 
-
 export const UserWonPost = (posts) =>(
-    console.log(posts,),
     {
     type: GET_USER_WON_POST_SUCCESS,
     userWonPost : posts
 })
 
-
+export const getSinglePost = (post) =>(
+    {
+        type:GET_SINGLE_POST,
+        post:post
+    }
+)
 
 export const GetPostList = (config) => async dispatch => {
 
@@ -65,6 +68,7 @@ export const LikePost = (id, username, config) => async dispatch =>{
         axios.get(`http://127.0.0.1:8000/post/like/${id}`, config).then(res =>{
            
             dispatch(GetPostList(config))
+            dispatch(GetSinglePost(id, config))
             dispatch(GetUserWonPostList(username,  config))
         }).catch(function (error){
             if (error.response){
@@ -82,6 +86,7 @@ export const CommentPost = (id, username, data, config) => async dispatch =>{
         axios.post(`http://127.0.0.1:8000/post/comment/${id}`, data, config).then(res =>{
            
             dispatch(GetPostList(config))
+            dispatch(GetSinglePost(id, config))
             dispatch(GetUserWonPostList(username,  config))
         }).catch(function (error){
             if (error.response){
@@ -99,6 +104,7 @@ export const CommentUpdate = (id, username, data, config) => async dispatch =>{
         axios.put(`http://127.0.0.1:8000/post/comment/rud/${id}`, data, config).then(res =>{
             
             dispatch(GetPostList(config))
+            dispatch(GetSinglePost(id, config))
             dispatch(GetUserWonPostList(username,  config))
         }).catch(function (error){
             if (error.response){
@@ -114,6 +120,7 @@ export const CommentDelete = (id, username, config) => async dispatch =>{
         axios.delete(`http://127.0.0.1:8000/post/comment/rud/${id}`, config).then(res =>{
             
             dispatch(GetPostList(config))
+            dispatch(GetSinglePost(id, config))
             dispatch(GetUserWonPostList(username,  config))
         }).catch(function (error){
             if (error.response){
@@ -133,6 +140,7 @@ export const ChangePrivacy = (id, username, data, config) => async dispatch =>{
         axios.put(`http://127.0.0.1:8000/post/detail/${id}`, data, config).then(res =>{
             
             dispatch(GetPostList(config))
+            dispatch(GetSinglePost(id, config))
             dispatch(GetUserWonPostList(username,  config))
         }).catch(function (error){
             if (error.response){
@@ -153,6 +161,7 @@ export const SharePost = (id, username, data, config) => async dispatch =>{
             
             localStorage.setItem('RePost', res.data.RePost)
             dispatch(GetPostList(config))
+            dispatch(GetSinglePost(id, config))
             dispatch(GetUserWonPostList(username, config))
         }).catch(function (error){
             if (error.response){
@@ -171,6 +180,7 @@ export const EditPost = (id, username, data, config) => async dispatch =>{
            
             localStorage.setItem('updated','success')
             dispatch(GetPostList(config))
+            dispatch(GetSinglePost(id, config))
             dispatch(GetUserWonPostList(username, config))
         }).catch(function (error){
             if (error.response){
@@ -189,7 +199,8 @@ export const DeletePosts = (id, username, config) => async dispatch =>{
     
             localStorage.setItem('deleted','Deleted')
             dispatch(GetPostList(config))
-            dispatch(GetUserWonPostList(username, config))
+            dispatch(GetSinglePost(id, config))
+           {username && dispatch(GetUserWonPostList(username, config))}
         }).catch(function (error){
             if (error.response){
                 console.log(error.response.data.detail);
@@ -215,3 +226,18 @@ export const GetUserWonPostList = (username, config) => async dispatch => {
     }
 
 }
+
+export const GetSinglePost = (id, config) => async dispatch => {
+
+    try{
+        axios.get(`http://127.0.0.1:8000/post/detail/${id}`, config).then(res =>{
+                
+                dispatch(getSinglePost(res.data))
+        }
+        )
+    }catch(err){
+        console.log(err);
+    }
+
+}
+

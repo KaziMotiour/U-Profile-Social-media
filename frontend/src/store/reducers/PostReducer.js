@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {GET_POST_START, GET_POST_SUCCESS, SHARE_POST_SUCCESS, POST_LIKED_USER, REMOVE_POST_LIKED_USER, POST_SHARD_USER, REMOVE_POST_SHARD_USER, GET_USER_WON_POST_SUCCESS} from '../actions/ActionTypes'
+import {GET_POST_START, GET_POST_SUCCESS, SHARE_POST_SUCCESS, POST_LIKED_USER, REMOVE_POST_LIKED_USER, POST_SHARD_USER, REMOVE_POST_SHARD_USER, GET_USER_WON_POST_SUCCESS, GET_SINGLE_POST} from '../actions/ActionTypes'
 import { auth_fail, auth_start } from '../actions/Auth'
 import { GetPostLikedUser } from '../actions/Utils'
 
@@ -10,7 +10,8 @@ const initialState = ({
     sharePostInfo:null,
     postLikedUser:[],
     postSharedUser:[],
-    UserWonPost:[]
+    UserWonPost:[],
+    singlePost:null
 })
 
 const GetPostStart = (state, action) =>({
@@ -49,6 +50,11 @@ const GetUserWonPost = (state, action) =>({
     UserWonPost: action.userWonPost
 })
 
+const GetSinglePost = (state, action) =>({
+    ...state,
+    singlePost: action.post
+})
+
 const PostReducer = (state = initialState, action) =>{
     switch(action.type){
         case GET_POST_START: return GetPostStart(state, action)
@@ -59,6 +65,7 @@ const PostReducer = (state = initialState, action) =>{
         case POST_SHARD_USER: return GetPostSharedUsers(state, action)
         case REMOVE_POST_SHARD_USER: return RemovePostSharedUsers(state, action)
         case GET_USER_WON_POST_SUCCESS: return GetUserWonPost(state, action)
+        case GET_SINGLE_POST: return GetSinglePost(state, action)
         default: return state
 
     }

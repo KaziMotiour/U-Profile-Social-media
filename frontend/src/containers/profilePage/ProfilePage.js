@@ -10,6 +10,7 @@ import {GetUserWonPostList} from '../../store/actions/PostCrud'
 import Follower from './FollowerAndGallery/Follower'
 import Following from './FollowerAndGallery/Following'
 import Gallery from './FollowerAndGallery/gallery'
+import UserInformation from './profilePost/UserInformation'
 
 import Nav from '../../component/Nav'
 
@@ -50,6 +51,7 @@ function ProfilePage() {
     const [openFollwoing, setOpenFollwoing] = useState(false)
     const [openFollower, setOpenFollower] = useState(false)
     const [openTimeline, setOpenTimeline] = useState(true)
+    const [openAbout, setOpenAbout] = useState(false)
     const followers = useSelector(state => state.user.followerUser)
     const followingUser = useSelector(state => state.user.followingUser)
     const userWonPost = useSelector(state => state.post.UserWonPost)
@@ -73,6 +75,7 @@ function ProfilePage() {
         setOpenFollwoing(false)
         setOpenFollower(false)
         setOpenTimeline(false)
+        setOpenAbout(false)
 
     }
     const HandleOpenFollwoing=()=>{
@@ -81,6 +84,7 @@ function ProfilePage() {
         setOpenFollwoing(true)
         setOpenFollower(false)
         setOpenTimeline(false)
+        setOpenAbout(false)
        
         
     }
@@ -90,6 +94,7 @@ function ProfilePage() {
         setOpenFollwoing(false)
         setOpenFollower(true)
         setOpenTimeline(false)
+        setOpenAbout(false)
         
     }
     const HandleOpenTimeline=()=>{
@@ -97,8 +102,15 @@ function ProfilePage() {
         setOpenFollwoing(false)
         setOpenFollower(false)
         setOpenTimeline(true)
+        setOpenAbout(false)
     }
-
+    const HandleOpenAbout =()=>{
+        setOpenGalley(false)
+        setOpenFollwoing(false)
+        setOpenFollower(false)
+        setOpenTimeline(false)
+        setOpenAbout(true)
+    }
 
 
     const checkAuthenticatin =()=>{
@@ -117,7 +129,7 @@ function ProfilePage() {
 
             {/* profile info */}
             <div className={classes.profileInfo}>
-            <ProfileInfo openTimelineOpen={HandleOpenTimeline} opneFollowers={HandleOpenFollower} opneFollowing={HandleOpenFollwoing} opneGallery={HandleOpenGallery}/>
+            <ProfileInfo openTimelineOpen={HandleOpenTimeline} opneFollowers={HandleOpenFollower} opneFollowing={HandleOpenFollwoing} opneGallery={HandleOpenGallery} openAbout={HandleOpenAbout}/>
             </div>
             
             {/*  */}
@@ -126,6 +138,7 @@ function ProfilePage() {
             {openFollower && <Follower  followers={followers} userProfile={userProfile} />}
             {openFollwoing && <Following following={followingUser} userProfile={userProfile} />}
             {openGallery && <Gallery  useWonPost={userWonPost} userProfile={userProfile} />}
+            {openAbout && <UserInformation  userInfo={userProfile}/> }
             </div>
             
             

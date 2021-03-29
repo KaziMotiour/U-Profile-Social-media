@@ -97,6 +97,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop:'4px',
       width: theme.spacing(5),
       height: theme.spacing(5),
+      cursor:'pointer',
     },
     nav:{
       width:'400px',
@@ -145,14 +146,14 @@ function Nav() {
   const accessToken = useSelector(state => state.auth.access_token)
   const loggedInUser = useSelector(state => state.user.loggedinUserInfo)
   const notificationCount = useSelector(state => state.user.notificationCount)
-  const notificationLists = useSelector(state => state.user.notificationList)
+  const notifications = useSelector(state => state.user.notifications)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [openNotificationBar, setOpenNotificationBar] = useState(false)
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const lengthOfNotifcation  = notificationLists.length
+
   const config = { headers: { 
     'Content-Type':'application/json',
     'Authorization': "Bearer " + localStorage.getItem('access_token')
@@ -190,8 +191,10 @@ function Nav() {
 
     setOpenNotificationBar(!openNotificationBar)
     dispatch(NotificationList(config))
+    console.log('hello');
   
 }
+
 const CloseNotificationBar = () =>{
   setOpenNotificationBar(false)
 }
@@ -220,14 +223,16 @@ const CloseNotificationBar = () =>{
       onClose={handleMenuClose}
     
     ><div style={{display:'flex', flexDirection:'column'}}>
-      <MenuItem onClick={handleMenuClose} > <Link component={NavLink}
-            underline="none"  to={`/${loggedInUser && loggedInUser.username }`}> Profile </Link></MenuItem>
+      <Link component={NavLink} underline="none"  to={`/${loggedInUser && loggedInUser.username }`}>
+      <MenuItem onClick={handleMenuClose} >  Profile </MenuItem>
+     </Link>
+     
+     
+     <Link component={NavLink}underline="none"  to={`/accountSetings`}>
       <MenuItem onClick={handleMenuClose}>
-      <Link component={NavLink}
-            underline="none"  to={`/accountSetings`}> 
         My account
-        </Link>
         </MenuItem>
+        </Link>
       <MenuItem onClick={handleMenuClose}><p onClick={HandleLogout}>LogOut</p></MenuItem>
       </div>
     </Menu>
@@ -246,15 +251,19 @@ const CloseNotificationBar = () =>{
       onClose={handleMobileMenuClose}
     >
       <div style={{display:'flex', flexDirection:'column'}}>
-      
+      <Link component={NavLink} underline="none"  to={`/notification`}>
       <MenuItem>
         <IconButton aria-label="show 11 new notifications" color="inherit">
           <Badge badgeContent={notificationCount} color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
+        
         <p>Notifications</p>
       </MenuItem>
+      </Link>
+
+      <Link component={NavLink} underline="none"  to={`/${loggedInUser && loggedInUser.username }`}>
       <MenuItem >
         <IconButton
           aria-label="account of current user"
@@ -263,16 +272,31 @@ const CloseNotificationBar = () =>{
           color="inherit"
         >
           <AccountCircle />
-        </IconButton>
+          </IconButton>
         <p>Profile</p>
       </MenuItem>
+        </Link>
+
+        <Link component={NavLink} underline="none"  to={`/accountSetings`}>
+            <MenuItem >
+              <IconButton aria-label="show 11 new notifications" color="inherit">
+                <Badge color="secondary">
+                  <MeetingRoomIcon />
+                </Badge>
+              </IconButton>
+         
+                 My account
+        
+             </MenuItem>
+          </Link>
+          
       <MenuItem onClick={HandleLogout}>
         <IconButton aria-label="show 11 new notifications" color="inherit">
           <Badge color="secondary">
             <MeetingRoomIcon />
           </Badge>
         </IconButton>
-        <p>Logout</p>
+        <p onClick={HandleLogout}>Logout</p>
       </MenuItem>
       </div>
     </Menu>
@@ -280,7 +304,7 @@ const CloseNotificationBar = () =>{
   );
 
   return (
-    <div className={classes.grow} onClick={openNotificationBar===true && CloseNotificationBar}>
+    <div className={classes.grow} onClick={openNotificationBar === true && CloseNotificationBar}>
       <AppBar position="static">
         <Toolbar>
           <Typography className={classes.title} variant="h6">
@@ -312,9 +336,10 @@ const CloseNotificationBar = () =>{
                  <li> 
                    
                  <ul class="dropdown" className={ classes.navs}>
-                 {notificationLists.length!==0 ? (notificationLists.map(notify=>(
+                 {notifications.length!==0 ? (notifications.map(notify=>(
                    <li className={classes.navli}> <Notification notify={notify} key={notify.id}/> </li>))) : <span className={classes.noNotify}>no Notification yeat </span> }
                  
+                  
 
                 </ul>
                   </li>
@@ -338,9 +363,11 @@ const CloseNotificationBar = () =>{
               {loggedInUser ? ( <Avatar alt="Remy Sharp" src={loggedInUser.profile.image} className={classes.small} />) :  ( <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" className={classes.small} />)}
             </IconButton>
           </div>
-
+                
           <div className={classes.sectionMobile}>
+          <Link component={NavLink} underline="none"  to={`/${loggedInUser && loggedInUser.username }`}>
             {loggedInUser ? ( <Avatar alt="Remy Sharp" src={loggedInUser.profile.image} className={classes.small} />) :  ( <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" className={classes.small} />)}
+            </Link>
             <IconButton
               aria-label="show more"
               aria-controls={mobileMenuId}

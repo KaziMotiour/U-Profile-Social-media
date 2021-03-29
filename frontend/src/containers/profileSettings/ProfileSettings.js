@@ -27,14 +27,14 @@ createStyles({
     forms:{
         marginBottom:10,
     },
-    title:{
-        width:'100%',
-        textAlign:'center',
-        fontSize:40,
-        marginBottom:10,
-        paddingBottom:5,
-        borderBottom:'2px solid #EBECED'
-    },
+      title:{
+          width:'100%',
+          textAlign:'center',
+          fontSize:40,
+          marginBottom:10,
+          paddingBottom:5,
+          borderBottom:'2px solid #EBECED'
+      },
     editButton:{
         backgroundColor:'rgb(66, 129, 245)', float:'right', marginRight:20,
     },

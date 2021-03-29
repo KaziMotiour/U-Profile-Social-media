@@ -117,10 +117,10 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
   const [openEditForm, setOpenEditForm] = React.useState(false)
   const [openDeleteForm, setOpenDeleteForm] = React.useState(false)
   const [postComments, setPostComments] = useState('');
-  const number_of_comment = postComment.length
+  const number_of_comment = postComment && postComment.length
   const [commentOpen, setCommentOpen] = useState(false)
   const loggedin_user_info = useSelector(state=> state.user.loggedinUserInfo)
-  const shared_users = shared_user.length
+  const shared_users =shared_user && shared_user.length
   const config = { headers: { 
     'Content-Type':'application/json',
     'Authorization': "Bearer " + localStorage.getItem('access_token')
@@ -253,7 +253,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         <div className='post-header'>
         
         <div className="post_avatar">
-          <Avatar src={user.profile.image} className={classes.large}/>
+          <Avatar src={user && user.profile.image} className={classes.large}/>
         </div>
       
         <div className="post__headerText">

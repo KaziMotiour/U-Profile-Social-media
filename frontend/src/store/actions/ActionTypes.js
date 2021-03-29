@@ -40,6 +40,10 @@ export const  GET_POST_START = 'GET_POST_START'
 export const GET_POST_SUCCESS   = 'GET_POST_SUCCESS'
 export const SHARE_POST_SUCCESS   = 'SHARE_POST_SUCCESS'
 
+
+// get single post
+export const GET_SINGLE_POST = 'GET_SINGLE_POST'
+
 // User won post 
 
 export const GET_USER_WON_POST_SUCCESS   = 'GET_USER_WON_POST_SUCCESS'

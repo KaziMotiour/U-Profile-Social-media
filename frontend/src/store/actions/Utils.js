@@ -73,8 +73,9 @@ export const NotificationCount = (config) => async dispatch =>{
 export const NotificationList = (config) => async dispatch =>{
     try{
         await axios.get('http://127.0.0.1:8000/notification', config).then(res=>{
-           dispatch(NotificationLists(res.data))
-           dispatch(NotificationCount(config))
+           
+        dispatch(NotificationLists(res.data))
+           
             
         })
 

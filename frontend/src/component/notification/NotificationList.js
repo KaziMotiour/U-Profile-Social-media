@@ -6,6 +6,7 @@ import {
   createStyles,
 } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
+import {useHistory} from 'react-router-dom'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,12 +61,38 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 function Notification({ notify }) {
+
   const classes = useStyles();
+  const history =  useHistory()
   let notification = null;
-  console.log(notify);
+
+  const handleShowUserPorfile = (username) =>{
+    checkAuthenticatin()
+    history.push(`/${username}`)
+
+   
+  }
+
+  const handleShowPost = (postId) =>{
+    checkAuthenticatin()
+    history.push(`/post/${postId}`)
+
+   
+  }
+
+  const checkAuthenticatin =()=>{
+    const access_token = localStorage.getItem('access_token')
+    if(!access_token){
+      history.push({
+        pathname: '/login',
+        state: { detail: 'session expired, Try to login again' }
+      })
+    }
+  }
+
   if (notify.Notification_type === 1) {
     notification = (
-      <div className={notify.is_seen? classes.notification : classes.unseenNotification }>
+      <div className={notify.is_seen? classes.notification : classes.unseenNotification } onClick={() =>handleShowPost(notify.post.id)}>
         <Avatar
           alt="Remy Sharp"
           src={notify.sender.profile.image}
@@ -93,7 +120,7 @@ function Notification({ notify }) {
     );
   }else if(notify.Notification_type === 2){
       notification = (
-        <div className={classes.notification}>
+        <div className={classes.notification} onClick={() =>handleShowPost(notify.post.id)} >
         <Avatar
           alt="Remy Sharp"
           src={notify.sender.profile.image}
@@ -122,7 +149,7 @@ function Notification({ notify }) {
 
   }else if(notify.Notification_type === 3){
     notification = (
-      <div className={classes.notification}>
+      <div className={classes.notification} onClick={() =>handleShowUserPorfile(notify.sender.username)}>
       <Avatar
         alt="Remy Sharp"
         src={notify.sender.profile.image}

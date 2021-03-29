@@ -18,8 +18,7 @@ function Home(props) {
 
     const dispatch = useDispatch()
     const history = useHistory()
-    const notificationLists = useSelector(state => state.user.notificationList)
-    const notifcationCount = notificationLists.length
+  
 
     const access = localStorage.getItem('access_token')
 
