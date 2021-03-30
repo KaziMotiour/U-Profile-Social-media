@@ -1,19 +1,42 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from django.db.models import Q
+from django.db.models import Q
 from rest_framework.decorators import api_view,  permission_classes
 from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .permission import IsOwnerOrReadOnly
 from rest_framework.parsers import MultiPartParser, FormParser
-from .serializers import UserProfile, UserSerializer, PostBookmarkSerializer, PostBookmarkSerializer,PostUserDetailsSerializer, RecomendedUserList, FollowingOrFollower
+from .serializers import UserProfile, UserSerializer, PostBookmarkSerializer, PostBookmarkSerializer, PostUserDetailsSerializer, RecomendedUserList, FollowingOrFollower, UserSearchFilter
 from .models import User_profile, PostBookmark, UserFollow
 from django.contrib.auth import get_user_model
 from UserPost.models import UserPost, Post
+from django_filters import rest_framework as filters
+from rest_framework import filters
 User = get_user_model()
 
 # Create your views here.
 
+
+class SearchUser(ListAPIView):
+    serializer_class = UserSerializer
+    def get_queryset(self):
+        query = self.kwargs.get('query')
+        firstName=query
+        lastName=query
+      
+        if '_' in query:
+            firstName, lastName = query.split('_')
+
+        print(firstName, lastName, 'query')
+
+        qs = User.objects.filter(Q(username__icontains=query)|Q(profile__first_name__icontains=query) |(
+        Q(profile__first_name__icontains=firstName)&Q(profile__Last_name__icontains=lastName)))
+        return qs
+   
+    
+ 
+    
 
 class UserProfileView(RetrieveAPIView):
     serializer_class=UserSerializer
@@ -29,10 +52,7 @@ class EditUserProfile(RetrieveUpdateAPIView):
     
 class GetLoggedinUser(ListAPIView):
 
-    print('User logggggggggggggggggg')
-
     permission_classes=[IsAuthenticated]
-    
     serializer_class = PostUserDetailsSerializer
     def get_queryset(self):
         user = self.request.user

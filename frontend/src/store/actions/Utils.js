@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import {POST_LIKED_USER, REMOVE_POST_LIKED_USER, POST_SHARD_USER, REMOVE_POST_SHARD_USER, NOTIFICATION_COUNT, NOTIFICATION_LIST, REMOVE_NOTIFICATION_LIST} from './ActionTypes'
+import {POST_LIKED_USER, REMOVE_POST_LIKED_USER, POST_SHARD_USER, REMOVE_POST_SHARD_USER, NOTIFICATION_COUNT, NOTIFICATION_LIST, SEARCH_USER_LIST} from './ActionTypes'
 import { DataUsageSharp } from '@material-ui/icons'
 
 export const PostLikedUser = (users) =>(
@@ -34,6 +34,11 @@ export const NotificationLists = (data) =>(
     notificatonList : data
 })
 
+export const SearchUserList = (user) =>(
+    {
+    type:SEARCH_USER_LIST,
+    searchedUserLists : user
+})
 
 export const GetPostLikedUser = (id, config) => async dispatch =>{
     try{
@@ -75,6 +80,22 @@ export const NotificationList = (config) => async dispatch =>{
         await axios.get('http://127.0.0.1:8000/notification', config).then(res=>{
            
         dispatch(NotificationLists(res.data))
+           
+            
+        })
+
+    }catch(err){
+        console.log(err);
+    }
+} 
+
+
+export const SearchUser = (query,config) => async dispatch =>{
+    console.log(query, 'queryyyyyyyy');
+    try{
+        await axios.get(`http://127.0.0.1:8000/profile/search/${query}`, config).then(res=>{
+           console.log(res.data, 'search dataaaaaaaaaa');
+        dispatch(SearchUserList(res.data))
            
             
         })

@@ -5,9 +5,17 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth import  get_user_model
 from UserPost.models import UserPost
 from UserPost.serializers import PostSerializer
+from django_filters import rest_framework as filters
     
 User= get_user_model()
 
+
+class UserSearchFilter(filters.FilterSet):
+    # min_price = django_filters.NumberFilter(name="price", lookup_expr='gte')
+    # max_price = django_filters.NumberFilter(name="price", lookup_expr='lte')
+    class Meta:
+        model = User
+        fields = ['username']  
 
 
 class UserInfoSrializer(serializers.ModelSerializer):
@@ -58,11 +66,6 @@ class RecomendedUserList(serializers.ModelSerializer):
                     mutual_friend+=1
 
             return mutual_friend
-
-
-
-
-
 
 
 
@@ -169,15 +172,20 @@ class UserProfile(serializers.ModelSerializer):
 # full user detailsUserProfile
 class UserSerializer(serializers.ModelSerializer):
         full_name = serializers.SerializerMethodField(read_only=True)
-        profile=UserProfile(read_only=True)
+        name = serializers.SerializerMethodField(read_only=True)
+        profile = UserProfile(read_only=True)
         class Meta:
             model = User
-            fields=['username', 'id','full_name','profile',]
+            fields=['username', 'id','full_name','profile', 'name']
             
 
         def get_full_name(self, obj):
             user = User_profile.objects.filter(user=obj).first()
             return str(user.first_name)+' '+ str(user.Last_name)
+        
+        def get_name(self, obj):
+            user = User_profile.objects.filter(user=obj).first()
+            return str(user.first_name)+'_'+ str(user.Last_name)
 
         # def get_profilePic(self, obj):
         #     user = User_profile.objects.filter(user=obj).first()

@@ -37,7 +37,6 @@ class User_profile(models.Model):
 
 
 
-
 class UserFollowManager(models.Manager):
 
     def ToggleFollow(self, user, toggle_user):

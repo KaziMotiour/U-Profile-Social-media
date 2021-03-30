@@ -1,9 +1,10 @@
 from django.urls import path, include
-from .views import EditUserProfile, GetLoggedinUser, UserFollowViews,UserdetailView, UserProfileView, ToggleBookmarkViews, PostBookmarkVew, RecomendedUser, MutualFeiend, Following, Follower
+from .views import EditUserProfile, GetLoggedinUser, UserFollowViews,UserdetailView, UserProfileView, ToggleBookmarkViews, PostBookmarkVew, RecomendedUser, MutualFeiend, Following, Follower, SearchUser
 
 urlpatterns = [
     path('<slug:username>', UserProfileView.as_view(), name="user"),
     path('user/<slug:username>/', UserdetailView.as_view(), name="user"),
+    path('search/<slug:query>', SearchUser.as_view(), name="search_user"),
     path('loggedinUser/', GetLoggedinUser.as_view(), name="get-user"),
     path('edit-profile/<int:pk>', EditUserProfile.as_view(), name="edit-profile"),
     path('follow/<slug:username>', UserFollowViews, name="userFollow"),

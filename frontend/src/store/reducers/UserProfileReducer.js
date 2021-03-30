@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { LOGGED_IN_USER_INFO, RECOMENDED_USER, MUTUAL_FRIEND, REMOVE_MUTUAL_FRIEND, NOTIFICATION_COUNT, NOTIFICATION_LIST, REMOVE_NOTIFICATION_LIST, USER_PFORILE, GET_FOLLWING_USER, GET_FOLLWER_USER,  USER_PROFILE_UPDATE_SUCCESS, USER_PROFILE_UPDATE_FAIL, REMOVE_USER_PROFILE_UPDATE_SUCCESS, } from '../actions/ActionTypes'
+import { LOGGED_IN_USER_INFO, RECOMENDED_USER, MUTUAL_FRIEND, REMOVE_MUTUAL_FRIEND, NOTIFICATION_COUNT, NOTIFICATION_LIST, REMOVE_NOTIFICATION_LIST, USER_PFORILE, GET_FOLLWING_USER, GET_FOLLWER_USER,  USER_PROFILE_UPDATE_SUCCESS, USER_PROFILE_UPDATE_FAIL, REMOVE_USER_PROFILE_UPDATE_SUCCESS,SEARCH_USER_LIST } from '../actions/ActionTypes'
 import { auth_fail, auth_start } from '../actions/Auth'
 
 const initialState = ({
@@ -14,6 +14,7 @@ const initialState = ({
     followingUser:[],
     userUpdateSuccess : false,
     userUpdateFail : null,
+    searchUserList : []
 
 })
 
@@ -93,6 +94,13 @@ const userProfileUpdateFail = (state, action) =>(
     ...state,
     userUpdateFail:action.ProfileUpdateError
 })
+const searchedUserList = (state, action) =>(
+    
+    {
+    ...state,
+    searchUserList:action.searchedUserLists
+})
+
 
 
 const UserInfo = (state = initialState, action) =>{
@@ -110,6 +118,8 @@ const UserInfo = (state = initialState, action) =>{
         case USER_PROFILE_UPDATE_SUCCESS: return userProfileUpdateSuccess(state, action)
         case REMOVE_USER_PROFILE_UPDATE_SUCCESS: return removeUserProfileUpdateSuccess(state, action)
         case USER_PROFILE_UPDATE_FAIL: return userProfileUpdateFail(state, action)
+        case SEARCH_USER_LIST: return searchedUserList(state, action)
+       
         default: return state
 
     }

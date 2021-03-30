@@ -124,6 +124,7 @@ function Comment(props) {
 
     return (
      <div className='comment' onClick={() => openCommentEditOptin && setOpenCommentEditOption(false)}> 
+
         <div className= 'comment-header'>
         <Avatar src={comment.user && comment.user.profile.image} className={classes.small}/> 
       </div> 
@@ -131,6 +132,7 @@ function Comment(props) {
         <div style={{display:'flex'}}>
         <h4>{comment.user.full_name ? comment.user.username: comment.user.full_name}</h4> &nbsp; <p style={{ontSize:'13px', marginLeft:'auto'}}> </p>&nbsp;{comment.create_date}
         </div>
+        
         <div>
          {editCommentOption === 'Edit' ? (<TextField autoFocus className={classes.text} onKeyDown={e =>HandleCommetPut(e, comment.id)} onChange={e => setPostComment(e.target.value)} value={postComment}  placeholder="What's you'r mind ?" spellCheck="true"/>)  : comment.comment }
         </div>
@@ -139,6 +141,7 @@ function Comment(props) {
       <div>
           {editCommentOption === 'Edit' && (<p className={classes.cancle_edit} onClick={()=>HandleCommentEditOpen()}>cancle</p>)}
     </div>
+      
       <div style={{marginLeft:'auto'}}>
       {loggedin_user_info.username === comment.user.username && <nav role="navigation">
         <ul>

@@ -19,9 +19,10 @@ import Link from '@material-ui/core/Link';
 import {useDispatch, useSelector} from 'react-redux'
 import { useHistory, withRouter, NavLink } from "react-router-dom";
 import {auth_logout} from '../store/actions/Auth'
-import {NotificationCount, NotificationList} from '../store/actions/Utils'
+import {NotificationCount, NotificationList, SearchUser} from '../store/actions/Utils'
 import Notification from './notification/NotificationList'
 import {REMOVE_MUTUAL_FRIEND, REMOVE_NOTIFICATION_LIST} from '../store/actions/ActionTypes'
+import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 import zIndex from '@material-ui/core/styles/zIndex';
 import './nav.css'
 
@@ -133,6 +134,27 @@ const useStyles = makeStyles((theme: Theme) =>
     noNotify:{
       marginTop:'500px',
       color:'rgb(214, 210, 210)',
+    },
+    notification:{
+      width:400,
+      ['@media (max-width: 920px)']: { // eslint-disable-line no-useless-computed-key
+        width: 300,
+        
+      },
+
+      ['@media (max-width: 600px)']: { // eslint-disable-line no-useless-computed-key
+        width: 200,
+        
+      },
+      ['@media (max-width: 400px)']: { // eslint-disable-line no-useless-computed-key
+        width: 150,
+        
+      },
+      ['@media (max-width: 350px)']: { // eslint-disable-line no-useless-computed-key
+        width: 120,
+        
+      },
+
     }
 
   
@@ -150,6 +172,7 @@ function Nav() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [openNotificationBar, setOpenNotificationBar] = useState(false)
+  const searchUser = useSelector(state => state.user.searchUserList)
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -161,6 +184,7 @@ function Nav() {
 
   useEffect(()=>{
     dispatch(NotificationCount(config))
+  
   },[])
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -198,6 +222,20 @@ function Nav() {
 const CloseNotificationBar = () =>{
   setOpenNotificationBar(false)
 }
+
+const handleOnSearch = (string, results) => {
+  dispatch(SearchUser(string, config))
+}
+
+const handleOnSelect = (item) => {
+  history.push(`/${item.username}`)
+  console.log(item)
+}
+
+const handleOnFocus = () => {
+  console.log('Focused')
+}
+
 
 
 
@@ -303,6 +341,9 @@ const CloseNotificationBar = () =>{
     </div>
   );
 
+// return part 
+
+
   return (
     <div className={classes.grow} onClick={openNotificationBar === true && CloseNotificationBar}>
       <AppBar position="static">
@@ -313,17 +354,28 @@ const CloseNotificationBar = () =>{
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
-              <SearchIcon />
+              <SearchIcon  />
+              
             </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
+            
+            <div className={classes.notification} >
+            
+              {/* Notfication */}
+            
+            <ReactSearchAutocomplete
+          
+            style={{zIndex:1000}}
+            items={searchUser}
+            onSearch={handleOnSearch}
+            onSelect={handleOnSelect}
+            onFocus={handleOnFocus}
+            autoFocus
+          />
+        </div>
+            
+                          
           </div>
+          
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
            

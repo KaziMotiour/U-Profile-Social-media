@@ -17,6 +17,7 @@ import ProfilePage from './containers/profilePage/ProfilePage'
 import UpdateProfileInfo from './containers/profileSettings/UpdateProfileInfo'
 import SinglePost from './containers/Home/Feed/Post/singlePost/SinglePost'
 import NotificationForMobile from './component/notification/NotificationForMobile'
+import Playground from './component/AutoCompletesearch'
 import {NotificationCount} from './store/actions/Utils'
 
 function  App() {
@@ -56,6 +57,7 @@ function  App() {
           <LogedInRoute exect path='/singup' component={Singup}/>
           <LogedInRoute exect path='/forgetpassword' component={ForgetPassword}/>
           <AuthenticRoute exect path='/accountSetings' component={UpdateProfileInfo}/>
+          <AuthenticRoute exect path='/autoComplete' component={Playground}/>
           <AuthenticRoute exect path='/notification' component={NotificationForMobile}/>
           <AuthenticRoute exect path='/post/:postId' component={SinglePost}/>
           <AuthenticRoute exect path='/:username' component={ProfilePage}/>

@@ -53,3 +53,5 @@ export const USER_PFORILE = 'USER_PFORILE'
 export const GET_FOLLWING_USER = 'GET_FOLLWING_USER'
 export const GET_FOLLWER_USER = 'GET_FOLLWER_USER'
 
+// search user
+export const SEARCH_USER_LIST = 'SEARCH_USER_LIST'
