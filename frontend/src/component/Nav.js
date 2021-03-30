@@ -224,7 +224,14 @@ const CloseNotificationBar = () =>{
 }
 
 const handleOnSearch = (string, results) => {
-  dispatch(SearchUser(string, config))
+  let query = string
+
+  if(string.indexOf(' ') >= 0){
+    let str = string.split(' ')
+    console.log(str,'hello');
+    query= str[0]+'_'+str[1]
+    }
+  dispatch(SearchUser(query, config))
 }
 
 const handleOnSelect = (item) => {
