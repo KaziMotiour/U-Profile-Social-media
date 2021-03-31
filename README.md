@@ -3,13 +3,14 @@
 ## Back-end
 * Django
 * Django Rest Framework
+* postgresql
 ## Front-end Part
 * React
 * Redux
 * material-ui
 
 ## Features
-* User Authentication
+* User Authentication (JWT)
 * User profile
 * Follow/Unfollow
 * Recommended user
@@ -22,6 +23,8 @@
 * share
 * Bookmark post
 * Post privacy (public, frinds, onlyme)
+* Change Password
+* Reset Password
 
 
 **Copyright (c)** 2020-3020 Kazi Motiour Rahman
