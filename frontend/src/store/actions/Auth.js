@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import {AUTH_START, AUTH_SUCCESS, AUTH_LOGOUT, AUTH_LOGIN_FAIL, AUTH_REGISTRATION, AUTH_REGISTRATION_FAIL, CAHNGE_PASSWORD, RESET_PASSWORD, VERIFY_JWT_TOKEN, PASSWORD_CHANGE_FILED, PASSWORD_CHANGE_SUCCESS } from './ActionTypes'
+import {AUTH_START, AUTH_SUCCESS, AUTH_LOGOUT, AUTH_LOGIN_FAIL, AUTH_REGISTRATION, AUTH_REGISTRATION_FAIL, CAHNGE_PASSWORD, RESET_PASSWORD, VERIFY_JWT_TOKEN, PASSWORD_CHANGE_FILED, PASSWORD_CHANGE_SUCCESS, RESET_EMAIL_CHANGED_SUCCESS, RESET_EMAIL_CHANGED_FAILED, RESET_PASSSWORD_FAILED, RESET_PASSSWORD_SUCCESS } from './ActionTypes'
 
 export const auth_start = () =>({
       type:AUTH_START
@@ -56,6 +56,43 @@ console.log(success, 'from success '),
   passwordChangedSuccess: success.message
 
 })
+
+export const Reset_emailSend_success = (success) =>(
+
+    {
+    type: RESET_EMAIL_CHANGED_SUCCESS,
+    reset_emailSend_success: success
+  
+  })
+
+export const Reset_emailSend_fail = (error) =>(
+
+    {
+    type: RESET_EMAIL_CHANGED_FAILED,
+    reset_emailSend_failed: error
+  
+  })
+
+
+
+export const Reset_password_success = (success) =>(
+  
+
+    {
+    type: RESET_PASSSWORD_SUCCESS,
+    reset_password_success: success
+
+})
+
+export const Reset_password_fail = (error) =>(
+
+    {
+    type: RESET_PASSSWORD_FAILED,
+    reset_password_failed: error
+  
+  })
+
+
 
 
 
@@ -163,7 +200,51 @@ export const ChangeUserPassword = (formData, config) => async dispatch =>{
 
       }).catch(function (error) {
       
+  
         dispatch(password_change_filed(error.response.data))
+          
+       })
+  }catch(err){
+      // console.log(err,'err');
+  }
+
+
+}
+
+
+export const SendResetEmail = (email, config) => async dispatch =>{
+
+  try{
+
+      await axios.post('http://127.0.0.1:8000/auth/password_reset/',{email}, config).then(res =>{  
+        
+        dispatch(Reset_emailSend_success(res.data.status))
+
+      }).catch(function (error) {
+      
+       
+        dispatch(Reset_emailSend_fail(error.response.data.email))
+          
+       })
+  }catch(err){
+      // console.log(err,'err');
+  }
+
+
+}
+
+export const PasswordResetConfirm = (formData, config) => async dispatch =>{
+
+  try{
+
+      await axios.post('http://127.0.0.1:8000/auth/password_reset/confirm/',formData, config).then(res =>{  
+
+
+        dispatch(Reset_password_success(res.data.status))
+
+      }).catch(function (error) {
+
+        dispatch(Reset_password_fail(error.response.data))
           
        })
   }catch(err){

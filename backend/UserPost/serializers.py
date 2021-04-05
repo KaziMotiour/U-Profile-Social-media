@@ -103,6 +103,7 @@ class PostSerializer(serializers.ModelSerializer):
     sharePostContent = serializers.CharField(max_length=1000, required=False)
     postComment = PostCommentSerializer(many=True, read_only=True)
     shared_user = PostUserDetailsSerializers(read_only=True, many=True)
+    timestamp = serializers.SerializerMethodField()
     class Meta:
         model = UserPost
         fields = ['id','parent', 'user', 'content', 'image', 'timestamp', 'is_retweet', 'is_saved', 'likes', 'privacy', 'sharePostContent','postComment', 'is_liked','shared_user']
@@ -128,6 +129,9 @@ class PostSerializer(serializers.ModelSerializer):
             return True
         else:
             return False
+    def get_timestamp(self, obj):
+        time = obj.get_timestamp()
+        return time
         
 
 

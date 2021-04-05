@@ -109,7 +109,7 @@ function Widgets() {
        {recomendedUser.length !==0 && (recomendedUser.map(user =>(
 
          <Card className={classes.root}>
-          <Link component={NavLink}  underline="none"  to={`/${user.username }`}>
+          <Link component={NavLink}  underline="none"  to={`/profile/${user.username }`}>
          <CardActionArea className={classes.cardTopArea}>
            <CardMedia
              className={classes.media}

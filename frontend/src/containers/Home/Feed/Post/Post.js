@@ -257,7 +257,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         </div>
       
         <div className="post__headerText">
-        <Link component={NavLink}  underline="none"  to={`/${user.username }`}>
+        <Link component={NavLink}  underline="none"  to={`/profile/${user.username }`}>
             <h3>
            
                {user.full_name!=='None None'? user.full_name : user.username}
@@ -266,7 +266,7 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
                 
             </h3 >
             </Link>
-            {timestamp.substr(0,10)} {timestamp.substr(10,6)}
+            {timestamp}
         
         </div>
         <div style={{marginLeft:'auto'}} className="nav">
@@ -397,16 +397,16 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
       
         <div className="post__headerText">
             <h3>
-            <Link component={NavLink}  underline="none"  to={`/${user.username }`}>
+            <Link component={NavLink}  underline="none"  to={`/profile/${user.username }`}>
                {user.full_name!=='None None'? user.full_name : user.username}
                </Link>
                 {/* {varified && <VerifiedUserIcon className="post_badge" /> } */}
                 <span className="post_username"> shared </span> 
-                <Link component={NavLink}  underline="none"  to={`/${parent.user.username }`}>
+                <Link component={NavLink}  underline="none"  to={`/profile/${parent.user.username }`}>
                {parent.user.username}'s </Link> post
 
             </h3 >
-            {timestamp.substr(0,10)} {timestamp.substr(10,6)}
+            {timestamp}
         </div>
         {/* post edit options begain */}
         <div style={{marginLeft:'auto'}}>
@@ -450,14 +450,14 @@ const Post  = forwardRef(({id, user, parent, content, image, privacy, is_retweet
         </div>
       
         <div className="post__headerText">
-        <Link component={NavLink}  underline="none"  to={`/${parent.user.username }`}>
+        <Link component={NavLink}  underline="none"  to={`/profile/${parent.user.username }`}>
             <h3>{parent.user.full_name !=='None None' ? parent.user.full_name : parent.user.username}
                 {/* {varified && <VerifiedUserIcon className="post_badge" /> } */}
                 <span className="post_username"> @{parent.user.username}</span> 
 
             </h3 >
             </Link>
-            {parent.timestamp.substr(0,10)} {parent.timestamp.substr(10,6)}
+            {parent.timestamp}
         </div>
         </div>
         <div className="post_body">    

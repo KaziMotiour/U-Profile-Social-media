@@ -1,7 +1,7 @@
 import React,{useState, useEffect} from 'react';
 import Button from '@material-ui/core/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import {REMOVE_PASSWORD_CHANGE_SUCCESS, REMOVE_USER_PROFILE_UPDATE_SUCCESS} from '../../../../../store/actions/ActionTypes'
+import {REMOVE_PASSWORD_CHANGE_SUCCESS, REMOVE_USER_PROFILE_UPDATE_SUCCESS,REMOVE_RESET_EMAIL_CHANGED_SUCCESS, REMOVE_RESET_PASSSWORD_SUCCESS} from '../../../../../store/actions/ActionTypes'
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from "@material-ui/core/SnackbarContent";
 
@@ -45,6 +45,11 @@ function SnackBer(props) {
         
         closeDialog('prof')
       }
+      else if(props.success_info === 'OK') {
+        confirmInfo="Passwrd Reset successfully Try To Login Again"
+        
+        closeDialog('res')
+      }
       const handleOpen = () =>{
         setState({ ...state, snackBerOpen: true });
       }
@@ -58,6 +63,12 @@ function SnackBer(props) {
             })  
             dis === 'prof' && dispatch({
               type:REMOVE_USER_PROFILE_UPDATE_SUCCESS
+            })
+            dis === 'res' && dispatch({
+              type:REMOVE_RESET_EMAIL_CHANGED_SUCCESS
+            })
+            dis === 'res' && dispatch({
+              type:REMOVE_RESET_PASSSWORD_SUCCESS
             })
         }, 2000))
       }

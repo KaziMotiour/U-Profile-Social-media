@@ -83,7 +83,7 @@ function Follower({followers, userProfile}) {
                 {followers.length!==0  && followers.map(user =>(
                     <div className={classes.userListItem}>
                         <Avatar src={user.profile.image} className={classes.avater}/> &nbsp;
-                        <Link component={NavLink}  underline="none"  to={`/${user.username }`}>
+                        <Link component={NavLink}  underline="none"  to={`/profile/${user.username }`}>
                            {user.full_name !=='None None' ? user.full_name: user.username}
                         </Link>
                            <Button onClick={()=> FollowOrUnfollow(user.username)} className={classes.followButton} variant="outlined" color="primary">{user.is_following? 'UnFollow':'Follow'}  </Button>

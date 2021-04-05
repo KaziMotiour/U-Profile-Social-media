@@ -11,9 +11,10 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import './forgetPasswor.css'
-import {SendResetEmail} from '../../store/actions/Auth'
+import {PasswordResetConfirm} from '../../store/actions/Auth'
 import {useHistory, useParams } from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux'
+import SnackBer from '../Home/Feed/Post/sharePost/SnackBer'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,16 +36,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ForgetPassword() {
+export default function ResetUserPassword() {
 
 
   const classes = useStyles();
   const dispatch = useDispatch()
   const history = useHistory()
 
-  const emailSendSuccess = useSelector(state => state.auth.emailSendSuccess)
-  const emailSendFailed = useSelector(state => state.auth.emailSendFailed)
-  const [email, setEmail] = useState()
+  const resetPasswordSuccess = useSelector(state => state.auth.resetPasswordSuccess)
+  const resetPasswordFailed = useSelector(state => state.auth.resetPasswordFailed)
+  const [tokenNull, setTokenNull] = useState(false)
+  const [newPasswordNull, setNewPasswordNull] = useState(false)
+  const [resetPasswordInfo, setResetPasswordInfo] = useState({
+      token:'',
+      newPassword:''
+  })
+
   const config = { headers: { 
     'Content-Type':'application/json',
   }}
@@ -52,17 +59,28 @@ export default function ForgetPassword() {
 
   const HandleSendEmail = (e) =>{
     e.preventDefault()
-    dispatch(SendResetEmail(email, config))
-  }
+    let formData = new FormData()
+    if(resetPasswordInfo.token==='' || resetPasswordInfo.newPasswordNull===''){
+
+        {resetPasswordInfo.token===null && setTokenNull(true)}
+        {resetPasswordInfo.newPasswordNull===null && setNewPasswordNull(true)}
+
+    }else{
+
+        formData.append('token', resetPasswordInfo.token)
+        formData.append('password', resetPasswordInfo.newPassword)
+        dispatch(PasswordResetConfirm(formData, config))
+
+    }
+
+}
 
 useEffect(() => {
+    {resetPasswordSuccess !==null && setResetPasswordInfo({token:'', newPassword:''})}
+}, [resetPasswordSuccess])
 
-  {emailSendSuccess === "OK" && setEmail('')}
-  {emailSendSuccess === "OK" && history.push('/resetPassword')}
-
-}, [emailSendSuccess])
-
-  return (
+  console.log(resetPasswordInfo);
+    return (
     <div className="login">
     <div className="tag">
         <h2>U-Profile.com</h2>
@@ -75,7 +93,7 @@ useEffect(() => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Enter you'r Email Address
+          Get the token value from you'r email address
         </Typography>
         <form className={classes.form} noValidate>
           <TextField
@@ -83,14 +101,30 @@ useEffect(() => {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="Token"
+            label="Token from email"
+            name="token"
+            autoComplete="Token"
             autoFocus
-            onChange={e => setEmail(e.target.value.trim())}
+            value={resetPasswordInfo.token}
+            onChange={e => setResetPasswordInfo({...resetPasswordInfo, [e.target.name]:e.target.value.trim()})}
           />
-          <span style={{color:'red'}} >{emailSendFailed && emailSendFailed}</span>
+          <span style={{color:'red'}} >{resetPasswordFailed && resetPasswordFailed.status && 'This Token is no longer avaiable'}</span>
+          
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="Passowrd"
+            label="New Password"
+            name="newPassword"
+            autoComplete="newPassword"
+            value={resetPasswordInfo.newPassword}
+            autoFocus
+            onChange={e => setResetPasswordInfo({...resetPasswordInfo,[e.target.name]:e.target.value.trim()})}
+          />
+          <span style={{color:'red'}} >{resetPasswordFailed && resetPasswordFailed.password && resetPasswordFailed.password}</span>
           <Button
             type="submit"
             fullWidth
@@ -99,7 +133,7 @@ useEffect(() => {
             className={classes.submit}
             onClick={ e => HandleSendEmail(e)}
           >
-            Submit
+            Reset Password
           </Button>
           <Grid container>
             <Grid item xs>
@@ -113,6 +147,7 @@ useEffect(() => {
       <Box mt={8}>
       </Box>
     </Container>
+    {resetPasswordSuccess==='OK' && <SnackBer open={true} success_info={resetPasswordSuccess} />}
     </div>
     </div>
   );

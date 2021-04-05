@@ -82,7 +82,7 @@ function Following({following, userProfile}) {
                 {following.length!=0 && following.map(user =>(
                     <div className={classes.userListItem}>
                         <Avatar src={user.profile.image} className={classes.avater}/> &nbsp;
-                        <Link component={NavLink}  underline="none"  to={`/${user.username }`}>
+                        <Link component={NavLink}  underline="none"  to={`/profile/${user.username }`}>
                            {user.full_name !=='None None' ? user.full_name: user.username}
                         </Link>
                            

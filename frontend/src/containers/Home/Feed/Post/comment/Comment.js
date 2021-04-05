@@ -3,10 +3,12 @@ import { Avatar } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'; 
 import TextField from '@material-ui/core/TextField';
 import {useDispatch, useSelector} from 'react-redux'
-import {useHistory} from 'react-router-dom'
+import {useHistory, NavLink} from 'react-router-dom'
 import {VerifyJwtToken} from '../../../../../store/actions/Auth'
 import {CommentUpdate, CommentDelete} from '../../../../../store/actions/PostCrud'
 import {NotificationCount} from '../../../../../store/actions/Utils'
+import Link from '@material-ui/core/Link';
+
 import './Comment.css'
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -125,14 +127,22 @@ function Comment(props) {
     return (
      <div className='comment' onClick={() => openCommentEditOptin && setOpenCommentEditOption(false)}> 
 
+      {/* comment  */}
         <div className= 'comment-header'>
         <Avatar src={comment.user && comment.user.profile.image} className={classes.small}/> 
       </div> 
       <div className={editCommentOption ==='Edit' ? classes.comment_body_edit : classes.comment_body}>
+      
+      {/* Comment user name */}
         <div style={{display:'flex'}}>
-        <h4>{comment.user.full_name ? comment.user.username: comment.user.full_name}</h4> &nbsp; <p style={{ontSize:'13px', marginLeft:'auto'}}> </p>&nbsp;{comment.create_date}
+        <h4>
+        <Link component={NavLink}  underline="none"  to={`/profile/${comment.user.username }`}>
+          {comment.user.full_name ? comment.user.username: comment.user.full_name}
+          </Link>
+          </h4> &nbsp; <p style={{ontSize:'13px', marginLeft:'auto'}}> </p>&nbsp;{comment.create_date}
         </div>
         
+          {/* Comment create fomr */}
         <div>
          {editCommentOption === 'Edit' ? (<TextField autoFocus className={classes.text} onKeyDown={e =>HandleCommetPut(e, comment.id)} onChange={e => setPostComment(e.target.value)} value={postComment}  placeholder="What's you'r mind ?" spellCheck="true"/>)  : comment.comment }
         </div>
@@ -142,6 +152,8 @@ function Comment(props) {
           {editCommentOption === 'Edit' && (<p className={classes.cancle_edit} onClick={()=>HandleCommentEditOpen()}>cancle</p>)}
     </div>
       
+
+      {/* Comment edit options */}
       <div style={{marginLeft:'auto'}}>
       {loggedin_user_info.username === comment.user.username && <nav role="navigation">
         <ul>

@@ -68,7 +68,7 @@ function Notification({ notify }) {
 
   const handleShowUserPorfile = (username) =>{
     checkAuthenticatin()
-    history.push(`/${username}`)
+    history.push(`/profile/${username}`)
 
    
   }

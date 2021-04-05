@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {AUTH_START, AUTH_SUCCESS, AUTH_LOGOUT,AUTH_LOGIN_FAIL, AUTH_REGISTRATION, AUTH_REGISTRATION_FAIL, CAHNGE_PASSWORD, RESET_PASSWORD, PASSWORD_CHANGE_FILED, PASSWORD_CHANGE_SUCCESS, REMOVE_PASSWORD_CHANGE_SUCCESS} from '../actions/ActionTypes'
+import {AUTH_START, AUTH_SUCCESS, AUTH_LOGOUT,AUTH_LOGIN_FAIL, AUTH_REGISTRATION, AUTH_REGISTRATION_FAIL, CAHNGE_PASSWORD, RESET_PASSWORD, PASSWORD_CHANGE_FILED, PASSWORD_CHANGE_SUCCESS, REMOVE_PASSWORD_CHANGE_SUCCESS, RESET_EMAIL_CHANGED_SUCCESS, RESET_EMAIL_CHANGED_FAILED, RESET_PASSSWORD_FAILED, RESET_PASSSWORD_SUCCESS, REMOVE_RESET_EMAIL_CHANGED_SUCCESS, REMOVE_RESET_PASSSWORD_SUCCESS} from '../actions/ActionTypes'
 
 import { auth_fail, auth_start } from '../actions/Auth'
 
@@ -12,6 +12,10 @@ const initialState = ({
     registration_error:null,
     passwordChange_error:null,
     passwordChange_Success:null,
+    emailSendSuccess:null,
+    emailSendFailed:null,
+    resetPasswordSuccess:null,
+    resetPasswordFailed:null,
 
 })
 
@@ -69,6 +73,53 @@ const removeSuccessPasswordChange = (state, action) =>(
     ...state,
     passwordChange_Success: null
 })
+const sendEmailSuccess = (state, action) =>(
+    console.log(action),
+
+    {
+    ...state,
+    emailSendSuccess: action.reset_emailSend_success,
+    emailSendFailed:null,
+    
+})
+const sendEmailFailed = (state, action) =>(
+    console.log(action),
+    {
+    ...state,
+    emailSendFailed:action.reset_emailSend_failed,
+    emailSendSuccess: null
+})
+
+const passwordResetSuccess = (state, action) =>(
+
+    {
+    ...state,
+    resetPasswordSuccess: action.reset_password_success,
+    resetPasswordFailed:null,
+    
+})
+
+const passwordResetFailed = (state, action) =>(
+    {
+    ...state,
+    resetPasswordFailed:action.reset_password_failed,
+    resetPasswordSuccess: null
+})
+
+const RemoveSendEmailSuccess = (state, action) =>(
+
+    {
+    ...state,
+    emailSendSuccess:null,
+    
+})
+
+const RemovePasswordResetSuccess = (state, action) =>(
+    {
+    ...state,
+    resetPasswordSuccess:null,
+})
+
 
 
 const AuthReducer = (state = initialState, action) =>{
@@ -81,8 +132,12 @@ const AuthReducer = (state = initialState, action) =>{
         case AUTH_REGISTRATION_FAIL: return authRegistrationFail(state, action)
         case PASSWORD_CHANGE_FILED: return passwordChangeFailed(state, action)
         case PASSWORD_CHANGE_SUCCESS: return successPasswordChange(state, action)
-        case REMOVE_PASSWORD_CHANGE_SUCCESS : return removeSuccessPasswordChange(state, action)
-       
+        case RESET_EMAIL_CHANGED_SUCCESS : return sendEmailSuccess(state, action)
+        case RESET_EMAIL_CHANGED_FAILED : return sendEmailFailed(state, action)
+        case RESET_PASSSWORD_SUCCESS : return passwordResetSuccess(state, action)
+        case RESET_PASSSWORD_FAILED : return passwordResetFailed(state, action)
+        case REMOVE_RESET_EMAIL_CHANGED_SUCCESS : return RemoveSendEmailSuccess(state, action)
+        case REMOVE_RESET_PASSSWORD_SUCCESS : return RemovePasswordResetSuccess(state, action)
         default: return state
 
     }

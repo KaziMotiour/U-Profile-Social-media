@@ -72,7 +72,7 @@ export default function Singup() {
   const HandleSubmit = (e) =>{
     e.preventDefault()
     const {email, username, password, password2} = registrationInfo
-    dispatch(Registration(email, username, password, password2))
+    dispatch(Registration(email.trim(), username.trim(), password, password2))
   
 
   }

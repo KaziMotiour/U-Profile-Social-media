@@ -19,6 +19,8 @@ import SinglePost from './containers/Home/Feed/Post/singlePost/SinglePost'
 import NotificationForMobile from './component/notification/NotificationForMobile'
 import Playground from './component/AutoCompletesearch'
 import {NotificationCount} from './store/actions/Utils'
+import NotFound from './component/NotFound'
+import ResetUserPassword from './containers/forgetPassword/ResetPassword'
 
 function  App() {
 
@@ -56,12 +58,15 @@ function  App() {
           <LogedInRoute exect path='/Login' component={Login}/>
           <LogedInRoute exect path='/singup' component={Singup}/>
           <LogedInRoute exect path='/forgetpassword' component={ForgetPassword}/>
+          <LogedInRoute exect path='/resetPassword' component={ResetUserPassword}/>
           <AuthenticRoute exect path='/accountSetings' component={UpdateProfileInfo}/>
           <AuthenticRoute exect path='/autoComplete' component={Playground}/>
           <AuthenticRoute exect path='/notification' component={NotificationForMobile}/>
           <AuthenticRoute exect path='/post/:postId' component={SinglePost}/>
-          <AuthenticRoute exect path='/:username' component={ProfilePage}/>
+          <AuthenticRoute exect path='/profile/:username' component={ProfilePage}/>
           <AuthenticRoute exect path='/' component={Home}/>
+          <AuthenticRoute  component={NotFound}/>
+
           </Switch>
         </Layout>
       </Router>

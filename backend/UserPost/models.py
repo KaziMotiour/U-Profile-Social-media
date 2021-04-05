@@ -147,6 +147,9 @@ class UserPost(models.Model):
     @property
     def is_retweet(self):
         return self.parent != None
+
+    def get_timestamp(self):
+        return humanize.naturaltime(self.timestamp)
        
 
 class PostComment(models.Model):

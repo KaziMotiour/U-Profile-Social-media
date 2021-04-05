@@ -235,7 +235,7 @@ const handleOnSearch = (string, results) => {
 }
 
 const handleOnSelect = (item) => {
-  history.push(`/${item.username}`)
+  history.push(`/profile/${item.username}`)
   console.log(item)
 }
 
@@ -268,7 +268,7 @@ const handleOnFocus = () => {
       onClose={handleMenuClose}
     
     ><div style={{display:'flex', flexDirection:'column'}}>
-      <Link component={NavLink} underline="none"  to={`/${loggedInUser && loggedInUser.username }`}>
+      <Link component={NavLink} underline="none"  to={`/profile/${loggedInUser && loggedInUser.username }`}>
       <MenuItem onClick={handleMenuClose} >  Profile </MenuItem>
      </Link>
      
@@ -308,7 +308,7 @@ const handleOnFocus = () => {
       </MenuItem>
       </Link>
 
-      <Link component={NavLink} underline="none"  to={`/${loggedInUser && loggedInUser.username }`}>
+      <Link component={NavLink} underline="none"  to={`/profile/${loggedInUser && loggedInUser.username }`}>
       <MenuItem >
         <IconButton
           aria-label="account of current user"
