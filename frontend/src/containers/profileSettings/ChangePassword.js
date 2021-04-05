@@ -8,6 +8,7 @@ import { Button } from '@material-ui/core';
 import {ChangeUserPassword} from '../../store/actions/Auth'
 import { useDispatch, useSelector } from 'react-redux';
 import SnackBer from '../Home/Feed/Post/sharePost/SnackBer'
+import {useParams} from 'react-router-dom'
 
 const useStyles = makeStyles((theme: Theme) =>
 createStyles({
@@ -43,6 +44,7 @@ export default function ChangePassword() {
 
     const classes = useStyles()
     const dispatch=useDispatch()
+   
     const error = useSelector(state => state.auth.passwordChange_error)
     const success = useSelector(state => state.auth.passwordChange_Success)
     const [oldPasswordRequired, setOldPasswordRequired] = useState(false)

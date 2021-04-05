@@ -15,6 +15,12 @@ import {SendResetEmail} from '../../store/actions/Auth'
 import {useHistory, useParams } from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux'
 
+// allert 
+import Alert from '@material-ui/lab/Alert';
+import IconButton from '@material-ui/core/IconButton';
+import Collapse from '@material-ui/core/Collapse';
+import CloseIcon from '@material-ui/icons/Close';
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -44,7 +50,10 @@ export default function ForgetPassword() {
 
   const emailSendSuccess = useSelector(state => state.auth.emailSendSuccess)
   const emailSendFailed = useSelector(state => state.auth.emailSendFailed)
+
   const [email, setEmail] = useState()
+  const [sendEmailSuccess, setSendEmailSuccess] = useState(false)
+
   const config = { headers: { 
     'Content-Type':'application/json',
   }}
@@ -58,7 +67,7 @@ export default function ForgetPassword() {
 useEffect(() => {
 
   {emailSendSuccess === "OK" && setEmail('')}
-  {emailSendSuccess === "OK" && history.push('/resetPassword')}
+  {emailSendSuccess === "OK" && setSendEmailSuccess(true)}
 
 }, [emailSendSuccess])
 
@@ -68,6 +77,26 @@ useEffect(() => {
         <h2>U-Profile.com</h2>
       </div>
       <div>
+
+      <Collapse in={sendEmailSuccess}>
+        <Alert
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setSendEmailSuccess(false);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+        >
+        Email send successfully, Check you'r email to reset password
+        </Alert>
+      </Collapse>
+
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>

@@ -46,7 +46,7 @@ function SnackBer(props) {
         closeDialog('prof')
       }
       else if(props.success_info === 'OK') {
-        confirmInfo="Passwrd Reset successfully Try To Login Again"
+        confirmInfo="Password Reset successfully, Try To Login Again"
         
         closeDialog('res')
       }

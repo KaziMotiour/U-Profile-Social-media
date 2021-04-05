@@ -42,13 +42,12 @@ export default function ResetUserPassword() {
   const classes = useStyles();
   const dispatch = useDispatch()
   const history = useHistory()
-
+  const {token} = useParams()
   const resetPasswordSuccess = useSelector(state => state.auth.resetPasswordSuccess)
   const resetPasswordFailed = useSelector(state => state.auth.resetPasswordFailed)
   const [tokenNull, setTokenNull] = useState(false)
   const [newPasswordNull, setNewPasswordNull] = useState(false)
   const [resetPasswordInfo, setResetPasswordInfo] = useState({
-      token:'',
       newPassword:''
   })
 
@@ -60,15 +59,14 @@ export default function ResetUserPassword() {
   const HandleSendEmail = (e) =>{
     e.preventDefault()
     let formData = new FormData()
-    if(resetPasswordInfo.token==='' || resetPasswordInfo.newPasswordNull===''){
+    if( resetPasswordInfo.newPasswordNull===''){
 
-        {resetPasswordInfo.token===null && setTokenNull(true)}
         {resetPasswordInfo.newPasswordNull===null && setNewPasswordNull(true)}
 
     }else{
 
-        formData.append('token', resetPasswordInfo.token)
-        formData.append('password', resetPasswordInfo.newPassword)
+        formData.append('token', token.trim())
+        formData.append('password', resetPasswordInfo.newPassword.trim())
         dispatch(PasswordResetConfirm(formData, config))
 
     }
@@ -96,7 +94,7 @@ useEffect(() => {
           Get the token value from you'r email address
         </Typography>
         <form className={classes.form} noValidate>
-          <TextField
+          {/* <TextField
             variant="outlined"
             margin="normal"
             required
@@ -108,8 +106,8 @@ useEffect(() => {
             autoFocus
             value={resetPasswordInfo.token}
             onChange={e => setResetPasswordInfo({...resetPasswordInfo, [e.target.name]:e.target.value.trim()})}
-          />
-          <span style={{color:'red'}} >{resetPasswordFailed && resetPasswordFailed.status && 'This Token is no longer avaiable'}</span>
+          /> */}
+          <span style={{color:'red'}} >{resetPasswordFailed && resetPasswordFailed.status && 'Token is no longer avaiable, Try to send email again.'}</span>
           
           <TextField
             variant="outlined"

@@ -57,8 +57,8 @@ function  App() {
         <Switch>  
           <LogedInRoute exect path='/Login' component={Login}/>
           <LogedInRoute exect path='/singup' component={Singup}/>
-          <LogedInRoute exect path='/forgetpassword' component={ForgetPassword}/>
-          <LogedInRoute exect path='/resetPassword' component={ResetUserPassword}/>
+          <Route exect path='/forgetpassword' component={ForgetPassword}/>
+          <Route exect path='/resetPassword/:token' component={ResetUserPassword}/>
           <AuthenticRoute exect path='/accountSetings' component={UpdateProfileInfo}/>
           <AuthenticRoute exect path='/autoComplete' component={Playground}/>
           <AuthenticRoute exect path='/notification' component={NotificationForMobile}/>
