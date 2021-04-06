@@ -116,6 +116,7 @@ useEffect(() => {
             label="Email Address"
             name="email"
             autoComplete="email"
+            value={email}
             autoFocus
             onChange={e => setEmail(e.target.value.trim())}
           />

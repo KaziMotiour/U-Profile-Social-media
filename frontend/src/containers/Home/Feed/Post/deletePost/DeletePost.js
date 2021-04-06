@@ -72,7 +72,7 @@ export default function DeletePost({open, username, id, hondleDeleteFormOpen}) {
           localStorage.removeItem('deleted')
           hondleDeleteFormOpen()
     
-    }, 3000))
+    }, 4000))
   }
   
  

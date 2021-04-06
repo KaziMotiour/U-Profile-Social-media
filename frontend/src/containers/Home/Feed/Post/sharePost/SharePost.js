@@ -55,7 +55,7 @@ async function closeDialog (){
       localStorage.removeItem('RePost')
       props.hondleShareOpen()
   
-  }, 3000))
+  }, 4000))
 }
  
   const checkAuthenticatin =()=>{

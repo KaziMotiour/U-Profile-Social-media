@@ -83,7 +83,7 @@ class NewUsers(AbstractBaseUser, PermissionsMixin):
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
 
-    email_plaintext_message =  "You're receiving this email because you requested a password reset for your user account at U-profile.\n\n go through the link to reset password: \n http://localhost:3000/resetPassword/{} \n\n \n\n Thanks for using our site! \n\n The U-profile team.".format(reset_password_token.key)
+    email_plaintext_message =  "You're receiving this email because you requested a password reset for your user account at U-profile.\n\n go through the link to reset password: \n http://kmotiour.pythonanywhere.com/resetPassword/{} \n\n \n\n Thanks for using our site! \n\n The U-profile team.".format(reset_password_token.key)
 
     html_content ='<a href="http://localhost:3000/resetPassword" >http://localhost:3000/resetPassword</a>'
 

@@ -103,7 +103,7 @@ export const UserLogin = (email, password) => async dispatch =>{
 
     try{
       dispatch(auth_start())
-        await axios.post('http://127.0.0.1:8000/api/token/',{email, password}).then(res =>{
+        await axios.post('http://kmotiour.pythonanywhere.com/api/token/',{email, password}).then(res =>{
           localStorage.setItem('access_token', res.data.access)
           dispatch(auth_success(res.data.access))
         }).catch(function (error) {
@@ -139,7 +139,7 @@ export const VerifyJwtToken = () => async dispatch =>{
   const token = localStorage.getItem('access_token')
   try{
 
-      await axios.post('http://127.0.0.1:8000/api/token/verify/',{token}).then(res =>{
+      await axios.post('http://kmotiour.pythonanywhere.com/api/token/verify/',{token}).then(res =>{
       
       }).catch(function (error) {
 
@@ -159,7 +159,7 @@ export const VerifyJwtToken = () => async dispatch =>{
 export const Registration = (email, username, password, password2) => async dispatch =>{
     console.log(email, username, password, password2);
     try{
-        await axios.post('http://127.0.0.1:8000/auth/singup/',{email, username, password, password2}).then(res =>{
+        await axios.post('http://kmotiour.pythonanywhere.com/auth/singup/',{email, username, password, password2}).then(res =>{
 
             dispatch(auth_registratin(res.data))
         }).catch(function (error) {
@@ -195,7 +195,7 @@ export const ChangeUserPassword = (formData, config) => async dispatch =>{
 
   try{
 
-      await axios.put('http://127.0.0.1:8000/auth/change-password/',formData, config).then(res =>{  
+      await axios.put('http://kmotiour.pythonanywhere.com/auth/change-password/',formData, config).then(res =>{  
         dispatch(password_change_success(res.data))
 
       }).catch(function (error) {
@@ -216,7 +216,7 @@ export const SendResetEmail = (email, config) => async dispatch =>{
 
   try{
 
-      await axios.post('http://127.0.0.1:8000/auth/password_reset/',{email}, config).then(res =>{  
+      await axios.post('http://kmotiour.pythonanywhere.com/auth/password_reset/',{email}, config).then(res =>{  
         
         dispatch(Reset_emailSend_success(res.data.status))
 
@@ -237,7 +237,7 @@ export const PasswordResetConfirm = (formData, config) => async dispatch =>{
 
   try{
 
-      await axios.post('http://127.0.0.1:8000/auth/password_reset/confirm/',formData, config).then(res =>{  
+      await axios.post('http://kmotiour.pythonanywhere.com/auth/password_reset/confirm/',formData, config).then(res =>{  
 
 
         dispatch(Reset_password_success(res.data.status))

@@ -35,7 +35,7 @@ export const GetPostList = (config) => async dispatch => {
 
     try{
         dispatch(GetPostStart)
-        axios.get('http://127.0.0.1:8000/post/list/',config).then(res =>{
+        axios.get('http://kmotiour.pythonanywhere.com/post/list/',config).then(res =>{
                 
                 dispatch(GetPostSuccess(res.data))
         }
@@ -49,7 +49,7 @@ export const GetPostList = (config) => async dispatch => {
 export const CreatePost = (data, config) => async dispatch =>{
 
     try{
-        axios.post('http://127.0.0.1:8000/post/create/',data, config).then(res =>{
+        axios.post('http://kmotiour.pythonanywhere.com/post/create/',data, config).then(res =>{
            
             dispatch(GetPostList(config))
         }).catch(function (error){
@@ -65,7 +65,7 @@ export const CreatePost = (data, config) => async dispatch =>{
 export const LikePost = (id, username, config) => async dispatch =>{
 
     try{
-        axios.get(`http://127.0.0.1:8000/post/like/${id}`, config).then(res =>{
+        axios.get(`http://kmotiour.pythonanywhere.com/post/like/${id}`, config).then(res =>{
            
             dispatch(GetPostList(config))
             dispatch(GetSinglePost(id, config))
@@ -83,7 +83,7 @@ export const LikePost = (id, username, config) => async dispatch =>{
 export const CommentPost = (id, username, data, config) => async dispatch =>{
     console.log(id, data.get('comment'), config);
     try{
-        axios.post(`http://127.0.0.1:8000/post/comment/${id}`, data, config).then(res =>{
+        axios.post(`http://kmotiour.pythonanywhere.com/post/comment/${id}`, data, config).then(res =>{
            
             dispatch(GetPostList(config))
             dispatch(GetSinglePost(id, config))
@@ -101,7 +101,7 @@ export const CommentPost = (id, username, data, config) => async dispatch =>{
 export const CommentUpdate = (id, username, data, config) => async dispatch =>{
     console.log(id, data.get('comment'), config);
     try{
-        axios.put(`http://127.0.0.1:8000/post/comment/rud/${id}`, data, config).then(res =>{
+        axios.put(`http://kmotiour.pythonanywhere.com/post/comment/rud/${id}`, data, config).then(res =>{
             
             dispatch(GetPostList(config))
             dispatch(GetSinglePost(id, config))
@@ -117,7 +117,7 @@ export const CommentUpdate = (id, username, data, config) => async dispatch =>{
 }
 export const CommentDelete = (id, username, config) => async dispatch =>{
     try{
-        axios.delete(`http://127.0.0.1:8000/post/comment/rud/${id}`, config).then(res =>{
+        axios.delete(`http://kmotiour.pythonanywhere.com/post/comment/rud/${id}`, config).then(res =>{
             
             dispatch(GetPostList(config))
             dispatch(GetSinglePost(id, config))
@@ -137,7 +137,7 @@ export const CommentDelete = (id, username, config) => async dispatch =>{
 export const ChangePrivacy = (id, username, data, config) => async dispatch =>{
     console.log(data.get('privacy'),'privacy');
     try{
-        axios.put(`http://127.0.0.1:8000/post/detail/${id}`, data, config).then(res =>{
+        axios.put(`http://kmotiour.pythonanywhere.com/post/detail/${id}`, data, config).then(res =>{
             
             dispatch(GetPostList(config))
             dispatch(GetSinglePost(id, config))
@@ -156,7 +156,7 @@ export const ChangePrivacy = (id, username, data, config) => async dispatch =>{
 export const SharePost = (id, username, data, config) => async dispatch =>{
     console.log(data.get('sharePostContent'));
     try{
-        axios.post(`http://127.0.0.1:8000/post/rePost/${id}`, data, config).then(res =>{
+        axios.post(`http://kmotiour.pythonanywhere.com/post/rePost/${id}`, data, config).then(res =>{
            
             
             localStorage.setItem('RePost', res.data.RePost)
@@ -176,7 +176,7 @@ export const SharePost = (id, username, data, config) => async dispatch =>{
 export const EditPost = (id, username, data, config) => async dispatch =>{
    
     try{
-        axios.put(`http://127.0.0.1:8000/post/detail/${id}`, data, config).then(res =>{
+        axios.put(`http://kmotiour.pythonanywhere.com/post/detail/${id}`, data, config).then(res =>{
            
             localStorage.setItem('updated','success')
             dispatch(GetPostList(config))
@@ -194,7 +194,7 @@ export const EditPost = (id, username, data, config) => async dispatch =>{
 }
 export const DeletePosts = (id, username, config) => async dispatch =>{
     try{
-        axios.delete(`http://127.0.0.1:8000/post/detail/${id}`, config).then(res =>{
+        axios.delete(`http://kmotiour.pythonanywhere.com/post/detail/${id}`, config).then(res =>{
            
     
             localStorage.setItem('deleted','Deleted')
@@ -216,7 +216,7 @@ export const DeletePosts = (id, username, config) => async dispatch =>{
 export const GetUserWonPostList = (username, config) => async dispatch => {
 
     try{
-        axios.get(`http://127.0.0.1:8000/post/${username}`, config).then(res =>{
+        axios.get(`http://kmotiour.pythonanywhere.com/post/${username}`, config).then(res =>{
                 
                 dispatch(UserWonPost(res.data))
         }
@@ -230,7 +230,7 @@ export const GetUserWonPostList = (username, config) => async dispatch => {
 export const GetSinglePost = (id, config) => async dispatch => {
 
     try{
-        axios.get(`http://127.0.0.1:8000/post/detail/${id}`, config).then(res =>{
+        axios.get(`http://kmotiour.pythonanywhere.com/post/detail/${id}`, config).then(res =>{
                 
                 dispatch(getSinglePost(res.data))
         }

@@ -113,8 +113,8 @@ AUTH_PASSWORD_VALIDATORS = [
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_POST = 587
-EMAIL_HOST_USER = 'kmatiour30@gmail.com'
-EMAIL_HOST_PASSWORD = 'mmbyncsshnexaaax'
+EMAIL_HOST_USER = 'kmotiour30@gmail.com'
+EMAIL_HOST_PASSWORD = 'hcpvchwmjkrawfzp'
 EMAIL_USE_TLS = True
 
 # SEND_GRID_API_KEY = ''

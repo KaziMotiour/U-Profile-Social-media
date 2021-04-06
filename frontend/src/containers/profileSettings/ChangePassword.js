@@ -51,7 +51,6 @@ export default function ChangePassword() {
     const [newPasswordRequired, setNewPasswordRequired] = useState(false)
     const [openSnackber, setOpenSnackber] = useState(false)
 
-    console.log(success,'change d');
     const [inputData, setInputData] = useState({
         old_password:'',
         new_password:''
@@ -83,7 +82,7 @@ export default function ChangePassword() {
     
 
    useEffect(()=>(
-     success!==null ? setOpenSnackber(true) : setOpenSnackber(false)
+     success!==null && setOpenSnackber(true)
    ),[success])
 
 

@@ -118,7 +118,7 @@ async function closeDialog (){
         localStorage.removeItem('updated')
         hondleEditFormOpen()
   
-  }, 3000))
+  }, 4000))
 }
 
  
