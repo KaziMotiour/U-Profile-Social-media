@@ -56,7 +56,7 @@ export const userProfileUpdateFail = (error) =>(
 
 export const UserProfile = (username, config) => async dispatch =>{
     try{
-        await axios.get(`http://kmotiour.pythonanywhere.com/profile/${username}`, config).then(res =>{
+        await axios.get(`https://kmotiour.pythonanywhere.com/profile/${username}`, config).then(res =>{
         dispatch(UserProfileData(res.data))
         
     })
@@ -71,7 +71,7 @@ export const UserProfile = (username, config) => async dispatch =>{
 export const EditUserProfile = (id, username, formData, config) => async dispatch =>{
     console.log(formData.get('github_link'),'idddddddddddddddddddddd');
     try{
-        await axios.put(`http://kmotiour.pythonanywhere.com/profile/edit-profile/${id}`, formData, config).then(res =>{
+        await axios.put(`https://kmotiour.pythonanywhere.com/profile/edit-profile/${id}`, formData, config).then(res =>{
 
         dispatch({ type:USER_PROFILE_UPDATE_SUCCESS})
         dispatch(UserProfile(username, config))
@@ -99,7 +99,7 @@ export const EditUserProfile = (id, username, formData, config) => async dispatc
 export const LoggedUserInfo = (config) => async dispatch =>{
     console.log(config,'logged configgggg');
     try{
-            await axios.get('http://kmotiour.pythonanywhere.com/profile/loggedinUser/', config).then(res =>{
+            await axios.get('https://kmotiour.pythonanywhere.com/profile/loggedinUser/', config).then(res =>{
                
             dispatch(loggedin_user_info(res.data[0]))
         })
@@ -114,7 +114,7 @@ export const LoggedUserInfo = (config) => async dispatch =>{
 export const RecomendedUser = (config) => async dispatch =>{
 
     try{
-        await axios.get('http://kmotiour.pythonanywhere.com/profile/recomemdedUser/',config).then(res =>{
+        await axios.get('https://kmotiour.pythonanywhere.com/profile/recomemdedUser/',config).then(res =>{
             dispatch(recomended_user(res.data))
         })
     }catch(err){
@@ -125,7 +125,7 @@ export const RecomendedUser = (config) => async dispatch =>{
 
 export const UserFollow = (username, profileUser, config, profile ) => async dispatch =>{
     try{
-        await axios.get(`http://kmotiour.pythonanywhere.com/profile/follow/${username}`, config).then(res =>{
+        await axios.get(`https://kmotiour.pythonanywhere.com/profile/follow/${username}`, config).then(res =>{
             
             dispatch(RecomendedUser(config))
             dispatch(GetFollowerUser(profileUser, config))
@@ -142,7 +142,7 @@ export const UserFollow = (username, profileUser, config, profile ) => async dis
 export const UserFollowFromLikedUser = (id, username, config) => async dispatch =>{
    
     try{
-        await axios.get(`http://kmotiour.pythonanywhere.com/profile/follow/${username}`, config).then(res =>{
+        await axios.get(`https://kmotiour.pythonanywhere.com/profile/follow/${username}`, config).then(res =>{
             dispatch(GetPostLikedUser(id, config))
         })
     }catch(err){
@@ -154,7 +154,7 @@ export const UserFollowFromLikedUser = (id, username, config) => async dispatch 
 export const UserFollowFromSharedUser = (id, username, config) => async dispatch =>{
     
     try{
-        await axios.get(`http://kmotiour.pythonanywhere.com/profile/follow/${username}`, config).then(res =>{
+        await axios.get(`https://kmotiour.pythonanywhere.com/profile/follow/${username}`, config).then(res =>{
             dispatch(GetPostSharedUser(id, config))
         })
     }catch(err){
@@ -167,7 +167,7 @@ export const UserFollowFromSharedUser = (id, username, config) => async dispatch
 export const MutualFriend = (id, config) => async dispatch =>{
 
     try{
-        await axios.get(`http://kmotiour.pythonanywhere.com/profile/mutualfriend/${id}`,config).then(res =>{
+        await axios.get(`https://kmotiour.pythonanywhere.com/profile/mutualfriend/${id}`,config).then(res =>{
             
             dispatch(mutual_friend(res.data))
         })
@@ -180,7 +180,7 @@ export const MutualFriend = (id, config) => async dispatch =>{
 export const GetFollowerUser = (username, config) => async dispatch =>{
    
     try{
-        await axios.get(`http://kmotiour.pythonanywhere.com/profile/follower/${username}`,config).then(res =>{
+        await axios.get(`https://kmotiour.pythonanywhere.com/profile/follower/${username}`,config).then(res =>{
             // console.log(res.data, 'followwwwwwwwww');
             dispatch(followerUser(res.data))
         })
@@ -193,7 +193,7 @@ export const GetFollowerUser = (username, config) => async dispatch =>{
 export const GetFollowingUser = (username, config) => async dispatch =>{
 
     try{
-        await axios.get(`http://kmotiour.pythonanywhere.com/profile/following/${username}`,config).then(res =>{
+        await axios.get(`https://kmotiour.pythonanywhere.com/profile/following/${username}`,config).then(res =>{
             console.log(res.data, 'folloing');
             dispatch(followingUser(res.data))
         })

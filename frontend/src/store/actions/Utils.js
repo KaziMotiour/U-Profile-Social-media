@@ -42,7 +42,7 @@ export const SearchUserList = (user) =>(
 
 export const GetPostLikedUser = (id, config) => async dispatch =>{
     try{
-        await axios.get(`http://kmotiour.pythonanywhere.com/post/liked-user/${id}`, config).then(res=>{
+        await axios.get(`https://kmotiour.pythonanywhere.com/post/liked-user/${id}`, config).then(res=>{
             dispatch(PostLikedUser(res.data))
         })
 
@@ -53,7 +53,7 @@ export const GetPostLikedUser = (id, config) => async dispatch =>{
 
 export const GetPostSharedUser = (id, config) => async dispatch =>{
     try{
-        await axios.get(`http://kmotiour.pythonanywhere.com/post/shared-user/${id}`, config).then(res=>{
+        await axios.get(`https://kmotiour.pythonanywhere.com/post/shared-user/${id}`, config).then(res=>{
             
             dispatch(PostSharedUser(res.data))
         })
@@ -65,7 +65,7 @@ export const GetPostSharedUser = (id, config) => async dispatch =>{
 
 export const NotificationCount = (config) => async dispatch =>{
     try{
-        await axios.get('http://kmotiour.pythonanywhere.com/notification/count', config).then(res=>{
+        await axios.get('https://kmotiour.pythonanywhere.com/notification/count', config).then(res=>{
            console.log(res.data);
             dispatch(NotificationCountData(res.data.new_notification))
         })
@@ -77,7 +77,7 @@ export const NotificationCount = (config) => async dispatch =>{
 
 export const NotificationList = (config) => async dispatch =>{
     try{
-        await axios.get('http://kmotiour.pythonanywhere.com/notification', config).then(res=>{
+        await axios.get('https://kmotiour.pythonanywhere.com/notification', config).then(res=>{
            
         dispatch(NotificationLists(res.data))
            
@@ -93,7 +93,7 @@ export const NotificationList = (config) => async dispatch =>{
 export const SearchUser = (query,config) => async dispatch =>{
     console.log(query, 'queryyyyyyyy');
     try{
-        await axios.get(`http://kmotiour.pythonanywhere.com/profile/search/${query}`, config).then(res=>{
+        await axios.get(`https://kmotiour.pythonanywhere.com/profile/search/${query}`, config).then(res=>{
            console.log(res.data, 'search dataaaaaaaaaa');
         dispatch(SearchUserList(res.data))
            
