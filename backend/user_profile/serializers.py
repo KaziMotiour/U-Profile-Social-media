@@ -110,8 +110,11 @@ class UserProfile(serializers.ModelSerializer):
         
     def get_followed_by(self, obj):
         user = UserFollow.objects.filter(user__username=obj.user.username).first()
+        # user = User.objects.filter(username=obj).first()
         if user:
             return user.followed_by.count()
+        
+        # print(users.UserFollowing.all().count(), 'following')
         return 0
 
 
@@ -202,7 +205,14 @@ class PostBookmarkSerializer(serializers.ModelSerializer):
 
 
 class FollowingOrFollower(serializers.ModelSerializer):
-        
+        # following = PostUserDetailsSerializer(read_only=True)
+        class Meta:
+            model = UserFollow
+            fields = ['user', 'following', 'followed_by']
+
+
+class FollowdByUser(serializers.ModelSerializer):
+        # followed_by=PostUserDetailsSerializer(read_only=True)
         class Meta:
             model = UserFollow
             fields = ['user', 'following', 'followed_by']

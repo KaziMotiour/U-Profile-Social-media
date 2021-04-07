@@ -41,11 +41,14 @@ class UserFollowManager(models.Manager):
 
     def ToggleFollow(self, user, toggle_user):
         get_user,created = UserFollow.objects.get_or_create(user=user)
+        followed_by_user,created = UserFollow.objects.get_or_create(user=toggle_user)
         if toggle_user in get_user.following.all():
             get_user.following.remove(toggle_user)
+            followed_by_user.followed_by.remove(user)
             added=False
         else:
             get_user.following.add(toggle_user)
+            followed_by_user.followed_by.add(user)
             added=True
         return added
 
