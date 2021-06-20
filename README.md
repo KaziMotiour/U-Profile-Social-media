@@ -17,7 +17,7 @@ https://u-profile.herokuapp.com/
 * material-ui
 
 ## Features
-* User Authentication (JWT)
+* User Authentication(JWT)
 * User profile
 * Follow/Unfollow
 * Recommended user
