@@ -100,10 +100,10 @@ export const Reset_password_fail = (error) =>(
 
 
 export const UserLogin = (email, password) => async dispatch =>{
-
+    console.log(email, password)
     try{
       dispatch(auth_start())
-        await axios.post('https://kmotiour.pythonanywhere.com/api/token/',{email, password}).then(res =>{
+        await axios.post('http://127.0.0.1:8000/api/token/', {email, password}).then(res =>{
           localStorage.setItem('access_token', res.data.access)
           dispatch(auth_success(res.data.access))
         }).catch(function (error) {
@@ -151,8 +151,6 @@ export const VerifyJwtToken = () => async dispatch =>{
   }catch(err){
       // console.log(err,'err');
   }
-
-
 }
 
 

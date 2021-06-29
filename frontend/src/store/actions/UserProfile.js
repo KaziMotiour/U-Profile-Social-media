@@ -13,7 +13,7 @@ export const loggedin_user_info = (data) =>(
   
   })
 
-  export const recomended_user = (data) =>(
+export const recomended_user = (data) =>(
     {
     type: RECOMENDED_USER,
     recomended_user: data
